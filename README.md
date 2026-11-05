@@ -47,7 +47,7 @@
 ### 2. Kurulum Adımları
 ```bash
 # 1. Depoyu klonlayın
-git clone https://github.com/erdemeroglu/pergel.git
+git clone https://github.com/erogluerdem/pergel.git
 cd pergel
 
 # 2. PHP ve JS bağımlılıklarını kurun
