@@ -1,0 +1,1691 @@
+/**
+ * ŞantiyeConnect Visual Enhancements
+ * Modern ve profesyonel görsel iyileştirmeler
+ * Version: 1.0.0
+ */
+
+/* ==========================================
+   CSS Custom Properties (Değişkenler)
+   ========================================== */
+:root {
+    /* Ana Renkler — Pergel Tema Değişkenleriyle Uyumlu */
+    --sc-primary: var(--pt-primary, #2563EB);
+    --sc-primary-light: var(--pt-accent, #60A5FA);
+    --sc-primary-dark: var(--pt-primary-hover, #1D4ED8);
+    --sc-accent: var(--pt-accent, #3B82F6);
+    --sc-accent-light: var(--pt-accent, #60A5FA);
+    --sc-success: var(--pt-success, #10B981);
+    --sc-success-light: #34D399;
+    --sc-danger: var(--pt-danger, #EF4444);
+    --sc-warning: var(--pt-warning, #D97706);
+    --sc-warning-dark: #B45309;
+    --sc-warning-light: #FCD34D;
+    --sc-info: var(--pt-info, #06B6D4);
+    
+    /* Nötr Tonlar */
+    --sc-dark: var(--pt-body-bg, #1E293B);
+    --sc-slate-700: var(--pt-heading-color, #334155);
+    --sc-slate-600: var(--pt-body-color, #475569);
+    --sc-slate-500: var(--pt-text-muted, #64748B);
+    --sc-slate-400: var(--pt-text-subtle, #94A3B8);
+    --sc-slate-300: var(--pt-card-border, #CBD5E1);
+    --sc-slate-200: var(--pt-table-border, #E2E8F0);
+    --sc-slate-100: var(--pt-table-stripe-bg, #F1F5F9);
+    --sc-white: var(--pt-card-bg, #FFFFFF);
+    
+    /* Gradientler */
+    --gradient-primary: linear-gradient(135deg, var(--pt-primary, #2563EB) 0%, var(--pt-primary-hover, #1D4ED8) 100%);
+    --gradient-accent: linear-gradient(135deg, var(--pt-accent, #3B82F6) 0%, var(--pt-primary-hover, #1D4ED8) 100%);
+    --gradient-success: linear-gradient(135deg, var(--pt-success, #10B981) 0%, #059669 100%);
+    --gradient-warning: linear-gradient(135deg, var(--pt-warning, #D97706) 0%, #B45309 100%);
+    --gradient-dark: linear-gradient(135deg, var(--pt-card-header-bg, #334155) 0%, var(--pt-body-bg, #1E293B) 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+    --gradient-card: var(--pt-card-bg, linear-gradient(145deg, #ffffff 0%, #f8fafc 100%));
+    
+    /* Gölgeler */
+    --shadow-sm: var(--pt-card-shadow, 0 1px 2px 0 rgba(0, 0, 0, 0.05));
+    --shadow-md: var(--pt-card-shadow, 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06));
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-glow-primary: 0 0 20px rgba(var(--pt-primary-rgb, 245, 158, 11), 0.3);
+    --shadow-glow-accent: 0 0 20px rgba(var(--pt-accent-rgb, 59, 130, 246), 0.3);
+    --shadow-glow-success: 0 0 20px rgba(16, 185, 129, 0.3);
+    
+    /* Animasyon */
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+    --transition-slow: 350ms ease;
+    --transition-spring: 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html[data-bs-theme="dark"] {
+    --sc-slate-700: var(--pt-heading-color, #f1f5f9);
+    --sc-slate-600: var(--pt-body-color, #e2e8f0);
+    --sc-slate-500: var(--pt-text-muted, #cbd5e1);
+    --sc-slate-400: var(--pt-text-subtle, #94a3b8);
+    --sc-slate-300: var(--pt-card-border, rgba(255, 255, 255, 0.15));
+    --sc-slate-200: var(--pt-table-border, rgba(255, 255, 255, 0.08));
+    --sc-slate-100: var(--pt-table-stripe-bg, #1e293b);
+    --sc-white: var(--pt-card-bg, #0f172a);
+
+    --gradient-card: var(--pt-card-bg, linear-gradient(145deg, #1e293b 0%, #0f172a 100%));
+    --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+
+    --shadow-sm: var(--pt-card-shadow, 0 1px 2px 0 rgba(0, 0, 0, 0.3));
+    --shadow-md: var(--pt-card-shadow, 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3));
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+}
+
+
+/* ==========================================
+   Global Animasyonlar
+   ========================================== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(245, 158, 11, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
+}
+
+/* ==========================================
+   Modern Card Stilleri
+   ========================================== */
+.card {
+    border: 1px solid var(--pt-card-border, var(--sc-slate-200)) !important;
+    border-radius: var(--pt-card-radius, 16px) !important;
+    background: var(--pt-card-bg, var(--gradient-card)) !important;
+    box-shadow: var(--pt-card-shadow, var(--shadow-md)) !important;
+    color: var(--pt-body-color) !important;
+    transition: all var(--transition-normal) !important;
+    overflow: hidden;
+    position: relative;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--pt-primary, var(--gradient-primary));
+    opacity: 0.8;
+    transition: opacity var(--transition-normal);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl) !important;
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.card-header {
+    background: var(--pt-card-header-bg, transparent) !important;
+    border-bottom: 1px solid var(--pt-card-header-border, var(--sc-slate-200)) !important;
+    color: var(--pt-heading-color) !important;
+    padding: 1.25rem 1.5rem !important;
+}
+
+.card-title {
+    color: var(--pt-heading-color, var(--sc-slate-700)) !important;
+    font-weight: 600 !important;
+    margin-bottom: 0 !important;
+}
+
+.card-body {
+    color: var(--pt-body-color) !important;
+    padding: 1.5rem !important;
+}
+
+/* Stat Card - Özel stil */
+.stat-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::after {
+    content: '';
+    position: absolute;
+    right: -30px;
+    bottom: -30px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--sc-primary);
+    opacity: 0.05;
+    transition: all var(--transition-slow);
+}
+
+.stat-card:hover::after {
+    transform: scale(1.5);
+    opacity: 0.1;
+}
+
+/* Dashboard Metric Cards */
+.row.g-3 > [class*="col-"] > .card {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.row.g-3 > [class*="col-"]:nth-child(1) > .card { animation-delay: 0.1s; }
+.row.g-3 > [class*="col-"]:nth-child(2) > .card { animation-delay: 0.2s; }
+.row.g-3 > [class*="col-"]:nth-child(3) > .card { animation-delay: 0.3s; }
+.row.g-3 > [class*="col-"]:nth-child(4) > .card { animation-delay: 0.4s; }
+
+/* ==========================================
+   Modern Butonlar
+   ========================================== */
+.btn {
+    border-radius: 10px !important;
+    font-weight: 500 !important;
+    transition: all var(--transition-normal) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+
+.btn:active::after {
+    width: 200px;
+    height: 200px;
+}
+
+.btn-primary {
+    background: var(--gradient-primary) !important;
+    border: none !important;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow-primary) !important;
+}
+
+.btn-success {
+    background: var(--gradient-success) !important;
+    border: none !important;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow-success) !important;
+}
+
+.btn-info {
+    background: var(--gradient-accent) !important;
+    border: none !important;
+    color: white !important;
+}
+
+.btn-info:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow-accent) !important;
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--sc-primary) !important;
+    color: var(--sc-primary) !important;
+    background: transparent !important;
+}
+
+.btn-outline-primary:hover {
+    background: var(--sc-primary) !important;
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+/* Icon Button */
+.btn-icon {
+    width: 42px;
+    height: 42px;
+    padding: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px !important;
+}
+
+/* ==========================================
+   Progress Bar İyileştirmeleri
+   ========================================== */
+.progress {
+    height: 8px;
+    border-radius: 100px;
+    background: var(--sc-slate-200);
+    overflow: visible;
+}
+
+.progress-bar {
+    border-radius: 100px;
+    position: relative;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: inherit;
+    box-shadow: 0 0 8px currentColor;
+}
+
+.progress-bar.bg-primary {
+    background: var(--gradient-primary) !important;
+}
+
+.progress-bar.bg-success {
+    background: var(--gradient-success) !important;
+}
+
+.progress-bar.bg-info {
+    background: var(--gradient-accent) !important;
+}
+
+/* Animated Progress */
+.progress-animated .progress-bar {
+    animation: shimmer 2s linear infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(
+        90deg,
+        var(--sc-primary) 0%,
+        var(--sc-primary-light) 50%,
+        var(--sc-primary) 100%
+    );
+}
+
+/* ==========================================
+   Badge İyileştirmeleri
+   ========================================== */
+.badge {
+    font-weight: 500;
+    padding: 0.5em 0.85em;
+    border-radius: 8px;
+    letter-spacing: 0.3px;
+    transition: all var(--transition-fast);
+}
+
+.badge:hover {
+    transform: scale(1.05);
+}
+
+.bg-soft-primary {
+    background: rgba(245, 158, 11, 0.12) !important;
+    color: var(--sc-primary-dark) !important;
+}
+
+.bg-soft-success {
+    background: rgba(16, 185, 129, 0.12) !important;
+    color: var(--sc-success) !important;
+}
+
+.bg-soft-info {
+    background: rgba(59, 130, 246, 0.12) !important;
+    color: var(--sc-accent) !important;
+}
+
+.bg-soft-danger {
+    background: rgba(239, 68, 68, 0.12) !important;
+    color: var(--sc-danger) !important;
+}
+
+.bg-soft-warning {
+    background: rgba(245, 158, 11, 0.12) !important;
+    color: var(--sc-warning) !important;
+}
+
+/* Gradient Badges */
+.badge-gradient-primary {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.badge-gradient-success {
+    background: var(--gradient-success);
+    color: white;
+}
+
+.badge-gradient-accent {
+    background: var(--gradient-accent);
+    color: white;
+}
+
+/* Pulse Badge */
+.badge-pulse {
+    position: relative;
+}
+
+.badge-pulse::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--sc-danger);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* ==========================================
+   Tablo İyileştirmeleri
+   ========================================== */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table thead th {
+    background: var(--sc-slate-100) !important;
+    color: var(--sc-slate-600);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    padding: 1rem 1.25rem !important;
+    border: none !important;
+}
+
+.table thead th:first-child {
+    border-radius: 12px 0 0 12px;
+}
+
+.table thead th:last-child {
+    border-radius: 0 12px 12px 0;
+}
+
+.table tbody tr {
+    transition: all var(--transition-fast);
+}
+
+.table tbody tr:hover {
+    background: rgba(59, 130, 246, 0.04) !important;
+    transform: scale(1.005);
+}
+
+.table tbody td {
+    padding: 1rem 1.25rem !important;
+    border-bottom: 1px solid var(--sc-slate-200) !important;
+    vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
+/* Striped Table Modern */
+.table-striped tbody tr:nth-of-type(odd) {
+    background: rgba(241, 245, 249, 0.5) !important;
+}
+
+/* ==========================================
+   Form İyileştirmeleri
+   ========================================== */
+.form-control,
+.form-select {
+    border-radius: 10px !important;
+    border: 2px solid var(--sc-slate-300) !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.95rem;
+    transition: all var(--transition-normal) !important;
+    background: var(--sc-white);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--sc-accent) !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
+    outline: none !important;
+}
+
+.form-control::placeholder {
+    color: var(--sc-slate-400);
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--sc-slate-600);
+    margin-bottom: 0.5rem;
+}
+
+/* Floating Label Style */
+.form-floating > .form-control,
+.form-floating > .form-select {
+    padding: 1.5rem 1rem 0.5rem !important;
+}
+
+/* Input Group */
+.input-group {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.input-group-text {
+    background: var(--sc-slate-100) !important;
+    border: 2px solid var(--sc-slate-300) !important;
+    border-right: none !important;
+    color: var(--sc-slate-500);
+}
+
+.input-group .form-control {
+    border-left: none !important;
+}
+
+/* Checkbox & Radio Modern */
+.form-check-input {
+    width: 1.25em;
+    height: 1.25em;
+    border: 2px solid var(--sc-slate-400);
+    transition: all var(--transition-fast);
+}
+
+.form-check-input:checked {
+    background-color: var(--sc-primary);
+    border-color: var(--sc-primary);
+}
+
+.form-check-input:focus {
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+/* ==========================================
+   Alert İyileştirmeleri
+   ========================================== */
+.alert {
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 1rem 1.25rem !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.alert::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.1) !important;
+    color: #065F46 !important;
+}
+
+.alert-success::before {
+    background: var(--sc-success);
+}
+
+.alert-danger {
+    background: rgba(239, 68, 68, 0.1) !important;
+    color: #991B1B !important;
+}
+
+.alert-danger::before {
+    background: var(--sc-danger);
+}
+
+.alert-warning {
+    background: rgba(245, 158, 11, 0.1) !important;
+    color: #92400E !important;
+}
+
+.alert-warning::before {
+    background: var(--sc-warning);
+}
+
+.alert-info {
+    background: rgba(6, 182, 212, 0.1) !important;
+    color: #0E7490 !important;
+}
+
+.alert-info::before {
+    background: var(--sc-info);
+}
+
+/* ==========================================
+   Modal İyileştirmeleri
+   ========================================== */
+.modal-content {
+    border: none !important;
+    border-radius: 20px !important;
+    box-shadow: var(--shadow-xl) !important;
+    overflow: hidden;
+}
+
+.modal-header {
+    background: var(--sc-slate-100);
+    border-bottom: 1px solid var(--sc-slate-200) !important;
+    padding: 1.25rem 1.5rem !important;
+}
+
+.modal-title {
+    font-weight: 600;
+    color: var(--sc-slate-700);
+}
+
+.modal-body {
+    padding: 1.5rem !important;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--sc-slate-200) !important;
+    padding: 1rem 1.5rem !important;
+}
+
+.modal.fade .modal-dialog {
+    transform: scale(0.9) translateY(-50px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+/* ==========================================
+   Dropdown İyileştirmeleri
+   ========================================== */
+.dropdown-menu {
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: var(--shadow-xl) !important;
+    padding: 0.5rem !important;
+    animation: fadeInUp 0.2s ease;
+}
+
+.dropdown-item {
+    border-radius: 8px !important;
+    padding: 0.65rem 1rem !important;
+    font-weight: 500;
+    transition: all var(--transition-fast) !important;
+}
+
+.dropdown-item:hover {
+    background: var(--sc-slate-100) !important;
+    transform: translateX(4px);
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+    background: var(--gradient-primary) !important;
+    color: white !important;
+}
+
+.dropdown-divider {
+    margin: 0.5rem 0 !important;
+    border-color: var(--sc-slate-200) !important;
+}
+
+/* ==========================================
+   Tooltip ve Popover
+   ========================================== */
+.tooltip {
+    font-size: 0.875rem;
+}
+
+.tooltip-inner {
+    background: var(--sc-dark) !important;
+    border-radius: 8px !important;
+    padding: 0.5rem 0.75rem !important;
+}
+
+.popover {
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+.popover-header {
+    background: var(--sc-slate-100) !important;
+    border-bottom: 1px solid var(--sc-slate-200) !important;
+    border-radius: 12px 12px 0 0 !important;
+    font-weight: 600;
+}
+
+/* ==========================================
+   Pagination İyileştirmeleri
+   ========================================== */
+.pagination {
+    gap: 4px;
+}
+
+.page-link {
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 0.5rem 0.85rem !important;
+    color: var(--sc-slate-600) !important;
+    font-weight: 500;
+    transition: all var(--transition-fast) !important;
+}
+
+.page-link:hover {
+    background: var(--sc-slate-100) !important;
+    color: var(--sc-primary) !important;
+    transform: translateY(-2px);
+}
+
+.page-item.active .page-link {
+    background: var(--gradient-primary) !important;
+    color: white !important;
+    box-shadow: var(--shadow-sm);
+}
+
+.page-item.disabled .page-link {
+    opacity: 0.5;
+}
+
+/* ==========================================
+   Breadcrumb İyileştirmeleri
+   ========================================== */
+.breadcrumb {
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0;
+}
+
+.breadcrumb-item {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.breadcrumb-item a {
+    color: var(--sc-slate-500);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.breadcrumb-item a:hover {
+    color: var(--sc-primary);
+}
+
+.breadcrumb-item.active {
+    color: var(--sc-slate-700);
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: var(--sc-slate-400);
+}
+
+/* ==========================================
+   Nav Tabs İyileştirmeleri
+   ========================================== */
+.nav-tabs {
+    border-bottom: 2px solid var(--sc-slate-200);
+    gap: 4px;
+}
+
+.nav-tabs .nav-link {
+    border: none !important;
+    border-radius: 10px 10px 0 0 !important;
+    color: var(--sc-slate-500);
+    font-weight: 500;
+    padding: 0.75rem 1.25rem;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.nav-tabs .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 3px;
+    background: var(--gradient-primary);
+    border-radius: 3px 3px 0 0;
+    transition: width var(--transition-normal);
+}
+
+.nav-tabs .nav-link:hover {
+    background: var(--sc-slate-100);
+    color: var(--sc-slate-700);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--sc-primary) !important;
+    background: transparent !important;
+}
+
+.nav-tabs .nav-link.active::after {
+    width: 100%;
+}
+
+/* Nav Pills */
+.nav-pills {
+    gap: 8px;
+}
+
+.nav-pills .nav-link {
+    border-radius: 10px;
+    padding: 0.6rem 1.2rem;
+    color: var(--sc-slate-600);
+    font-weight: 500;
+    transition: all var(--transition-fast);
+}
+
+.nav-pills .nav-link:hover {
+    background: var(--sc-slate-100);
+}
+
+.nav-pills .nav-link.active {
+    background: var(--gradient-primary) !important;
+    color: white !important;
+    box-shadow: var(--shadow-sm);
+}
+
+/* ==========================================
+   Timeline İyileştirmeleri
+   ========================================== */
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--sc-primary), var(--sc-accent), var(--sc-success));
+    border-radius: 2px;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+    animation: slideInLeft 0.5s ease forwards;
+    opacity: 0;
+}
+
+.timeline-item:nth-child(1) { animation-delay: 0.1s; }
+.timeline-item:nth-child(2) { animation-delay: 0.2s; }
+.timeline-item:nth-child(3) { animation-delay: 0.3s; }
+.timeline-item:nth-child(4) { animation-delay: 0.4s; }
+.timeline-item:nth-child(5) { animation-delay: 0.5s; }
+
+.timeline-pin {
+    position: absolute;
+    left: -26px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    background: var(--sc-white);
+    border: 3px solid var(--sc-primary);
+    border-radius: 50%;
+    transition: all var(--transition-fast);
+}
+
+.timeline-item:hover .timeline-pin {
+    transform: scale(1.3);
+    background: var(--sc-primary);
+}
+
+/* ==========================================
+   Avatar İyileştirmeleri
+   ========================================== */
+.avatar {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all var(--transition-fast);
+}
+
+.avatar:hover {
+    transform: scale(1.05);
+}
+
+.avatar-circle {
+    border-radius: 50%;
+}
+
+.avatar-xs { width: 28px; height: 28px; font-size: 0.75rem; }
+.avatar-sm { width: 36px; height: 36px; font-size: 0.875rem; }
+.avatar-md { width: 48px; height: 48px; font-size: 1rem; }
+.avatar-lg { width: 64px; height: 64px; font-size: 1.25rem; }
+.avatar-xl { width: 80px; height: 80px; font-size: 1.5rem; }
+
+.avatar-group {
+    display: flex;
+}
+
+.avatar-group .avatar {
+    margin-left: -10px;
+    border: 2px solid var(--sc-white);
+    box-shadow: var(--shadow-sm);
+}
+
+.avatar-group .avatar:first-child {
+    margin-left: 0;
+}
+
+.avatar-group .avatar:hover {
+    z-index: 1;
+}
+
+/* ==========================================
+   Loading States
+   ========================================== */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--sc-slate-200) 25%,
+        var(--sc-slate-100) 50%,
+        var(--sc-slate-200) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 8px;
+}
+
+.skeleton-text {
+    height: 1em;
+    margin-bottom: 0.5em;
+}
+
+.skeleton-title {
+    height: 1.5em;
+    width: 60%;
+    margin-bottom: 1em;
+}
+
+.skeleton-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+/* Spinner Enhancement */
+.spinner-border {
+    border-width: 3px;
+}
+
+.spinner-grow {
+    background: var(--gradient-primary);
+}
+
+/* ==========================================
+   Scroll Customization
+   ========================================== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--sc-slate-100);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--sc-slate-400);
+    border-radius: 4px;
+    transition: background var(--transition-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--sc-slate-500);
+}
+
+/* ==========================================
+   Utility Classes
+   ========================================== */
+.text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.bg-gradient-primary { background: var(--gradient-primary) !important; }
+.bg-gradient-success { background: var(--gradient-success) !important; }
+.bg-gradient-accent { background: var(--gradient-accent) !important; }
+.bg-gradient-dark { background: var(--gradient-dark) !important; }
+
+.shadow-glow-primary { box-shadow: var(--shadow-glow-primary) !important; }
+.shadow-glow-success { box-shadow: var(--shadow-glow-success) !important; }
+.shadow-glow-accent { box-shadow: var(--shadow-glow-accent) !important; }
+
+.hover-lift {
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.hover-scale {
+    transition: transform var(--transition-fast);
+}
+
+.hover-scale:hover {
+    transform: scale(1.02);
+}
+
+/* Glass Effect */
+.glass {
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-dark {
+    background: rgba(30, 41, 59, 0.8) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Gradient Border */
+.gradient-border {
+    position: relative;
+    background: var(--sc-white);
+    border-radius: 12px;
+}
+
+.gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 14px;
+    padding: 2px;
+    background: var(--gradient-primary);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+/* ==========================================
+   Page Content İyileştirmeleri
+   ========================================== */
+.page-title-box {
+    animation: fadeIn 0.5s ease;
+}
+
+.page-title-box h4 {
+    font-weight: 600;
+    color: var(--sc-slate-700);
+}
+
+/* ==========================================
+   Chart Container İyileştirmeleri
+   ========================================== */
+.apex-charts {
+    padding: 0.5rem;
+}
+
+.apexcharts-tooltip {
+    border: none !important;
+    border-radius: 10px !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+.apexcharts-tooltip-title {
+    background: var(--sc-slate-100) !important;
+    border-bottom: 1px solid var(--sc-slate-200) !important;
+}
+
+/* ==========================================
+   Responsive İyileştirmeler
+   ========================================== */
+@media (max-width: 768px) {
+    .card {
+        border-radius: 12px !important;
+    }
+    
+    .card-body {
+        padding: 1rem !important;
+    }
+    
+    .btn {
+        padding: 0.65rem 1rem !important;
+    }
+    
+    .table thead th,
+    .table tbody td {
+        padding: 0.75rem 1rem !important;
+    }
+}
+
+/* ==========================================
+   Dark Mode Support (Opsiyonel)
+   ========================================== */
+@media (prefers-color-scheme: dark) {
+    .dark-mode-auto {
+        --sc-white: #1E293B;
+        --sc-slate-100: #334155;
+        --sc-slate-200: #475569;
+    }
+}
+
+/* ==========================================
+   Print Styles
+   ========================================== */
+@media print {
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+    
+    .btn,
+    .sidebar-left,
+    #page-topbar {
+        display: none !important;
+    }
+}
+
+/* ==========================================
+   Global Pagination & SVG Icon Size Fix
+   ========================================== */
+nav svg,
+.pagination svg,
+svg.w-5,
+svg.h-5,
+svg.w-6,
+svg.h-6,
+svg[class*="w-"],
+svg[class*="h-"] {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    max-width: 20px !important;
+    max-height: 20px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    flex-shrink: 0 !important;
+}
+
+.pagination {
+    display: flex !important;
+    padding-left: 0 !important;
+    list-style: none !important;
+    border-radius: 0.375rem !important;
+    margin-bottom: 0 !important;
+    gap: 4px !important;
+}
+
+.page-link {
+    position: relative !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.375rem 0.75rem !important;
+    font-size: 0.875rem !important;
+    text-decoration: none !important;
+    border-radius: 0.375rem !important;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out !important;
+}
+
+/* ==========================================
+   Comprehensive Badge & Theme Color Fixes
+   ========================================== */
+
+/* 1. Translucent Hero Banners & Badges */
+.sales-acc-hero-banner .badge,
+.hero-banner .badge,
+.badge.bg-white.bg-opacity-20,
+.badge.bg-white.bg-opacity-25,
+.badge.bg-white-20,
+.hero-badge-light {
+    background-color: rgba(255, 255, 255, 0.18) !important;
+    color: #ffffff !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.sales-acc-hero-banner .badge i,
+.hero-banner .badge i,
+.badge.bg-white.bg-opacity-20 i,
+.badge.bg-white.bg-opacity-25 i,
+.hero-badge-light i {
+    color: #ffffff !important;
+}
+
+/* 2. Code, Invoice & Monospace Table Badges */
+.badge.bg-dark.bg-opacity-10,
+.badge-code,
+.badge-subtle-dark {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.3px;
+}
+
+html[data-bs-theme="light"] .badge.bg-dark.bg-opacity-10,
+:root:not([data-bs-theme="dark"]) .badge.bg-dark.bg-opacity-10,
+html[data-bs-theme="light"] .badge-code,
+:root:not([data-bs-theme="dark"]) .badge-code {
+    background-color: #f1f5f9 !important;
+    color: #334155 !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+html[data-bs-theme="dark"] .badge.bg-dark.bg-opacity-10,
+html[data-bs-theme="dark"] .badge-code {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #f8fafc !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* 3. General bg-opacity-10 Soft Badges */
+.badge.bg-success.bg-opacity-10 {
+    background-color: rgba(16, 185, 129, 0.12) !important;
+    color: #059669 !important;
+    border: 1px solid rgba(16, 185, 129, 0.25) !important;
+}
+html[data-bs-theme="dark"] .badge.bg-success.bg-opacity-10 {
+    background-color: rgba(16, 185, 129, 0.2) !important;
+    color: #34d399 !important;
+    border: 1px solid rgba(52, 211, 153, 0.35) !important;
+}
+
+.badge.bg-warning.bg-opacity-10 {
+    background-color: rgba(245, 158, 11, 0.12) !important;
+    color: #d97706 !important;
+    border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+html[data-bs-theme="dark"] .badge.bg-warning.bg-opacity-10 {
+    background-color: rgba(245, 158, 11, 0.2) !important;
+    color: #fbbf24 !important;
+    border: 1px solid rgba(251, 191, 36, 0.35) !important;
+}
+
+.badge.bg-danger.bg-opacity-10 {
+    background-color: rgba(239, 68, 68, 0.12) !important;
+    color: #dc2626 !important;
+    border: 1px solid rgba(239, 68, 68, 0.25) !important;
+}
+html[data-bs-theme="dark"] .badge.bg-danger.bg-opacity-10 {
+    background-color: rgba(239, 68, 68, 0.2) !important;
+    color: #f87171 !important;
+    border: 1px solid rgba(248, 113, 113, 0.35) !important;
+}
+
+.badge.bg-primary.bg-opacity-10 {
+    background-color: rgba(59, 130, 246, 0.12) !important;
+    color: #2563eb !important;
+    border: 1px solid rgba(59, 130, 246, 0.25) !important;
+}
+html[data-bs-theme="dark"] .badge.bg-primary.bg-opacity-10 {
+    background-color: rgba(59, 130, 246, 0.2) !important;
+    color: #60a5fa !important;
+    border: 1px solid rgba(96, 165, 250, 0.35) !important;
+}
+
+.badge.bg-emerald.bg-opacity-10 {
+    background-color: rgba(5, 150, 105, 0.12) !important;
+    color: #059669 !important;
+    border: 1px solid rgba(5, 150, 105, 0.25) !important;
+}
+html[data-bs-theme="dark"] .badge.bg-emerald.bg-opacity-10 {
+    background-color: rgba(5, 150, 105, 0.2) !important;
+    color: #34d399 !important;
+    border: 1px solid rgba(52, 211, 153, 0.35) !important;
+}
+
+.badge.bg-indigo.bg-opacity-10 {
+    background-color: rgba(99, 102, 241, 0.12) !important;
+    color: #4f46e5 !important;
+    border: 1px solid rgba(99, 102, 241, 0.25) !important;
+}
+html[data-bs-theme="dark"] .badge.bg-indigo.bg-opacity-10 {
+    background-color: rgba(99, 102, 241, 0.2) !important;
+    color: #818cf8 !important;
+    border: 1px solid rgba(129, 140, 248, 0.35) !important;
+}
+
+/* 4. Text and Label Colors in Light & Dark Mode */
+.text-emerald {
+    color: #059669 !important;
+}
+html[data-bs-theme="dark"] .text-emerald {
+    color: #34d399 !important;
+}
+
+html[data-bs-theme="dark"] .text-dark {
+    color: #f8fafc !important;
+}
+
+/* Glass card fine-tuning */
+html[data-bs-theme="light"] .sales-acc-glass-card,
+:root:not([data-bs-theme="dark"]) .sales-acc-glass-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+html[data-bs-theme="dark"] .sales-acc-glass-card {
+    background: rgba(30, 41, 59, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* ==========================================
+   ULTRA HIGH-CONTRAST AMBER / ORANGE SYSTEM
+   ========================================== */
+
+/* Root Variables Override */
+:root {
+    --sc-primary: #d97706;
+    --sc-primary-light: #f59e0b;
+    --sc-primary-dark: #b45309;
+    --sc-warning: #d97706;
+    --sc-warning-dark: #b45309;
+    --sc-warning-light: #fcd34d;
+    --gradient-primary: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+}
+
+/* 1. High-Contrast Warning & Amber Buttons */
+.btn-warning,
+.btn-amber {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25) !important;
+}
+
+.btn-warning:hover,
+.btn-amber:hover {
+    background: linear-gradient(135deg, #b45309 0%, #92400e 100%) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(180, 83, 9, 0.35) !important;
+}
+
+.btn-warning i,
+.btn-warning span,
+.btn-warning *,
+.btn-amber i,
+.btn-amber span,
+.btn-amber * {
+    color: #ffffff !important;
+}
+
+.btn-warning.text-dark,
+.btn-warning.text-white {
+    color: #ffffff !important;
+}
+
+.btn-outline-warning,
+.btn-outline-amber {
+    border: 2px solid #d97706 !important;
+    color: #b45309 !important;
+    background: transparent !important;
+    font-weight: 700 !important;
+}
+
+.btn-outline-warning:hover,
+.btn-outline-amber:hover {
+    background: #d97706 !important;
+    color: #ffffff !important;
+}
+
+html[data-bs-theme="dark"] .btn-outline-warning,
+html[data-bs-theme="dark"] .btn-outline-amber {
+    border-color: #f59e0b !important;
+    color: #fbbf24 !important;
+}
+
+/* 2. Soft Warning / Amber Icon Containers & Badges */
+.bg-warning,
+.bg-soft-warning,
+.st-kpi-icon.bg-warning,
+.stat-icon.bg-warning,
+.bg-warning.bg-opacity-10,
+.badge.bg-warning.bg-opacity-10,
+.avatar-title.bg-warning,
+.avatar-title.bg-warning-subtle {
+    background-color: rgba(217, 119, 6, 0.14) !important;
+    color: #b45309 !important;
+    border: 1px solid rgba(217, 119, 6, 0.25) !important;
+}
+
+.bg-warning i,
+.bg-soft-warning i,
+.st-kpi-icon.bg-warning i,
+.stat-icon.bg-warning i,
+.bg-warning.bg-opacity-10 i,
+.avatar-title.bg-warning i,
+.avatar-title.bg-warning-subtle i {
+    color: #b45309 !important;
+}
+
+html[data-bs-theme="dark"] .bg-warning,
+html[data-bs-theme="dark"] .bg-soft-warning,
+html[data-bs-theme="dark"] .st-kpi-icon.bg-warning,
+html[data-bs-theme="dark"] .stat-icon.bg-warning,
+html[data-bs-theme="dark"] .bg-warning.bg-opacity-10,
+html[data-bs-theme="dark"] .badge.bg-warning.bg-opacity-10,
+html[data-bs-theme="dark"] .avatar-title.bg-warning,
+html[data-bs-theme="dark"] .avatar-title.bg-warning-subtle {
+    background-color: rgba(245, 158, 11, 0.2) !important;
+    color: #fbbf24 !important;
+    border: 1px solid rgba(251, 191, 36, 0.35) !important;
+}
+
+html[data-bs-theme="dark"] .bg-warning i,
+html[data-bs-theme="dark"] .bg-soft-warning i,
+html[data-bs-theme="dark"] .st-kpi-icon.bg-warning i,
+html[data-bs-theme="dark"] .stat-icon.bg-warning i,
+html[data-bs-theme="dark"] .bg-warning.bg-opacity-10 i,
+html[data-bs-theme="dark"] .avatar-title.bg-warning i,
+html[data-bs-theme="dark"] .avatar-title.bg-warning-subtle i {
+    color: #fbbf24 !important;
+}
+
+/* 3. Text Warning & Metric Contrast Fix */
+.text-warning,
+.text-amber {
+    color: #b45309 !important;
+    font-weight: 600;
+}
+
+html[data-bs-theme="dark"] .text-warning,
+html[data-bs-theme="dark"] .text-amber {
+    color: #fbbf24 !important;
+}
+
+/* 4. Solid Warning / Amber Badges (e.g., Pill Badges) */
+.badge.bg-warning:not(.bg-opacity-10),
+.badge.badge-warning {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 6px rgba(217, 119, 6, 0.2) !important;
+}
+
+/* ==========================================
+   PRIMARY COLOR & SOFT ICON CONTAINER FIXES
+   ========================================== */
+
+/* 1. Primary Buttons */
+.btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(29, 78, 216, 0.35) !important;
+}
+
+.btn-primary i,
+.btn-primary span,
+.btn-primary * {
+    color: #ffffff !important;
+}
+
+.btn-outline-primary {
+    border: 2px solid #2563eb !important;
+    color: #2563eb !important;
+    background: transparent !important;
+    font-weight: 600 !important;
+}
+
+.btn-outline-primary:hover {
+    background: #2563eb !important;
+    color: #ffffff !important;
+}
+
+html[data-bs-theme="dark"] .btn-outline-primary {
+    border-color: #3b82f6 !important;
+    color: #60a5fa !important;
+}
+
+/* 2. Primary Soft Containers & Avatars (Fixes Solid Orange Squares) */
+.bg-primary,
+.bg-soft-primary,
+.bg-primary.bg-opacity-10,
+.badge.bg-primary.bg-opacity-10,
+.avatar-title.bg-primary,
+.avatar-title.bg-primary-subtle,
+.avatar-md.bg-primary,
+.avatar-md.bg-primary-subtle,
+.doc-stat-icon.bg-primary,
+.st-kpi-icon.bg-primary {
+    background-color: rgba(37, 99, 235, 0.12) !important;
+    color: #2563eb !important;
+    border: 1px solid rgba(37, 99, 235, 0.22) !important;
+}
+
+.bg-primary i,
+.bg-soft-primary i,
+.bg-primary.bg-opacity-10 i,
+.avatar-title.bg-primary i,
+.avatar-title.bg-primary-subtle i,
+.avatar-md.bg-primary i,
+.avatar-md.bg-primary-subtle i,
+.doc-stat-icon.bg-primary i,
+.st-kpi-icon.bg-primary i {
+    color: #2563eb !important;
+}
+
+html[data-bs-theme="dark"] .bg-primary,
+html[data-bs-theme="dark"] .bg-soft-primary,
+html[data-bs-theme="dark"] .bg-primary.bg-opacity-10,
+html[data-bs-theme="dark"] .badge.bg-primary.bg-opacity-10,
+html[data-bs-theme="dark"] .avatar-title.bg-primary,
+html[data-bs-theme="dark"] .avatar-title.bg-primary-subtle,
+html[data-bs-theme="dark"] .avatar-md.bg-primary,
+html[data-bs-theme="dark"] .avatar-md.bg-primary-subtle,
+html[data-bs-theme="dark"] .doc-stat-icon.bg-primary,
+html[data-bs-theme="dark"] .st-kpi-icon.bg-primary {
+    background-color: rgba(59, 130, 246, 0.2) !important;
+    color: #60a5fa !important;
+    border: 1px solid rgba(96, 165, 250, 0.3) !important;
+}
+
+html[data-bs-theme="dark"] .bg-primary i,
+html[data-bs-theme="dark"] .bg-soft-primary i,
+html[data-bs-theme="dark"] .bg-primary.bg-opacity-10 i,
+html[data-bs-theme="dark"] .avatar-title.bg-primary i,
+html[data-bs-theme="dark"] .avatar-title.bg-primary-subtle i,
+html[data-bs-theme="dark"] .avatar-md.bg-primary i,
+html[data-bs-theme="dark"] .avatar-md.bg-primary-subtle i,
+html[data-bs-theme="dark"] .doc-stat-icon.bg-primary i,
+html[data-bs-theme="dark"] .st-kpi-icon.bg-primary i {
+    color: #60a5fa !important;
+}
+
+/* 3. Text Primary Color */
+.text-primary {
+    color: #2563eb !important;
+}
+
+html[data-bs-theme="dark"] .text-primary {
+    color: #60a5fa !important;
+}
+
+/* 4. Solid Primary Badges */
+.badge.bg-primary:not(.bg-opacity-10) {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+/* 5. Floating Right Sidebar Trigger Bar Fix */
+.custom-setting {
+    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-right: none !important;
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+.custom-setting .btn {
+    color: #ffffff !important;
+    background: transparent !important;
+}
+
+.custom-setting .btn:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #60a5fa !important;
+}
+
+.custom-setting .btn i {
+    color: #ffffff !important;
+}
+
+.custom-setting .btn:hover i {
+    color: #60a5fa !important;
+}
+
+/* 6. Hero Banner Light & Outline Light Buttons Fix */
+.btn-light,
+.btn-white {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #0f172a !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.btn-light:hover,
+.btn-white:hover {
+    background-color: #f8fafc !important;
+    border-color: #f8fafc !important;
+    color: #2563eb !important;
+    transform: translateY(-2px);
+}
+
+.btn-outline-light {
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(4px);
+}
+
+.btn-outline-light:hover {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #ffffff !important;
+}
+
+.btn-outline-light:hover * {
+    color: #0f172a !important;
+}
+
+/* ==========================================================================
+   UNIVERSAL HERO BANNER HIGH-CONTRAST & ROYAL SLATE DESIGN SYSTEM FIX
+   ========================================================================== */
+.sales-acc-hero-banner, .site-hero-banner, .crm-hero-banner, .dashboard-hero-banner {
+    background: var(--pt-card-bg, linear-gradient(135deg, #0f172a 0%, #1e293b 100%)) !important;
+    border-radius: 20px !important;
+    border: 1px solid var(--pt-card-border, rgba(255, 255, 255, 0.1)) !important;
+    box-shadow: var(--pt-card-shadow, 0 15px 35px rgba(15, 23, 42, 0.35)) !important;
+    padding: 28px 32px !important;
+    margin-bottom: 24px !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.sales-acc-hero-banner::before, .site-hero-banner::before, .crm-hero-banner::before, .dashboard-hero-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--pt-primary, #f59e0b), #3b82f6, #10b981, var(--pt-primary, #f59e0b));
+    background-size: 300% 100%;
+    animation: globalHeroGlow 4s linear infinite;
+}
+
+@keyframes globalHeroGlow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+}
+
+
+
+
+
+

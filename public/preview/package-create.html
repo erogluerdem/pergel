@@ -1,0 +1,1062 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title> Yeni İhale Paketi Oluştur | Pergel - Admin & Dashboard Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="Codebucks" name="author" />
+    <!-- App favicon & Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+    <!-- include head css -->
+    <script src="http://localhost/build/js/pages/layout.js"></script>
+<!-- Bootstrap Css -->
+<link href="http://localhost/build/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+<!-- Icons Css -->
+<link href="http://localhost/build/css/icons.min.css" rel="stylesheet" type="text/css" />
+<!-- Material Design Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+<!-- App Css-->
+<link href="http://localhost/build/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+
+<!-- Accordion CSS for left sidebar -->
+<link href="http://localhost/css/accordion.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <!-- Begin page -->
+    <div id="layout-wrapper">
+        <!-- topbar -->
+        <!-- Start topbar -->
+<header id="page-topbar">
+    <div class="navbar-header">
+
+        <!-- Logo -->
+
+        <!-- Start Navbar-Brand -->
+        <div class="navbar-logo-box">
+            <a href="http://localhost/index" class="logo logo-dark">
+                <span class="logo-sm">
+                    <img src="http://localhost/build/images/logo-sm.png" alt="logo-sm-dark" height="20">
+                </span>
+                <span class="logo-lg">
+                    <img src="http://localhost/build/images/logo-dark.png" alt="logo-dark" height="18">
+                </span>
+            </a>
+
+            <a href="http://localhost/index" class="logo logo-light">
+                <span class="logo-sm">
+                    <img src="http://localhost/build/images/logo-sm.png" alt="logo-sm-light" height="20">
+                </span>
+                <span class="logo-lg">
+                    <img src="http://localhost/build/images/logo-light.png" alt="logo-light" height="18">
+                </span>
+            </a>
+
+            <button type="button" class="btn btn-sm top-icon sidebar-btn" id="sidebar-btn">
+                <i class="mdi mdi-menu-open align-middle fs-19"></i>
+            </button>
+        </div>
+        <!-- End navbar brand -->
+
+        <!-- Start menu -->
+        <div class="d-flex justify-content-between menu-sm px-3 ms-auto">
+            <div class="d-flex align-items-center gap-2">
+                <div class="dropdown d-none d-lg-block">
+                    <button type="button" class="btn btn-primary btn-sm fs-14 d-inline" data-bs-toggle="dropdown">
+                        Apps
+                        <i class="mdi mdi-chevron-down align-middle"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-start dropdown-menu-animated">
+                        <a href="#" class="dropdown-item">
+                            <div class="dropdown-icon"><i class="fa fa-boxes"></i></div>
+                            <span class="dropdown-content">Inventory Manager</span>
+                            <div class="dropdown-addon"><span class="badge badge-warning rounded-pill">20</span></div>
+                        </a>
+                        <div class="dropdown-submenu">
+                            <a href="#" class="dropdown-item">
+                                <div class="dropdown-icon"><i class="fa fa-project-diagram"></i></div>
+                                <span class="dropdown-content">Project manager</span>
+                                <div class="dropdown-addon"><i class="mdi mdi-chevron-right align-middle"></i></div>
+                            </a>
+                            <div class="dropdown-submenu-menu dropdown-submenu-end">
+                                <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
+                                        class="dropdown-content">Create project</span> </a>
+                                <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
+                                        class="dropdown-content">Delete project</span> </a>
+                                <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
+                                        class="dropdown-content">Ongoing project</span> </a>
+                                <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
+                                        class="dropdown-content">Completed project</span> </a>
+                                <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
+                                        class="dropdown-content">Urgent project</span></a>
+                            </div>
+                        </div>
+                        <div class="dropdown-submenu">
+                            <a href="#" class="dropdown-item">
+                                <div class="dropdown-icon"><i class="fa fa-tasks"></i></div>
+                                <span class="dropdown-content">Task manager</span>
+                                <div class="dropdown-addon"><i class="mdi mdi-chevron-right align-middle"></i></div>
+                            </a>
+                            <div class="dropdown-submenu-menu dropdown-submenu-end">
+                                <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
+                                        class="dropdown-content">Show task</span> </a>
+                                <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
+                                        class="dropdown-content">Assign task</span> </a>
+                                <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
+                                        class="dropdown-content">Assign member</span> </a>
+                                <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
+                                        class="dropdown-content">Completed task</span> </a>
+                                <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
+                                        class="dropdown-content">Urgent task</span></a>
+                            </div>
+                        </div>
+                        <a href="#" class="dropdown-item">
+                            <div class="dropdown-icon"><i class="fa fa-dollar-sign"></i></div>
+                            <span class="dropdown-content">Invoice</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="http://localhost/apps-contact" class="dropdown-item">
+                            <div class="dropdown-icon"><i class="fa fa-user-cog"></i></div>
+                            <span class="dropdown-content">My Account</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="dropdown d-none d-lg-block">
+                    <button type="button" class="btn btn-primary btn-sm fs-14" data-bs-toggle="dropdown"
+                        aria-haspopup="false" aria-expanded="false">
+                        Features
+                        <i class="mdi mdi-chevron-down align-middle"></i>
+                    </button>
+                    <div
+                        class="dropdown-menu dropdown-menu-start dropdown-menu-lg-widest dropdown-menu-widest dropdown-menu-animated bg-primary-subtle overflow-hidden">
+                        <div class="dropdown-row justify-content-center">
+                            <div class="p-2 menu-image">
+                                <img src="http://localhost/build/images/mega-menu.png" alt="mega-menu image"
+                                    class="img-fluid" style="height: 200px;">
+                            </div>
+                            <div class="dropdown-col">
+                                <h2 class="">Welcome back!</h2>
+                                <p class="text-muted mb-0">
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium, commodi hic
+                                    qui aspernatur doloremque quos tempora placeat culpa illum, voluptatibus delectus
+                                    provident cumque
+                                    aliquid enim, laborum aliquam. Quod, perferendis unde.
+                                </p>
+                                <div class="mt-3">
+                                    <a href="http://localhost/auth-login" class="btn btn-dark btn-wider">Login</a>
+                                </div>
+                            </div>
+                            <div class="dropdown-col border-start border-primary border-opacity-50">
+                                <h4 class="dropdown-header">Features</h4>
+                                <div class="grid-nav grid-nav-action">
+                                    <div class="grid-nav-row">
+                                        <a href="http://localhost/index" class="grid-nav-item">
+                                            <div class="grid-nav-icon"><i class="far fa-window-restore"></i></div>
+                                            <span class="grid-nav-content">Dashboard</span>
+                                        </a>
+                                        <a href="http://localhost/apps-kanban" class="grid-nav-item">
+                                            <div class="grid-nav-icon"><i class="far fa-clipboard"></i></div>
+                                            <span class="grid-nav-content">TODO List</span>
+                                        </a>
+                                        <a href="#" class="grid-nav-item">
+                                            <div class="grid-nav-icon"><i class="far fa-question-circle"></i></div>
+                                            <span class="grid-nav-content">Help Center</span>
+                                        </a>
+                                    </div>
+                                    <div class="grid-nav-row">
+                                        <a href="#" class="grid-nav-item">
+                                            <div class="grid-nav-icon"><i class="far fa-images"></i></div>
+                                            <span class="grid-nav-content">Gallery</span>
+                                        </a>
+                                        <a href="#" class="grid-nav-item">
+                                            <div class="grid-nav-icon"><i class="far fa-chart-bar"></i></div>
+                                            <span class="grid-nav-content">Scrumboard</span>
+                                        </a>
+                                        <a href="#" class="grid-nav-item">
+                                            <div class="grid-nav-icon"><i class="far fa-bookmark"></i></div>
+                                            <span class="grid-nav-content">Docs</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dropdown-col border-start border-primary border-opacity-50">
+                                <h4 class="dropdown-header">Tools</h4>
+                                <a href="#" class="dropdown-item"><i
+                                        class="mdi mdi-checkbox-blank-circle align-middle dropdown-bullet me-2"></i>
+                                    <span class="dropdown-content">Components</span> </a>
+                                <a href="#" class="dropdown-item"><i
+                                        class="mdi mdi-checkbox-blank-circle align-middle dropdown-bullet me-2"></i>
+                                    <span class="dropdown-content">Form Wizard</span> </a>
+                                <a href="#" class="dropdown-item"><i
+                                        class="mdi mdi-checkbox-blank-circle align-middle dropdown-bullet me-2"></i>
+                                    <span class="dropdown-content">Documentation</span> </a>
+                                <a href="#" class="dropdown-item"><i
+                                        class="mdi mdi-checkbox-blank-circle align-middle dropdown-bullet me-2"></i>
+                                    <span class="dropdown-content">Knowledge Base</span> </a>
+                                <a href="#" class="dropdown-item"><i
+                                        class="mdi mdi-checkbox-blank-circle align-middle dropdown-bullet me-2"></i>
+                                    <span class="dropdown-content">Inventory Manager</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <!--Start App Search-->
+                <form class="app-search d-none d-lg-block">
+                    <div class="position-relative">
+                        <input type="text" class="form-control" placeholder="Search...">
+                        <span class="fab fa-sistrix fs-17 align-middle"></span>
+                    </div>
+                </form>
+                <!--End App Search-->
+
+                <!-- Start Notification -->
+                <div class="dropdown d-inline-block">
+                    <button type="button" class="btn btn-sm top-icon" id="page-header-notifications-dropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell align-middle"></i>
+                        <span class="btn-marker"><i class="marker marker-dot text-danger"></i><span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-md dropdown-menu-end p-0"
+                        aria-labelledby="page-header-notifications-dropdown">
+                        <div class="p-3 bg-info">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h6 class="text-white m-0"><i class="far fa-bell me-2"></i> Notifications </h6>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="#!" class="badge bg-info-subtle text-info"> 8+</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-simplebar style="max-height: 230px;">
+                            <a href="" class="text-reset notification-item">
+                                <div class="d-flex">
+                                    <div class="avatar avatar-xs avatar-label-primary me-3">
+                                        <span class="rounded fs-16">
+                                            <i class="mdi mdi-file-document-outline"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h6 class="mb-1">New report has been recived</h6>
+                                        <div class="fs-12 text-muted">
+                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 3 min ago</p>
+                                        </div>
+                                    </div>
+                                    <i class="mdi mdi-chevron-right align-middle ms-2"></i>
+                                </div>
+                            </a>
+                            <a href="" class="text-reset notification-item">
+                                <div class="d-flex">
+                                    <div class="avatar avatar-xs avatar-label-success me-3">
+                                        <span class="rounded fs-16">
+                                            <i class="mdi mdi-cart-variant"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h6 class="mb-1">Last order was completed</h6>
+                                        <div class="fs-12 text-muted">
+                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 1 hour ago</p>
+                                        </div>
+                                    </div>
+                                    <i class="mdi mdi-chevron-right align-middle ms-2"></i>
+                                </div>
+                            </a>
+                            <a href="" class="text-reset notification-item">
+                                <div class="d-flex">
+                                    <div class="avatar avatar-xs avatar-label-danger me-3">
+                                        <span class="rounded fs-16">
+                                            <i class="mdi mdi-account-group"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h6 class="mb-1">Completed meeting canceled</h6>
+                                        <div class="fs-12 text-muted">
+                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 5 hour ago</p>
+                                        </div>
+                                    </div>
+                                    <i class="mdi mdi-chevron-right align-middle ms-2"></i>
+                                </div>
+                            </a>
+                            <a href="" class="text-reset notification-item">
+                                <div class="d-flex">
+                                    <div class="avatar avatar-xs avatar-label-warning me-3">
+                                        <span class="rounded fs-16">
+                                            <i class="mdi mdi-send-outline"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h6 class="mb-1">New feedback received</h6>
+                                        <div class="fs-12 text-muted">
+                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 6 hour ago</p>
+                                        </div>
+                                    </div>
+                                    <i class="mdi mdi-chevron-right align-middle ms-2"></i>
+                                </div>
+                            </a>
+                            <a href="" class="text-reset notification-item">
+                                <div class="d-flex">
+                                    <div class="avatar avatar-xs avatar-label-secondary me-3">
+                                        <span class="rounded fs-16">
+                                            <i class="mdi mdi-download-box"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h6 class="mb-1">New update was available</h6>
+                                        <div class="fs-12 text-muted">
+                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 1 day ago</p>
+                                        </div>
+                                    </div>
+                                    <i class="mdi mdi-chevron-right align-middle ms-2"></i>
+                                </div>
+                            </a>
+                            <a href="" class="text-reset notification-item">
+                                <div class="d-flex">
+                                    <div class="avatar avatar-xs avatar-label-info me-3">
+                                        <span class="rounded fs-16">
+                                            <i class="mdi mdi-hexagram-outline"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h6 class="mb-1">Your password was changed</h6>
+                                        <div class="fs-12 text-muted">
+                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 2 day ago</p>
+                                        </div>
+                                    </div>
+                                    <i class="mdi mdi-chevron-right align-middle ms-2"></i>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="p-2 border-top">
+                            <div class="d-grid">
+                                <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
+                                    <i class="mdi mdi-arrow-right-circle me-1"></i> View More..
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Notification -->
+
+                <!-- Start Activities -->
+                <div class="d-inline-block activities">
+                    <button type="button" class="btn btn-sm top-icon" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvas-rightsidabar">
+                        <i class="fas fa-table align-middle"></i>
+                    </button>
+                </div>
+                <!-- End Activities -->
+
+                <!-- Start Profile -->
+                <div class="dropdown d-inline-block">
+                    <button type="button" class="btn btn-sm top-icon p-0" id="page-header-user-dropdown"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="rounded avatar-2xs p-0" src="http://localhost/build/images/users/avatar-6.png"
+                            alt="Header Avatar">
+                    </button>
+                    <div
+                        class="dropdown-menu dropdown-menu-wide dropdown-menu-end dropdown-menu-animated overflow-hidden py-0">
+                        <div class="card border-0">
+                            <div class="card-header bg-primary rounded-0">
+                                <div class="rich-list-item w-100 p-0">
+                                    <div class="rich-list-prepend">
+                                        <div class="avatar avatar-label-light avatar-circle">
+                                            <div class="avatar-display"><i class="fa fa-user-alt"></i></div>
+                                        </div>
+                                    </div>
+                                    <div class="rich-list-content">
+                                        <h3 class="rich-list-title text-white">Charlie Stone</h3>
+                                        <span class="rich-list-subtitle text-white">admin@codubucks.in</span>
+                                    </div>
+                                    <div class="rich-list-append"><span class="badge badge-label-light fs-6">6+</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="grid-nav grid-nav-flush grid-nav-action grid-nav-no-rounded">
+                                    <div class="grid-nav-row">
+                                        <a href="http://localhost/apps-contact" class="grid-nav-item">
+                                            <div class="grid-nav-icon"><i class="far fa-address-card"></i></div>
+                                            <span class="grid-nav-content">Profile</span>
+                                        </a>
+                                        <a href="#!" class="grid-nav-item">
+                                            <div class="grid-nav-icon"><i class="far fa-comments"></i></div>
+                                            <span class="grid-nav-content">Messages</span>
+                                        </a>
+                                        <a href="#!" class="grid-nav-item">
+                                            <div class="grid-nav-icon"><i class="far fa-clone"></i></div>
+                                            <span class="grid-nav-content">Activities</span>
+                                        </a>
+                                    </div>
+                                    <div class="grid-nav-row">
+                                        <a href="#!" class="grid-nav-item">
+                                            <div class="grid-nav-icon"><i class="far fa-calendar-check"></i></div>
+                                            <span class="grid-nav-content">Tasks</span>
+                                        </a>
+                                        <a href="#!" class="grid-nav-item">
+                                            <div class="grid-nav-icon"><i class="far fa-sticky-note"></i></div>
+                                            <span class="grid-nav-content">Notes</span>
+                                        </a>
+                                        <a href="#!" class="grid-nav-item">
+                                            <div class="grid-nav-icon"><i class="far fa-bell"></i></div>
+                                            <span class="grid-nav-content">Notification</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer card-footer-bordered rounded-0"><a href="http://localhost/auth-login"
+                                    class="btn btn-label-danger">Sign out</a></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Profile -->
+            </div>
+        </div>
+        <!-- End menu -->
+    </div>
+</header>
+<!-- End topbar -->
+        <!-- sidebar components -->
+        <style>
+    .left-menu .has-arrow>span,
+    .left-menu a>span {
+        white-space: normal;  /* Metinlerin alt satıra geçmesine izin ver */
+        word-break: break-word; /* Gerekirse kelimeleri bölerek satır sonu yap */
+        display: inline-block;
+        max-width: 170px;     /* Metin alanının maksimum genişliği (Sidebar genişliğine göre ayarlanabilir) */
+        line-height: 1.3;     /* Satır yüksekliği */
+        vertical-align: middle;
+        margin-top: -4px;
+        padding-bottom: 4px;
+    }
+    .left-menu i {
+        vertical-align: middle;
+        margin-top: -3px;
+    }
+</style>
+
+<!-- ========== Left Sidebar Start ========== -->
+<div class="sidebar-left">
+    <div data-simplebar class="h-100">
+        <div id="sidebar-menu">
+            <!-- Left Menu Start -->
+            <ul class="left-menu list-unstyled" id="side-menu">
+
+                <li>
+                    <a href="http://localhost/dashboard" class="">
+                        <i class="fas fa-desktop"></i>
+                        <span>Ana Panel</span>
+                    </a>
+                </li>
+
+                <li class="menu-title">PLATFORM MODÜLLERİ</li>
+
+                
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow " aria-expanded="false">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Portföy & Fırsat</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow " aria-expanded="false">
+                                <i class="mdi mdi-checkbox-blank-circle align-middle"></i>
+                                <span>Portföy Yönetimi</span>
+                            </a>
+                            <ul class="sub-menu" aria-expanded="false">
+                                <li><a href="http://localhost/portfolio/management" class=""><i class="mdi mdi-circle-outline"></i> Portföy Yönetimi</a></li>
+                                <li><a href="http://localhost/portfolio/all-projects" class=""><i class="mdi mdi-circle-outline"></i> Tüm Projeler</a></li>
+                                <li><a href="http://localhost/portfolio/program-management" class=""><i class="mdi mdi-circle-outline"></i> Program Yönetimi</a></li>
+                                <li><a href="http://localhost/portfolio/financials" class=""><i class="mdi mdi-circle-outline"></i> Portföy Finansalları</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow " aria-expanded="false">
+                                <i class="mdi mdi-checkbox-blank-circle align-middle"></i>
+                                <span>İhale Yönetimi</span>
+                            </a>
+                            <ul class="sub-menu" aria-expanded="false">
+                                <li><a href="http://localhost/opportunities" class=""><i class="mdi mdi-circle-outline"></i> Potansiyel Projeler</a></li>
+                                <li><a href="http://localhost/portfolio/tenders/feasibility-capital" class=""><i class="mdi mdi-circle-outline"></i> Fizibilite Planlama</a></li>
+                                <li><a href="http://localhost/portfolio/tenders/package-prepare" class=""><i class="mdi mdi-circle-outline"></i> İhale Paketi Hazırla</a></li>
+                                <li><a href="http://localhost/portfolio/tenders/bid-management" class=""><i class="mdi mdi-circle-outline"></i> Teklif Yönetimi</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+                
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow " aria-expanded="false">
+                        <i class="fas fa-tasks"></i>
+                        <span>Proje Yönetimi</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="http://localhost/projects/documents" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Doküman Kontrolü</a></li>
+                        <li><a href="http://localhost/projects/planning" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Planlama</a></li>
+                        <li><a href="http://localhost/projects/communication" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> İletişim</a></li>
+                    </ul>
+                </li>
+
+                
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow " aria-expanded="false">
+                        <i class="fas fa-cube"></i>
+                        <span>BIM & Dijital İkiz</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="http://localhost/bim/models" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Model Yönetimi</a></li>
+                        <li><a href="http://localhost/bim/simulations" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Simülasyonlar</a></li>
+                    </ul>
+                </li>
+
+                
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow " aria-expanded="false">
+                        <i class="fas fa-wallet"></i>
+                        <span>Maliyet & Finans</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="http://localhost/cost/budget" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Bütçe Kontrolü</a></li>
+                        <li><a href="http://localhost/cost/payments" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Hakedişler</a></li>
+                        <li><a href="http://localhost/cost/erp" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> ERP Entegrasyonu</a></li>
+                    </ul>
+                </li>
+
+                
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow " aria-expanded="false">
+                        <i class="fas fa-file-signature"></i>
+                        <span>Sözleşme & Hak Talebi</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="http://localhost/contracts/management" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Sözleşmeler</a></li>
+                        <li><a href="http://localhost/contracts/claims" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Hak Talepleri</a></li>
+                    </ul>
+                </li>
+
+                
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow " aria-expanded="false">
+                        <i class="fas fa-hard-hat"></i>
+                        <span>Şantiye Yönetimi</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="http://localhost/field/operations"><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Saha Operasyonları</a></li>
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow " aria-expanded="false"><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Kalite & İSG (QHSE)</a>
+                            <ul class="sub-menu" aria-expanded="false">
+                                <li><a href="http://localhost/field/qhse/quality" class=""><i class="mdi mdi-circle-outline"></i> Kalite Kontrol</a></li>
+                                <li><a href="http://localhost/field/qhse/punchlist" class=""><i class="mdi mdi-circle-outline"></i> Eksik İşler</a></li>
+                                <li><a href="http://localhost/field/qhse/safety" class=""><i class="mdi mdi-circle-outline"></i> İş Güvenliği (İSG)</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+                
+                 <li>
+                    <a href="javascript: void(0);" class="has-arrow " aria-expanded="false">
+                        <i class="fas fa-cogs"></i>
+                        <span>Kaynak Yönetimi</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="http://localhost/resources/equipment" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Ekipman Parkı</a></li>
+                        <li><a href="http://localhost/resources/hr" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> İnsan Kaynakları</a></li>
+                    </ul>
+                </li>
+
+                
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow " aria-expanded="false">
+                        <i class="fas fa-truck"></i>
+                        <span>Tedarik & Satın Alma</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="http://127.0.0.1:8000/finance/accounts/suppliers" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Tedarikçiler</a></li>
+                        <li><a href="http://localhost/supply/procurement" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Satın Almalar</a></li>
+                    </ul>
+                </li>
+
+                
+                <li><a href="http://localhost/closeout" class=""><i class="fas fa-flag-checkered"></i><span>Proje Kapanış</span></a></li>
+                <li><a href="http://localhost/facility" class=""><i class="fas fa-building"></i><span>Tesis Yönetimi</span></a></li>
+                <li><a href="http://localhost/analytics" class=""><i class="fas fa-chart-pie"></i><span>Analitik & Raporlar</span></a></li>
+
+                <li class="menu-title">SİSTEM YÖNETİMİ</li>
+
+                
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow " aria-expanded="false">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Platform Yönetimi</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="http://localhost/admin/users" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Kullanıcılar & Roller</a></li>
+                        <li><a href="http://localhost/admin/standards" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Şirket Ayarları</a></li>
+                        <li><a href="http://localhost/admin/system" class=""><i class="mdi mdi-checkbox-blank-circle align-middle"></i> Sistem Kayıtları</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+        <!-- Sidebar -->
+    </div>
+</div>
+<!-- Left Sidebar End -->
+
+<!-- Accordion assets moved to head and after vendor scripts -->
+
+
+        <!-- ============================================================== -->
+        <!-- Start right Content here -->
+        <!-- ============================================================== -->
+        <div class="main-content">
+
+            <div class="page-content">
+                <div class="container-fluid">
+
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-flex align-items-center justify-content-between">
+                                <h4 class="mb-sm-0">Yeni İhale Paketi Oluştur</h4>
+
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);"></a>
+                                        </li>
+                                        <li class="breadcrumb-item active">Yeni İhale Paketi Oluştur</li>
+                                    </ol>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+
+                    <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>İhale Paketi Oluşturma Sihirbazı</h4>
+        <div>
+            <a href="http://localhost/portfolio/tenders/package-prepare" class="btn btn-secondary">Geri</a>
+        </div>
+    </div>
+
+    <form method="post" action="http://localhost/portfolio/tenders/package-prepare" enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="" autocomplete="off">        <div class="card mb-3 wizard-step" data-step="1">
+            <div class="card-body">
+                <h5>Adım 1 — Temel Bilgiler</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label>İlişkili Proje</label>
+                        <select name="project_id" class="form-control">
+                                                            <option value="1">Beer, Berge and Hettinger fuga</option>
+                                                            <option value="2">Kilback-Fadel maxime</option>
+                                                            <option value="3">O&#039;Conner Group sit</option>
+                                                            <option value="4">Goldner, Kutch and DuBuque rem</option>
+                                                            <option value="5">Gibson, Graham and Glover et</option>
+                                                            <option value="6">Parker and Sons nemo</option>
+                                                            <option value="7">Bruen and Sons voluptatem</option>
+                                                            <option value="8">Schroeder-Abbott omnis</option>
+                                                            <option value="9">Franecki PLC minus</option>
+                                                            <option value="10">Watsica, Macejkovic and Padberg atque</option>
+                                                            <option value="11">Bauch-Dare omnis</option>
+                                                            <option value="12">Miller Ltd deleniti</option>
+                                                            <option value="13">Reichert-Boehm fugiat</option>
+                                                            <option value="14">Hoeger-Christiansen non</option>
+                                                            <option value="15">Braun, Jenkins and Cole consequuntur</option>
+                                                            <option value="16">Monahan-Spencer et</option>
+                                                            <option value="17">Heathcote, Rath and Rowe iusto</option>
+                                                            <option value="18">Flatley-Erdman veritatis</option>
+                                                            <option value="19">Gerhold, Sanford and Beier dicta</option>
+                                                            <option value="20">Grimes PLC ea</option>
+                                                            <option value="21">Moen-Berge ut</option>
+                                                            <option value="22">Bernier PLC et</option>
+                                                            <option value="23">Vandervort PLC et</option>
+                                                            <option value="24">Gislason, Rempel and Schaefer delectus</option>
+                                                            <option value="25">SMOKE TEST</option>
+                                                    </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label>Paket Adı</label>
+                        <input type="text" name="name" class="form-control" required />
+                    </div>
+                    <div class="col-12 mb-2">
+                            <label>İşin Kapsamı</label>
+                            <textarea name="scope" class="form-control" rows="4"></textarea>
+                        </div>
+                    <div class="col-12 mb-2">
+                        <label>Davetli E-Posta Adresleri (her satıra bir e-posta veya virgülle ayrılmış)</label>
+                        <textarea name="bidders_text" class="form-control" rows="3" placeholder="firma1@example.com, firma2@example.com"></textarea>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label>Teklif Başlangıç</label>
+                        <input type="date" name="start_date" class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label>Teklif Bitiş</label>
+                        <input type="date" name="end_date" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3 wizard-step" data-step="2" style="display:none">
+            <div class="card-body">
+                <h5>Adım 2 — Dokümanlar & Çizimler</h5>
+                <p>Projedeki doküman ağacından seçim yapma UI'sı burada olacak.</p>
+                <div class="alert alert-primary">Entegrasyon: Merkezi Doküman Havuzu ile bağlanarak doğru versiyonları seçin.</div>
+                <style>
+                    /* small visual polish for the doc selection placeholder using primary tone */
+                    .doc-placeholder { background:#f8fbff; border:1px solid rgba(13,110,253,0.12); padding:18px; border-radius:6px; }
+                    .doc-list .list-group-item { display:flex; align-items:center; justify-content:space-between; }
+                    .doc-list .form-check-label { color:#6c757d; }
+                </style>
+                            </div>
+        </div>
+
+        <div class="card mb-3 wizard-step" data-step="3" style="display:none">
+            <div class="card-body">
+                <h5>Adım 3 — Keşif Özeti ve Teklif Formatı</h5>
+                <p>Excel kopyala-yapıştır veya CSV yükleme ile pozları içe aktarın.</p>
+                <div class="mb-2">
+                    <label>BOQ (CSV) Yükle — Beklenen sütunlar: Poz No, Açıklama, Birim, Miktar</label>
+                    <input type="file" name="boq_csv" class="form-control" accept=".csv" />
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3 wizard-step" data-step="4" style="display:none">
+            <div class="card-body">
+                <h5>Adım 4 — Davetli Firmalar</h5>
+                <p>Tedarikçi veritabanından firmaları seçin. (Placeholder)</p>
+                <div class="mb-2">
+                    <label>Örnek Davetli Seçimi (placeholder)</label>
+                    <select name="bidders[]" class="form-control" multiple>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <option value="ACME2">ACME2</option>
+                                                                        </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3 wizard-step" data-step="5" style="display:none">
+            <div class="card-body">
+                <h5>Adım 5 — Gözden Geçir ve Yayınla</h5>
+                <p>Girdiğiniz bilgilerin bir önizlemesi burada gösterilecek. Yayınlandığında seçilen firmalara davet e-postası gönderilecek. (Placeholder)</p>
+            </div>
+        </div>
+
+        <!-- Wizard navigation (always visible) -->
+        <div class="d-flex justify-content-between mb-4">
+            <div>
+                <button type="button" id="wizard-prev" class="btn btn-outline-secondary">Geri</button>
+            </div>
+            <div>
+                <button type="button" id="wizard-next" class="btn btn-primary">İleri</button>
+                <button class="btn btn-primary" id="wizard-submit" type="submit" style="display:none">İhaleyi Kaydet / Yayınla</button>
+            </div>
+        </div>
+    </form>
+    <script>
+        (function(){
+            let step = 1; const max = 5;
+            const showStep = (n)=>{
+                document.querySelectorAll('.wizard-step').forEach(el=>el.style.display='none');
+                const cur = document.querySelector('.wizard-step[data-step="'+n+'"]');
+                if(cur) cur.style.display='block';
+                document.getElementById('wizard-prev') && (document.getElementById('wizard-prev').style.display = n>1 ? 'inline-block' : 'none');
+                document.getElementById('wizard-next') && (document.getElementById('wizard-next').style.display = n<max ? 'inline-block' : 'none');
+                document.getElementById('wizard-submit') && (document.getElementById('wizard-submit').style.display = n===max ? 'inline-block' : 'none');
+            };
+            document.getElementById('wizard-next') && document.getElementById('wizard-next').addEventListener('click', ()=>{ if(step<max) step++; showStep(step); });
+            document.getElementById('wizard-prev') && document.getElementById('wizard-prev').addEventListener('click', ()=>{ if(step>1) step--; showStep(step); });
+            showStep(step);
+        })();
+    </script>
+</div>
+                </div>
+                <!-- container-fluid -->
+            </div>
+            <!-- End Page-content -->
+
+            <!-- footer -->
+            <footer class="footer">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-sm-6">
+                <script>document.write(new Date().getFullYear())</script> © Pergel.
+            </div>
+            <div class="col-sm-6">
+                <div class="text-sm-end d-none d-sm-block">
+                    Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="http://codebucks.in/" target="_blank" class="text-muted">Codebucks</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+        </div>
+        <!-- end main content-->
+    </div>
+    <!-- END layout-wrapper -->
+
+    <!-- customizer -->
+    <div class="custom-setting bg-primary pe-0 d-flex flex-column rounded-start">
+    <button type="button" class="btn btn-wide border-0 text-white fs-20 avatar-sm rounded-end-0" id="light-dark-mode">
+        <i class="mdi mdi-brightness-7 align-middle"></i>
+        <i class="mdi mdi-white-balance-sunny align-middle"></i>
+    </button>
+    <button type="button" class="btn btn-wide border-0 text-white fs-20 avatar-sm" data-toggle="fullscreen">
+        <i class="mdi mdi-arrow-expand-all align-middle"></i>
+    </button>
+    <button type="button" class="btn btn-wide border-0 text-white fs-16 avatar-sm" id="page-lock-btn" title="Sayfayı kilitle / aç">
+        <i class="mdi mdi-lock-open align-middle"></i>
+    </button>
+</div>
+
+<div class="offcanvas offcanvas-end" id="offcanvas-rightsidabar">
+    <div class="card h-100 rounded-0" data-simplebar="init">
+        <div class="card-header bg-light">
+            <h6 class="card-title text-uppercase">Activities</h6>
+            <div class="card-addon">
+                <button class="btn btn-label-danger" data-bs-dismiss="offcanvas">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="">
+                <h3 class="card-title">Company summary</h3>
+                <div class="border rounded p-2">
+                    <p class="text-muted mb-2">Server Load</p>
+                    <h4 class="fs-16 mb-2">489</h4>
+                    <div class="progress progress-sm" style="height:4px;">
+                        <div class="progress-bar bg-success" style="width: 49.4%"></div>
+                    </div>
+                    <p class="text-muted mb-0 mt-1">49.4% <span>Avg</span></p>
+                </div>
+                <div class="border rounded p-2">
+                    <p class="text-muted mb-2">Members online</p>
+                    <h4 class="fs-16 mb-2">3,450</h4>
+                    <div class="progress progress-sm" style="height:4px;">
+                        <div class="progress-bar bg-danger" style="width: 34.6%"></div>
+                    </div>
+                    <p class="text-muted mb-0 mt-1">34.6% <span>Avg</span></p>
+                </div>
+                <div class="border rounded p-2">
+                    <p class="text-muted mb-2">Today's revenue</p>
+                    <h4 class="fs-16 mb-2">$18,390</h4>
+                    <div class="progress progress-sm" style="height:4px;">
+                        <div class="progress-bar bg-warning" style="width: 20%"></div>
+                    </div>
+                    <p class="text-muted mb-0 mt-1">$37,578 <span>Avg</span></p>
+                </div>
+                <div class="border rounded p-2">
+                    <p class="text-muted mb-2">Expected profit</p>
+                    <h4 class="fs-16 mb-2">$23,461</h4>
+                    <div class="progress progress-sm" style="height:4px;">
+                        <div class="progress-bar bg-info" style="width: 60%"></div>
+                    </div>
+                    <p class="text-muted mb-0 mt-1">$23,461 <span>Avg</span></p>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h3 class="card-title">Latest log</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-pin"><i class="marker marker-dot text-primary"></i></div>
+                        <div class="timeline-content">
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">12 new users registered</p>
+                                <span class="text-muted">Just now</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-pin"><i class="marker marker-dot text-success"></i></div>
+                        <div class="timeline-content">
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">System shutdown <span class="badge badge-label-success">pending</span>
+                                </p>
+                                <span class="text-muted">2 mins</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-pin"><i class="marker marker-dot text-primary"></i></div>
+                        <div class="timeline-content">
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">New invoice received</p>
+                                <span class="text-muted">3 mins</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-pin"><i class="marker marker-dot text-danger"></i></div>
+                        <div class="timeline-content">
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">New order received <span
+                                        class="badge badge-label-danger">urgent</span></p>
+                                <span class="text-muted">10 mins</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-pin"><i class="marker marker-dot text-warning"></i></div>
+                        <div class="timeline-content">
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Production server down</p>
+                                <span class="text-muted">1 hrs</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-pin"><i class="marker marker-dot text-info"></i></div>
+                        <div class="timeline-content">
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">System error <a href="#">check</a></p>
+                                <span class="text-muted">2 hrs</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-pin"><i class="marker marker-dot text-secondary"></i></div>
+                        <div class="timeline-content">
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">DB overloaded 80%</p>
+                                <span class="text-muted">5 hrs</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-pin"><i class="marker marker-dot text-success"></i></div>
+                        <div class="timeline-content">
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Production server up</p>
+                                <span class="text-muted">6 hrs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h3 class="card-title">Upcoming activities</h3>
+                <div class="timeline timeline-timed">
+                    <div class="timeline-item">
+                        <span class="timeline-time">10:00</span>
+                        <div class="timeline-pin"><i class="marker marker-circle text-primary"></i></div>
+                        <div class="timeline-content">
+                            <div>
+                                <span>Meeting with</span>
+                                <div class="avatar-group ms-2">
+                                    <div class="avatar avatar-circle">
+                                        <img src="http://localhost/build/images/users/avatar-1.png"
+                                            alt="Avatar image" class="avatar-2xs" />
+                                    </div>
+                                    <div class="avatar avatar-circle">
+                                        <img src="http://localhost/build/images/users/avatar-2.png"
+                                            alt="Avatar image" class="avatar-2xs" />
+                                    </div>
+                                    <div class="avatar avatar-circle">
+                                        <img src="http://localhost/build/images/users/avatar-3.png"
+                                            alt="Avatar image" class="avatar-2xs" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-time">12:45</span>
+                        <div class="timeline-pin"><i class="marker marker-circle text-warning"></i></div>
+                        <div class="timeline-content">
+                            <p class="mb-0">Lorem ipsum dolor sit amit,consectetur eiusmdd tempor incididunt ut
+                                labore et dolore magna elit enim at minim veniam quis nostrud</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-time">14:00</span>
+                        <div class="timeline-pin"><i class="marker marker-circle text-danger"></i></div>
+                        <div class="timeline-content">
+                            <p class="mb-0">Received a new feedback on <a href="#">GoFinance</a> App product.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-time">15:20</span>
+                        <div class="timeline-pin"><i class="marker marker-circle text-success"></i></div>
+                        <div class="timeline-content">
+                            <p class="mb-0">Lorem ipsum dolor sit amit,consectetur eiusmdd tempor incididunt ut
+                                labore et dolore magna.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-time">17:00</span>
+                        <div class="timeline-pin"><i class="marker marker-circle text-info"></i></div>
+                        <div class="timeline-content">
+                            <p class="mb-0">Make Deposit <a href="#">USD 700</a> o ESL.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- end card-->
+</div>
+
+    <!-- vendor-scripts -->
+    <!-- JAVASCRIPT -->
+<script src="http://localhost/build/libs/jquery/dist/jquery.min.js"></script>
+<script src="http://localhost/build/libs/bootstrap/dist/js/bootstrap.bundle.js"></script>
+<script src="http://localhost/build/libs/metismenu/dist/metisMenu.js"></script>
+<script src="http://localhost/build/libs/simplebar/dist/simplebar.js"></script>
+<script src="http://localhost/build/libs/node-waves/dist/waves.js"></script>
+
+    <!-- Accordion JS (load after vendor scripts so it can override/handle metisMenu etc.) -->
+    <script src="http://localhost/js/accordion.js" defer></script>
+
+    <!-- Force-collapse fallback: ensure sidebar submenus are collapsed after all vendor scripts initialize -->
+    <script>
+        window.addEventListener('load', function() {
+            try {
+                var sidebar = document.querySelector('.sidebar-left');
+                if (!sidebar) return;
+
+                // Collapse any li that is open unless it should remain open
+                var openItems = sidebar.querySelectorAll('li.open, li.mm-active');
+                openItems.forEach(function(li) {
+                    var header = li.querySelector('.has-arrow');
+                    var submenu = li.querySelector('.sub-menu');
+
+                    var hasActiveChild = submenu && submenu.querySelector('.active');
+                    var ariaOpen = header && header.getAttribute('aria-expanded') === 'true';
+
+                    if (!hasActiveChild && !ariaOpen) {
+                        li.classList.remove('open');
+                        li.classList.remove('mm-active');
+                        if (submenu) submenu.style.maxHeight = null;
+                        if (header) header.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            } catch (e) {
+                console && console.error && console.error('Accordion force-collapse error', e);
+            }
+        });
+    </script>
+
+    
+    
+</body>
+
+</html>

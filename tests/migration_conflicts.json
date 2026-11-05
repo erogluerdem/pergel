@@ -1,0 +1,34 @@
+{
+    "alter_before_create": {
+        "planning_tasks": {
+            "first_file": "2025_09_26_020000_add_dependencies_to_planning_tasks_and_create_baselines.php",
+            "creates": [
+                "2025_09_27_010000_create_planning_tasks_table.php"
+            ]
+        },
+        "payments": {
+            "first_file": "2025_09_27_000001_add_contract_id_to_payments_table.php",
+            "creates": [
+                "2025_09_27_100000_create_payments_table.php"
+            ]
+        }
+    },
+    "multiple_creates": {
+        "milestones": [
+            "2025_09_27_000002_create_milestones_table.php",
+            "2025_09_27_173345_create_milestones_table.php"
+        ],
+        "risks": [
+            "2025_09_27_000003_create_risks_table.php",
+            "2025_09_27_173405_create_risks_table.php"
+        ],
+        "closeouts": [
+            "2025_09_27_124326_create_closeouts_table.php",
+            "2025_09_27_124330_create_closeouts_table.php"
+        ],
+        "inventory_items": [
+            "2025_10_02_135040_create_inventory_items_table.php",
+            "2025_10_02_141212_create_inventory_items_table.php"
+        ]
+    }
+}

@@ -1,0 +1,552 @@
+/* Saha Operasyonları - Modern ve Mobil Öncelikli Tasarım */
+
+.field-operations {
+    font-family: inherit;
+    background-color: transparent;
+    min-height: 100vh;
+}
+
+/* Ana Kartlar */
+.field-operations .card {
+    border: 1px solid var(--pt-card-border, rgba(0,0,0,0.1));
+    border-radius: var(--pt-card-radius, 12px);
+    background: var(--pt-card-bg, #ffffff);
+    color: var(--pt-body-color, inherit);
+    box-shadow: var(--pt-card-shadow, 0 2px 8px rgba(0,0,0,0.1));
+    transition: box-shadow 0.3s ease;
+}
+
+.field-operations .card:hover {
+    box-shadow: var(--shadow-xl, 0 4px 16px rgba(0,0,0,0.15));
+}
+
+.field-operations .card-header {
+    background: var(--pt-card-header-bg, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+    color: var(--pt-heading-color, white);
+    border-radius: 12px 12px 0 0 !important;
+    border-bottom: 1px solid var(--pt-card-header-border, transparent);
+    padding: 1rem 1.25rem;
+}
+
+/* Takvim */
+#report-calendar {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Ensure calendar doesn't collapse and remains visible on small screens */
+#report-calendar {
+    display: block;
+    min-height: 320px; /* provides visible area for calendar */
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.25rem;
+    align-items: start;
+}
+
+/* Stronger rules to prevent other styles overriding the calendar layout */
+#report-calendar .calendar-header {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+#report-calendar .calendar-grid {
+    display: grid !important;
+    grid-template-columns: repeat(7, 1fr) !important;
+    gap: 0.25rem !important;
+    align-items: start !important;
+}
+
+#report-calendar .calendar-day-header,
+#report-calendar .calendar-day {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+/* Ensure buttons in header don't stack */
+#report-calendar .calendar-header button {
+    min-width: 36px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.25rem;
+}
+
+.calendar-day-header {
+    text-align: center;
+    font-weight: bold;
+    padding: 0.5rem;
+    background-color: var(--pt-table-head-bg, #f8f9fa);
+    color: var(--pt-heading-color, inherit);
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+.calendar-day {
+    width: 100%;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    margin: 2px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    position: relative;
+}
+
+.calendar-day:hover {
+    transform: scale(1.05);
+}
+
+.calendar-day.completed {
+    background-color: #28a745;
+    color: white;
+}
+
+.calendar-day.draft {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.calendar-day.empty {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: default;
+}
+
+.calendar-day.other-month {
+    opacity: 0.5;
+}
+
+.calendar-day.today {
+    border: 2px solid #007bff;
+}
+
+.day-number {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.report-indicator {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 0.7rem;
+}
+
+/* Galeri */
+#media-gallery .media-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+#media-gallery .col-6 {
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+#media-gallery .media-item:hover {
+    transform: scale(1.02);
+}
+
+#media-gallery .media-item img,
+#media-gallery .media-item video {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.media-item .media-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    color: white;
+    padding: 8px;
+    font-size: 12px;
+}
+
+#media-empty, #media-empty i {
+    color: #6c757d;
+}
+
+.media-item .btn-danger {
+    opacity: 0.95;
+    padding: 0.25rem 0.5rem;
+}
+
+.media-item .media-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Harita */
+#media-map {
+    border-radius: 8px;
+    height: 400px;
+}
+
+/* Modal */
+.modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    border: none;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+/* Form Elemanları */
+.field-operations .form-control,
+.field-operations .form-select {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    padding: 0.5rem 0.75rem;
+}
+
+.field-operations .form-control:focus,
+.field-operations .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Butonlar */
+.field-operations .btn {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.field-operations .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* İş Gücü ve Ekipman Listeleri */
+.labour-item,
+.equipment-item,
+.task-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid #dee2e6;
+}
+
+.labour-item .row > div,
+.equipment-item .row > div {
+    margin-bottom: 0.5rem;
+}
+
+/* Hava Durumu */
+#weather-info {
+    padding: 1rem;
+}
+
+.weather-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.weather-temp {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.weather-desc {
+    text-transform: capitalize;
+    margin-bottom: 0.5rem;
+}
+
+.weather-details {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Mobil Uyumluluk */
+@media (max-width: 768px) {
+    .field-operations .container-fluid {
+        padding: 0.5rem;
+    }
+
+    .calendar-day {
+        min-height: 50px;
+        font-size: 14px;
+    }
+
+    .calendar-day-header {
+        font-size: 0.75rem;
+        padding: 0.25rem;
+    }
+
+    #media-gallery .media-item img,
+    #media-gallery .media-item video {
+        height: 120px;
+    }
+
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+
+    .calendar-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .calendar-header h5 {
+        font-size: 1rem;
+    }
+}
+
+/* Yükleme Animasyonu */
+.spinner-border {
+    width: 2rem;
+    height: 2rem;
+}
+
+/* Sekmeler */
+.nav-tabs .nav-link {
+    border: none;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: rgba(255,255,255,0.2);
+    color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.nav-tabs .nav-link:hover {
+    color: white;
+}
+
+/* İlerleme Çubuğu */
+.progress {
+    height: 8px;
+    border-radius: 4px;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #28a745, #20c997);
+}
+
+/* Alert */
+.alert {
+    border-radius: 12px;
+    border: none;
+}
+
+/* Responsive Grid */
+@media (max-width: 576px) {
+    #media-gallery .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .calendar-grid {
+        grid-template-columns: repeat(7, 1fr);
+        font-size: 0.75rem;
+    }
+
+    .calendar-day {
+        height: 40px;
+        min-width: 35px;
+    }
+
+    .day-number {
+        font-size: 0.9rem;
+    }
+}
+
+/* Yükleme Animasyonu */
+.spinner-border {
+    width: 2rem;
+    height: 2rem;
+}
+
+/* Sekmeler */
+.nav-tabs .nav-link {
+    border: none;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: rgba(255,255,255,0.2);
+    color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.nav-tabs .nav-link:hover {
+    color: white;
+}
+
+/* İlerleme Çubuğu */
+.progress {
+    height: 8px;
+    border-radius: 4px;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #28a745, #20c997);
+}
+
+/* Alert */
+.alert {
+    border-radius: 12px;
+    border: none;
+}
+
+/* Responsive Grid */
+@media (max-width: 576px) {
+    #media-gallery .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+.fo-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0;
+    width: 100%;
+}
+
+.fo-days .fo-cell {
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #eee;
+    cursor: pointer;
+    font-size: 14px;
+    position: relative;
+    padding: 6px;
+}
+
+.fo-days .fo-cell:hover {
+    background-color: #f8f9fa;
+}
+
+.fo-days .fo-cell.blank {
+    background: #f8f9fa;
+    cursor: default;
+    color: #ccc;
+}
+
+.fo-days .fo-cell.done {
+    background: #d4edda;
+    color: #155724;
+}
+
+.fo-days .fo-cell.draft {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* MAP - NUCLEAR FIX */
+#fo-map {
+    height: 400px;
+    width: 100%;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    position: relative;
+    background: #f8f9fa;
+}
+
+/* Ensure map container keeps space when inside hidden tabs */
+#fo-map {
+    min-height: 320px !important;
+    width: 100% !important;
+}
+
+#fo-map:empty::before {
+    content: "Harita yükleniyor...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #666;
+    font-size: 16px;
+}
+
+.leaflet-container {
+    height: 100%;
+    width: 100%;
+    border-radius: 6px;
+}
+
+/* GALLERY */
+.fo-thumb {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 4px;
+    margin-bottom: 8px;
+    background: white;
+}
+
+.fo-thumb img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .fo-days .fo-cell {
+        min-height: 35px;
+        font-size: 12px;
+    }
+
+    #fo-map {
+        height: 300px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .fo-days .fo-cell {
+        min-height: 30px;
+        font-size: 11px;
+    }
+
+    #fo-map {
+        height: 250px !important;
+    }
+}

@@ -1,0 +1,215 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#091024"/>
+      <stop offset="45%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+
+    <!-- Outer Glow Rim -->
+    <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#60a5fa" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.7"/>
+    </linearGradient>
+
+    <!-- Gold Accent Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="40%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+
+    <linearGradient id="goldLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+
+    <!-- Chrome / Steel Gradients -->
+    <linearGradient id="steelLight" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="60%" stop-color="#cbd5e1"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+
+    <linearGradient id="steelDark" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#64748b"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+
+    <linearGradient id="cyanGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+
+    <!-- Radial Ambient Glows -->
+    <radialGradient id="centerGlow" cx="50%" cy="32%" r="45%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"/>
+      <stop offset="60%" stop-color="#1d4ed8" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="draftGlow" cx="50%" cy="82%" r="40%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Drop Shadows -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+    <filter id="glowSubtle" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="laserGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Base Squircle Container -->
+  <rect x="16" y="16" width="480" height="480" rx="108" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle Blueprint Grid Overlay inside squircle -->
+  <g opacity="0.07" stroke="#93c5fd" stroke-width="1.2">
+    <!-- Concentric Blueprint Rings -->
+    <circle cx="256" cy="256" r="80" fill="none" stroke-dasharray="4 4"/>
+    <circle cx="256" cy="256" r="150" fill="none" stroke-dasharray="6 6"/>
+    <circle cx="256" cy="256" r="210" fill="none"/>
+    <!-- Axis lines -->
+    <line x1="256" y1="36" x2="256" y2="476" stroke-dasharray="6 4"/>
+    <line x1="36" y1="256" x2="476" y2="256" stroke-dasharray="6 4"/>
+    <!-- Diagonal lines -->
+    <line x1="90" y1="90" x2="422" y2="422" stroke-dasharray="4 6"/>
+    <line x1="422" y1="90" x2="90" y2="422" stroke-dasharray="4 6"/>
+  </g>
+
+  <!-- Ambient Light Halos -->
+  <rect x="16" y="16" width="480" height="480" rx="108" fill="url(#centerGlow)"/>
+  <rect x="16" y="16" width="480" height="480" rx="108" fill="url(#draftGlow)"/>
+
+  <!-- Border Highlight Rim -->
+  <rect x="16" y="16" width="480" height="480" rx="108" fill="none" stroke="url(#rimGrad)" stroke-width="4.5"/>
+  <rect x="18" y="18" width="476" height="476" rx="106" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.5"/>
+
+  <!-- DRAFTED GEOMETRIC ARC (The circle drawn by Pergel) -->
+  <g id="drafted-circle" filter="url(#laserGlow)">
+    <!-- Base laser arc -->
+    <path d="M 128 392 A 165 165 0 0 0 384 392" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" stroke-dasharray="1 0" opacity="0.9"/>
+    <!-- Extension arc (dashed guide) -->
+    <path d="M 104 350 A 165 165 0 0 0 128 392" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="4 4" opacity="0.6"/>
+    <path d="M 384 392 A 165 165 0 0 0 408 350" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="4 4" opacity="0.6"/>
+    <!-- Center baseline coordinate marker -->
+    <circle cx="256" cy="421" r="3" fill="#f59e0b"/>
+  </g>
+
+  <!-- MAIN COMPASS / PERGEL BODY -->
+  <g id="pergel-instrument" filter="url(#shadow)">
+    
+    <!-- MICROMETER SPINDLE / ADJUSTMENT ROD -->
+    <g id="micrometer-spindle">
+      <!-- Spindle rod -->
+      <rect x="182" y="260" width="148" height="8" rx="4" fill="#475569"/>
+      <rect x="184" y="261" width="144" height="3" rx="1.5" fill="#94a3b8"/>
+      <!-- Thread notches -->
+      <line x1="205" y1="260" x2="205" y2="268" stroke="#334155" stroke-width="1.5"/>
+      <line x1="215" y1="260" x2="215" y2="268" stroke="#334155" stroke-width="1.5"/>
+      <line x1="225" y1="260" x2="225" y2="268" stroke="#334155" stroke-width="1.5"/>
+      <line x1="287" y1="260" x2="287" y2="268" stroke="#334155" stroke-width="1.5"/>
+      <line x1="297" y1="260" x2="297" y2="268" stroke="#334155" stroke-width="1.5"/>
+      <line x1="307" y1="260" x2="307" y2="268" stroke="#334155" stroke-width="1.5"/>
+      <!-- Center Gold Knurled Adjustment Wheel -->
+      <rect x="242" y="247" width="28" height="34" rx="5" fill="url(#goldGrad)"/>
+      <rect x="244" y="249" width="24" height="30" rx="4" fill="#d97706"/>
+      <!-- Wheel Ridges -->
+      <line x1="248" y1="249" x2="248" y2="279" stroke="#fef08a" stroke-width="1.5"/>
+      <line x1="253" y1="249" x2="253" y2="279" stroke="#fef08a" stroke-width="1.5"/>
+      <line x1="258" y1="249" x2="258" y2="279" stroke="#fef08a" stroke-width="1.5"/>
+      <line x1="263" y1="249" x2="263" y2="279" stroke="#fef08a" stroke-width="1.5"/>
+    </g>
+
+    <!-- CALIBRATION DEGREE ARC (Between the legs) -->
+    <path d="M 188 288 A 120 120 0 0 0 324 288" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" opacity="0.8" stroke-dasharray="3 3"/>
+
+    <!-- LEFT ARM (Needle Leg) -->
+    <g id="left-arm">
+      <!-- Upper Main Arm Facet - Light Side -->
+      <polygon points="248,154 256,154 186,310 174,306" fill="url(#steelLight)"/>
+      <!-- Upper Main Arm Facet - Dark Side -->
+      <polygon points="240,154 248,154 174,306 164,302" fill="url(#steelDark)"/>
+      
+      <!-- Needle Joint Collar -->
+      <polygon points="162,298 188,308 182,324 156,314" fill="url(#goldGrad)"/>
+      
+      <!-- Lower Needle (Sleek Tapered Steel Point) -->
+      <polygon points="172,318 164,315 128,392 133,392" fill="url(#steelLight)"/>
+      <polygon points="164,315 158,312 126,392 128,392" fill="url(#steelDark)"/>
+      
+      <!-- Needle Tip Glow Point -->
+      <circle cx="128" cy="392" r="4.5" fill="#38bdf8" filter="url(#glowSubtle)"/>
+      <circle cx="128" cy="392" r="2.5" fill="#ffffff"/>
+    </g>
+
+    <!-- RIGHT ARM (Pencil / Stylus Leg) -->
+    <g id="right-arm">
+      <!-- Upper Main Arm Facet - Light Side -->
+      <polygon points="256,154 264,154 338,306 326,310" fill="url(#steelLight)"/>
+      <!-- Upper Main Arm Facet - Dark Side -->
+      <polygon points="264,154 272,154 348,302 338,306" fill="url(#steelDark)"/>
+      
+      <!-- Pencil / Lead Chuck Clamp Housing -->
+      <polygon points="324,308 350,298 356,314 330,324" fill="url(#goldGrad)"/>
+      
+      <!-- Clamp Adjustment Wing Screw -->
+      <ellipse cx="364" cy="310" rx="9" ry="5.5" transform="rotate(22 364 310)" fill="url(#goldLight)"/>
+      <circle cx="364" cy="310" r="3" fill="#b45309"/>
+
+      <!-- Lower Lead/Stylus Nib Holder -->
+      <polygon points="340,318 348,315 384,392 379,392" fill="url(#steelLight)"/>
+      <polygon points="348,315 354,312 386,392 384,392" fill="url(#steelDark)"/>
+      
+      <!-- Golden Drawing Tip / Lead -->
+      <polygon points="378,382 386,382 384,394 380,394" fill="url(#goldGrad)"/>
+      
+      <!-- Drawing Point Sparkle / Glow -->
+      <circle cx="384" cy="392" r="5" fill="#fbbf24" filter="url(#glowSubtle)"/>
+      <circle cx="384" cy="392" r="2.5" fill="#ffffff"/>
+    </g>
+
+    <!-- TOP PIVOT HEAD & CROWN HANDLE -->
+    <g id="pivot-head">
+      <!-- Top Crown Handle (Knurled grip) -->
+      <rect x="250" y="66" width="12" height="40" rx="3" fill="url(#steelDark)"/>
+      <!-- Handle Highlight -->
+      <rect x="252" y="68" width="4" height="36" rx="1.5" fill="url(#steelLight)"/>
+      <!-- Handle Top Finial Dome -->
+      <ellipse cx="256" cy="67" rx="9" ry="5.5" fill="url(#goldGrad)"/>
+      <circle cx="256" cy="65" r="3" fill="#fef08a"/>
+      <!-- Handle Base Collar -->
+      <rect x="246" y="102" width="20" height="7" rx="2.5" fill="url(#goldGrad)"/>
+
+      <!-- Large Outer Pivot Ring -->
+      <circle cx="256" cy="144" r="36" fill="url(#steelDark)"/>
+      <circle cx="256" cy="144" r="34" fill="#1e293b"/>
+      
+      <!-- Gold Bezel Ring -->
+      <circle cx="256" cy="144" r="28" fill="none" stroke="url(#goldGrad)" stroke-width="7"/>
+      
+      <!-- Inner Steel Core -->
+      <circle cx="256" cy="144" r="18" fill="url(#steelLight)"/>
+      
+      <!-- Center Sapphire Jewel Pin -->
+      <circle cx="256" cy="144" r="10" fill="url(#cyanGlow)"/>
+      <circle cx="253" cy="141" r="3.5" fill="#ffffff" opacity="0.85"/>
+    </g>
+
+  </g>
+
+  <!-- Architectural 'P' Subtle Watermark Monogram Accent in Top Right -->
+  <g opacity="0.22" transform="translate(390, 48) scale(0.65)">
+    <circle cx="36" cy="36" r="32" fill="none" stroke="#f59e0b" stroke-width="4"/>
+    <path d="M 26 56 V 16 H 42 A 16 16 0 0 1 42 40 H 26" fill="none" stroke="#f59e0b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

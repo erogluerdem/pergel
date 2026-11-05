@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PERGEL HTML Kullanım Rehberi - Form ve Input Elemanları</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        nav {
+            background: #f8f9fa;
+            padding: 15px 0;
+            border-bottom: 2px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 0 30px;
+        }
+        
+        nav a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 5px;
+        }
+        
+        nav a:hover {
+            color: #764ba2;
+            border-bottom-color: #764ba2;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        h4 {
+            color: #555;
+            font-size: 1.2em;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            border-left: 4px solid #667eea;
+            line-height: 1.5;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .tip-box {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .info-box strong, .warning-box strong, .success-box strong, .tip-box strong {
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .example-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            background: #fafafa;
+        }
+        
+        .example-title {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .demo-area {
+            background: white;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-control, .form-select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            width: 100%;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-text {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.875em;
+            color: #666;
+        }
+        
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+        
+        .invalid-feedback {
+            display: block;
+            margin-top: 5px;
+            color: #dc3545;
+            font-size: 0.875em;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+        
+        .highlight {
+            background: #fff59d;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            nav ul {
+                gap: 10px;
+                font-size: 0.9em;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            h3 {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎨 PERGEL HTML Kullanım Rehberi</h1>
+            <p>Bölüm 3: Form ve Input Elemanları</p>
+        </header>
+        
+        <nav>
+            <ul>
+                <li><a href="#temel-formlar">Temel Formlar</a></li>
+                <li><a href="#input-turleri">Input Türleri</a></li>
+                <li><a href="#validasyon">Validasyon</a></li>
+                <li><a href="#ileri-formlari">İleri Formlar</a></li>
+            </ul>
+        </nav>
+        
+        <div class="content">
+            <!-- TEMEL FORMLAR -->
+            <div class="section" id="temel-formlar">
+                <h2>📋 Temel Form Yapısı</h2>
+                
+                <p>Formlar, kullanıcıdan veri toplamak için kullanılan en önemli HTML öğeleridir. PERGEL'de Bootstrap 5'in form bileşenleri kullanılmaktadır.</p>
+                
+                <h3>Basit Form Örneği</h3>
+                <div class="code-block"><code>&lt;form method="POST" action="/kaydet"&gt;
+    @csrf
+    
+    &lt;div class="mb-3"&gt;
+        &lt;label for="ad" class="form-label"&gt;Adınız&lt;/label&gt;
+        &lt;input type="text" class="form-control" id="ad" name="ad"
+               placeholder="Adınızı girin" required&gt;
+    &lt;/div&gt;
+    
+    &lt;div class="mb-3"&gt;
+        &lt;label for="email" class="form-label"&gt;E-Posta&lt;/label&gt;
+        &lt;input type="email" class="form-control" id="email" name="email"
+               placeholder="email@örnek.com" required&gt;
+    &lt;/div&gt;
+    
+    &lt;button type="submit" class="btn btn-primary"&gt;Gönder&lt;/button&gt;
+    &lt;button type="reset" class="btn btn-secondary"&gt;Temizle&lt;/button&gt;
+&lt;/form&gt;</code></div>
+                
+                <h3>Form Elemanları Temel Sınıfları</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sınıf</th>
+                            <th>Kullanım</th>
+                            <th>Açıklama</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>.form-label</td>
+                            <td>Etiket</td>
+                            <td>Form etiketleri (label)</td>
+                        </tr>
+                        <tr>
+                            <td>.form-control</td>
+                            <td>Input/Textarea</td>
+                            <td>Text inputları ve textarea alanları</td>
+                        </tr>
+                        <tr>
+                            <td>.form-select</td>
+                            <td>Select</td>
+                            <td>Açılır menüler</td>
+                        </tr>
+                        <tr>
+                            <td>.form-check</td>
+                            <td>Checkbox/Radio</td>
+                            <td>Onay kutuları ve radyo düğmeleri</td>
+                        </tr>
+                        <tr>
+                            <td>.form-text</td>
+                            <td>Yardımcı Metin</td>
+                            <td>Form alanlarının altında açıklama</td>
+                        </tr>
+                        <tr>
+                            <td>.mb-3</td>
+                            <td>Form Grubu Aralığı</td>
+                            <td>Form elemanları arasında boşluk</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="info-box">
+                    <strong>ℹ️ Önemli:</strong>
+                    Laravel formlarında güvenlik için <span class="highlight">@csrf</span> direktifi mutlaka eklenmelidir.
+                </div>
+            </div>
+            
+            <!-- INPUT TÜRLERI -->
+            <div class="section" id="input-turleri">
+                <h2>⌨️ Input Türleri ve Kullanımı</h2>
+                
+                <h3>1. Metin Input'ları</h3>
+                <div class="example-card">
+                    <div class="example-title">📝 Metin Alanları</div>
+                    <div class="code-block"><code>&lt;!-- Basit Metin Input --&gt;
+&lt;input type="text" class="form-control" placeholder="Metin girin"&gt;
+
+&lt;!-- E-Posta Input --&gt;
+&lt;input type="email" class="form-control" placeholder="email@örnek.com"&gt;
+
+&lt;!-- Şifre Input --&gt;
+&lt;input type="password" class="form-control" placeholder="Şifre girin"&gt;
+
+&lt;!-- Telefon Input --&gt;
+&lt;input type="tel" class="form-control" placeholder="+90 (5XX) XXX XX XX"&gt;
+
+&lt;!-- URL Input --&gt;
+&lt;input type="url" class="form-control" placeholder="https://örnek.com"&gt;
+
+&lt;!-- Textarea (Çok Satırlı) --&gt;
+&lt;textarea class="form-control" rows="4" placeholder="Açıklama yazın"&gt;&lt;/textarea&gt;</code></div>
+                    
+                    <div class="demo-area">
+                        <div class="form-group">
+                            <label class="form-label">Basit Metin</label>
+                            <input type="text" class="form-control" placeholder="Metin girin">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">E-Posta</label>
+                            <input type="email" class="form-control" placeholder="email@örnek.com">
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>2. Sayısal ve Tarih Input'ları</h3>
+                <div class="example-card">
+                    <div class="example-title">🔢 Sayısal Alanlar</div>
+                    <div class="code-block"><code>&lt;!-- Sayı Input --&gt;
+&lt;input type="number" class="form-control" placeholder="Sayı girin"
+       min="0" max="100" step="1"&gt;
+
+&lt;!-- Ondalık Sayı --&gt;
+&lt;input type="number" class="form-control" 
+       step="0.01" placeholder="0.00"&gt;
+
+&lt;!-- Para Input --&gt;
+&lt;div class="input-group"&gt;
+    &lt;span class="input-group-text"&gt;₺&lt;/span&gt;
+    &lt;input type="number" class="form-control" 
+           placeholder="0,00" step="0.01"&gt;
+&lt;/div&gt;
+
+&lt;!-- Tarih Input --&gt;
+&lt;input type="date" class="form-control"&gt;
+
+&lt;!-- Saat Input --&gt;
+&lt;input type="time" class="form-control"&gt;
+
+&lt;!-- Tarih-Saat Input --&gt;
+&lt;input type="datetime-local" class="form-control"&gt;
+
+&lt;!-- Ay Input --&gt;
+&lt;input type="month" class="form-control"&gt;
+
+&lt;!-- Haftalar Input --&gt;
+&lt;input type="week" class="form-control"&gt;</code></div>
+                    
+                    <div class="demo-area">
+                        <div class="form-group">
+                            <label class="form-label">Sayı</label>
+                            <input type="number" class="form-control" placeholder="100" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tarih</label>
+                            <input type="date" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>3. Select (Açılır Menüler)</h3>
+                <div class="example-card">
+                    <div class="example-title">📌 Seçim Menüleri</div>
+                    <div class="code-block"><code>&lt;!-- Basit Select --&gt;
+&lt;select class="form-select"&gt;
+    &lt;option selected&gt;Seçim Yapınız...&lt;/option&gt;
+    &lt;option value="1"&gt;Seçenek 1&lt;/option&gt;
+    &lt;option value="2"&gt;Seçenek 2&lt;/option&gt;
+    &lt;option value="3"&gt;Seçenek 3&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;!-- Gruplanmış Select --&gt;
+&lt;select class="form-select"&gt;
+    &lt;optgroup label="Grup A"&gt;
+        &lt;option value="a1"&gt;A Seçenekleri 1&lt;/option&gt;
+        &lt;option value="a2"&gt;A Seçenekleri 2&lt;/option&gt;
+    &lt;/optgroup&gt;
+    &lt;optgroup label="Grup B"&gt;
+        &lt;option value="b1"&gt;B Seçenekleri 1&lt;/option&gt;
+        &lt;option value="b2"&gt;B Seçenekleri 2&lt;/option&gt;
+    &lt;/optgroup&gt;
+&lt;/select&gt;
+
+&lt;!-- Çoklu Seçim --&gt;
+&lt;select class="form-select" multiple&gt;
+    &lt;option value="1"&gt;Seçenek 1&lt;/option&gt;
+    &lt;option value="2"&gt;Seçenek 2&lt;/option&gt;
+    &lt;option value="3"&gt;Seçenek 3&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;!-- Select2 (PERGEL'de Mevcut) --&gt;
+&lt;select class="form-select form-select-sm select2"&gt;
+    &lt;option value=""&gt;Seçim Yapınız...&lt;/option&gt;
+    &lt;option value="1"&gt;Seçenek 1&lt;/option&gt;
+    &lt;option value="2"&gt;Seçenek 2&lt;/option&gt;
+&lt;/select&gt;</code></div>
+                </div>
+                
+                <h3>4. Checkbox ve Radio</h3>
+                <div class="example-card">
+                    <div class="example-title">☑️ Onay Kutuları ve Radyo Düğmeleri</div>
+                    <div class="code-block"><code>&lt;!-- Checkbox --&gt;
+&lt;div class="form-check"&gt;
+    &lt;input class="form-check-input" type="checkbox" 
+           id="checkbox1" name="secenek1"&gt;
+    &lt;label class="form-check-label" for="checkbox1"&gt;
+        Seçenek 1
+    &lt;/label&gt;
+&lt;/div&gt;
+
+&lt;div class="form-check"&gt;
+    &lt;input class="form-check-input" type="checkbox" 
+           id="checkbox2" name="secenek2"&gt;
+    &lt;label class="form-check-label" for="checkbox2"&gt;
+        Seçenek 2
+    &lt;/label&gt;
+&lt;/div&gt;
+
+&lt;!-- Radio Düğmeleri --&gt;
+&lt;div class="form-check"&gt;
+    &lt;input class="form-check-input" type="radio" 
+           name="durum" id="radio1" value="aktif"&gt;
+    &lt;label class="form-check-label" for="radio1"&gt;
+        Aktif
+    &lt;/label&gt;
+&lt;/div&gt;
+
+&lt;div class="form-check"&gt;
+    &lt;input class="form-check-input" type="radio" 
+           name="durum" id="radio2" value="pasif"&gt;
+    &lt;label class="form-check-label" for="radio2"&gt;
+        Pasif
+    &lt;/label&gt;
+&lt;/div&gt;
+
+&lt;!-- Switches (Toggle) --&gt;
+&lt;div class="form-check form-switch"&gt;
+    &lt;input class="form-check-input" type="checkbox" 
+           id="switch1" role="switch"&gt;
+    &lt;label class="form-check-label" for="switch1"&gt;
+        Bildirimleri Aç/Kapat
+    &lt;/label&gt;
+&lt;/div&gt;</code></div>
+                    
+                    <div class="demo-area">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="demo1">
+                            <label class="form-check-label" for="demo1">
+                                Seçenek 1
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="demo2">
+                            <label class="form-check-label" for="demo2">
+                                Seçenek 2
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- VALIDASYON -->
+            <div class="section" id="validasyon">
+                <h2>✅ Form Validasyonu</h2>
+                
+                <h3>HTML5 Validasyonu</h3>
+                <div class="code-block"><code>&lt;form&gt;
+    &lt;!-- Zorunlu Alan --&gt;
+    &lt;input type="text" class="form-control" required&gt;
+    
+    &lt;!-- Min/Max Uzunluk --&gt;
+    &lt;input type="text" class="form-control" 
+           minlength="3" maxlength="50"&gt;
+    
+    &lt;!-- Min/Max Değer --&gt;
+    &lt;input type="number" class="form-control" 
+           min="0" max="100"&gt;
+    
+    &lt;!-- Pattern (Regex) --&gt;
+    &lt;input type="text" class="form-control" 
+           pattern="[A-Za-z]+" 
+           title="Sadece harfler girebilirsiniz"&gt;
+    
+    &lt;!-- E-Posta Validasyonu --&gt;
+    &lt;input type="email" class="form-control" required&gt;
+    
+    &lt;!-- Tarih Validasyonu --&gt;
+    &lt;input type="date" class="form-control" required&gt;
+&lt;/form&gt;</code></div>
+                
+                <h3>Bootstrap Validasyon Stilleri</h3>
+                <div class="code-block"><code>&lt;!-- Başarılı Validasyon --&gt;
+&lt;input type="text" class="form-control is-valid"&gt;
+&lt;div class="valid-feedback"&gt;
+    Harika! Bu değer doğru.
+&lt;/div&gt;
+
+&lt;!-- Başarısız Validasyon --&gt;
+&lt;input type="text" class="form-control is-invalid"&gt;
+&lt;div class="invalid-feedback"&gt;
+    Lütfen geçerli bir değer girin.
+&lt;/div&gt;</code></div>
+                
+                <div class="demo-area">
+                    <div class="form-group">
+                        <label class="form-label">Başarılı Input</label>
+                        <input type="text" class="form-control is-valid" value="Geçerli giriş">
+                        <div style="color: #28a745; font-size: 0.875em; margin-top: 5px;">✓ Başarılı</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hatalı Input</label>
+                        <input type="text" class="form-control is-invalid" value="">
+                        <div class="invalid-feedback" style="display: block;">
+                            Bu alan zorunludur.
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Laravel Validasyonu</h3>
+                <div class="code-block"><code>@if ($errors->any())
+    &lt;div class="alert alert-danger"&gt;
+        &lt;ul&gt;
+            @foreach ($errors->all() as $error)
+                &lt;li&gt;{{ $error }}&lt;/li&gt;
+            @endforeach
+        &lt;/ul&gt;
+    &lt;/div&gt;
+@endif
+
+&lt;!-- Alan Bazında Hata --&gt;
+&lt;input type="email" class="form-control
+    @error('email') is-invalid @enderror"&gt;
+
+@error('email')
+    &lt;div class="invalid-feedback"&gt;
+        {{ $message }}
+    &lt;/div&gt;
+@enderror</code></div>
+            </div>
+            
+            <!-- İLERİ FORMLAR -->
+            <div class="section" id="ileri-formlari">
+                <h2>🚀 İleri Form Bileşenleri</h2>
+                
+                <h3>Input Grupları</h3>
+                <div class="code-block"><code>&lt;!-- Para Input Grubu --&gt;
+&lt;div class="input-group mb-3"&gt;
+    &lt;span class="input-group-text"&gt;₺&lt;/span&gt;
+    &lt;input type="number" class="form-control"&gt;
+    &lt;span class="input-group-text"&gt;.00&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;!-- Butonlu Input Grubu --&gt;
+&lt;div class="input-group mb-3"&gt;
+    &lt;input type="text" class="form-control" placeholder="Ara..."&gt;
+    &lt;button class="btn btn-primary" type="button"&gt;
+        &lt;i class="fas fa-search"&gt;&lt;/i&gt;
+    &lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- Checkbox ile Input Grubu --&gt;
+&lt;div class="input-group mb-3"&gt;
+    &lt;div class="input-group-text"&gt;
+        &lt;input class="form-check-input" type="checkbox"&gt;
+    &lt;/div&gt;
+    &lt;input type="text" class="form-control"&gt;
+&lt;/div&gt;
+
+&lt;!-- Dropdown ile Input Grubu --&gt;
+&lt;div class="input-group mb-3"&gt;
+    &lt;label class="input-group-text"&gt;Ülke&lt;/label&gt;
+    &lt;select class="form-select"&gt;
+        &lt;option&gt;Seçiniz...&lt;/option&gt;
+        &lt;option value="TR"&gt;Türkiye&lt;/option&gt;
+        &lt;option value="US"&gt;ABD&lt;/option&gt;
+    &lt;/select&gt;
+&lt;/div&gt;</code></div>
+                
+                <h3>Floating Labels (Yüzen Etiketler)</h3>
+                <div class="code-block"><code>&lt;div class="form-floating mb-3"&gt;
+    &lt;input type="email" class="form-control" 
+           id="floatingEmail" placeholder="name@example.com"&gt;
+    &lt;label for="floatingEmail"&gt;E-Posta Adresi&lt;/label&gt;
+&lt;/div&gt;
+
+&lt;div class="form-floating mb-3"&gt;
+    &lt;textarea class="form-control" id="floatingTextarea" 
+              placeholder="Açıklama yazın"&gt;&lt;/textarea&gt;
+    &lt;label for="floatingTextarea"&gt;Açıklama&lt;/label&gt;
+&lt;/div&gt;
+
+&lt;div class="form-floating"&gt;
+    &lt;select class="form-select" id="floatingSelect"&gt;
+        &lt;option&gt;Seçim yapınız...&lt;/option&gt;
+        &lt;option value="1"&gt;Seçenek 1&lt;/option&gt;
+    &lt;/select&gt;
+    &lt;label for="floatingSelect"&gt;Seçim&lt;/label&gt;
+&lt;/div&gt;</code></div>
+                
+                <h3>Form Layout Seçenekleri</h3>
+                <div class="code-block"><code>&lt;!-- Dikey Layout (Varsayılan) --&gt;
+&lt;form&gt;
+    &lt;div class="mb-3"&gt;
+        &lt;label for="ad" class="form-label"&gt;Ad&lt;/label&gt;
+        &lt;input type="text" class="form-control" id="ad"&gt;
+    &lt;/div&gt;
+    &lt;div class="mb-3"&gt;
+        &lt;label for="soyad" class="form-label"&gt;Soyadı&lt;/label&gt;
+        &lt;input type="text" class="form-control" id="soyad"&gt;
+    &lt;/div&gt;
+&lt;/form&gt;
+
+&lt;!-- Yatay Layout --&gt;
+&lt;form&gt;
+    &lt;div class="row mb-3"&gt;
+        &lt;label for="ad" class="col-sm-2 col-form-label"&gt;Ad&lt;/label&gt;
+        &lt;div class="col-sm-10"&gt;
+            &lt;input type="text" class="form-control" id="ad"&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="row mb-3"&gt;
+        &lt;label for="soyad" class="col-sm-2 col-form-label"&gt;Soyadı&lt;/label&gt;
+        &lt;div class="col-sm-10"&gt;
+            &lt;input type="text" class="form-control" id="soyad"&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/form&gt;
+
+&lt;!-- İnline Layout (Tek Satıra) --&gt;
+&lt;form class="row gy-2 gx-3"&gt;
+    &lt;div class="col-auto"&gt;
+        &lt;input type="text" class="form-control" placeholder="Ad"&gt;
+    &lt;/div&gt;
+    &lt;div class="col-auto"&gt;
+        &lt;input type="text" class="form-control" placeholder="Soyadı"&gt;
+    &lt;/div&gt;
+    &lt;div class="col-auto"&gt;
+        &lt;button type="submit" class="btn btn-primary"&gt;Gönder&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/form&gt;</code></div>
+                
+                <div class="success-box">
+                    <strong>✅ En İyi Pratikler:</strong>
+                    <ul>
+                        <li>Her input'a benzersiz ID verin</li>
+                        <li>Label'leri her zaman input ile ilişkilendirin (for attribute)</li>
+                        <li>Zorunlu alanları işaretleyin (*)</li>
+                        <li>Validasyon hataları açık ve net olsun</li>
+                        <li>Form gönderdikten sonra başarı mesajı gösterin</li>
+                    </ul>
+                </div>
+            </div>
+            
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 PERGEL CRM Sistemi. Tüm hakları saklıdır.</p>
+            <p>HTML Kullanım Rehberi - Bölüm 3: Form ve Input Elemanları</p>
+        </footer>
+    </div>
+</body>
+</html>

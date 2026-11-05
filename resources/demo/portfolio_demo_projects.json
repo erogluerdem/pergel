@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "name": "Demo Proje A",
+    "budget": 1200000,
+    "spent": 450000,
+    "start_date": "2024-01-15",
+    "end_date": "2024-12-15",
+    "progress_percent": 40,
+    "type": "Yapım",
+    "program_id": 1
+  },
+  {
+    "id": 2,
+    "name": "Demo Proje B",
+    "budget": 800000,
+    "spent": 760000,
+    "start_date": "2023-06-01",
+    "end_date": "2024-06-01",
+    "progress_percent": 95,
+    "type": "Tadilat",
+    "program_id": 1
+  },
+  {
+    "id": 3,
+    "name": "Demo Proje C",
+    "budget": 450000,
+    "spent": 300000,
+    "start_date": "2024-03-01",
+    "end_date": "2024-11-01",
+    "progress_percent": 55,
+    "type": "Danışmanlık",
+    "program_id": 2
+  }
+]

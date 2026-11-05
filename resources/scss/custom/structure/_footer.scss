@@ -1,0 +1,35 @@
+
+// _footer.scss
+
+
+.footer {
+    bottom: 0;
+    padding: 15px calc(#{$grid-gutter-width} * 1);
+    position: absolute;
+    right: 0;
+    color: $footer-color;
+    left: 0;
+    height: $footer-height;
+    box-shadow: var(--#{$prefix}box-shadow);
+    background-color: $footer-bg;
+    z-index: 1002;
+}
+
+@media (max-width: 992px) {
+    .footer {
+        left: 0;
+    }
+}
+
+// Enlarge menu
+.sidebar-collpsed {
+    .footer {
+        left: 0;
+    }
+}
+
+body[data-layout="horizontal"] {
+    .footer {
+        left: 0 !important;
+    }
+}

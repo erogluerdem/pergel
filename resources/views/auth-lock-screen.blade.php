@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <title>Kilit Ekranı | Pergel - Şantiye & Gayrimenkul Portalı</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css">
+
+    <style>
+        :root {
+            --bg-deep: #050811;
+            --card-bg: #0d1527;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.4);
+            --amber: #f59e0b;
+            --amber-glow: rgba(245, 158, 11, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+            padding: 30px 16px;
+        }
+
+        /* 100% Solid Ambient Canvas */
+        .lock-screen-bg {
+            position: fixed;
+            inset: 0;
+            background: #050811;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .lock-ambient-sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.32;
+            pointer-events: none;
+        }
+        .lock-sphere-1 {
+            top: -10%;
+            left: -10%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, #2563eb 0%, rgba(37,99,235,0) 70%);
+            animation: floatSphere1 16s ease-in-out infinite alternate;
+        }
+        .lock-sphere-2 {
+            bottom: -15%;
+            right: -10%;
+            width: 750px;
+            height: 750px;
+            background: radial-gradient(circle, #f59e0b 0%, rgba(245,158,11,0) 70%);
+            animation: floatSphere2 18s ease-in-out infinite alternate-reverse;
+        }
+        @keyframes floatSphere1 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 40px) scale(1.1); }
+        }
+        @keyframes floatSphere2 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-50px, -40px) scale(1.08); }
+        }
+
+        .lock-blueprint-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+            background-size: 48px 48px;
+            opacity: 0.7;
+        }
+
+        .lock-tech-crosshair {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border: 2px solid rgba(245, 158, 11, 0.4);
+            pointer-events: none;
+        }
+        .lock-ch-tl { top: 28px; left: 28px; border-right: none; border-bottom: none; }
+        .lock-ch-tr { top: 28px; right: 28px; border-left: none; border-bottom: none; }
+        .lock-ch-bl { bottom: 28px; left: 28px; border-right: none; border-top: none; }
+        .lock-ch-br { bottom: 28px; right: 28px; border-left: none; border-top: none; }
+
+        /* Foreground Content Container */
+        .lock-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 470px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Top Clock & Header */
+        .lock-top-bar {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .lock-security-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            padding: 5px 14px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #fbbf24;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+        }
+        .lock-pulse-dot {
+            width: 7px;
+            height: 7px;
+            background: #f59e0b;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #f59e0b;
+            animation: dotPulse 1.5s infinite;
+        }
+        @keyframes dotPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        .lock-hero-clock {
+            font-family: var(--font-mono);
+            font-size: 48px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -1.5px;
+            line-height: 1;
+            text-shadow: 0 4px 25px rgba(0, 0, 0, 0.9), 0 0 35px rgba(59, 130, 246, 0.3);
+        }
+        .lock-hero-sec {
+            font-size: 28px;
+            color: #f59e0b;
+            font-weight: 700;
+            margin-left: 2px;
+        }
+        .lock-clock-colon {
+            color: #60a5fa;
+            animation: colonBlink 1s infinite;
+        }
+        @keyframes colonBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        .lock-hero-date {
+            font-size: 14px;
+            font-weight: 500;
+            color: #94a3b8;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Central Card */
+        .lock-main-card {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 26px;
+            padding: 34px 30px;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.9), 0 0 40px rgba(37, 99, 235, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .lock-main-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, #3b82f6, #f59e0b, transparent);
+        }
+
+        /* Brand Emblem */
+        .lock-brand-center {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+        .lock-emblem-halo {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 84px;
+            height: 84px;
+            margin-bottom: 12px;
+        }
+        .lock-halo-spin {
+            position: absolute;
+            inset: -4px;
+            border-radius: 24px;
+            border: 2px dashed rgba(245, 158, 11, 0.45);
+            animation: haloRotate 25s linear infinite;
+        }
+        @keyframes haloRotate { to { transform: rotate(360deg); } }
+
+        .lock-emblem-box {
+            width: 76px;
+            height: 76px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7), 0 0 25px var(--primary-glow);
+        }
+        .lock-emblem-box img {
+            width: 56px;
+            height: 56px;
+        }
+
+        .lock-brand-name {
+            font-size: 23px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .lock-pro-badge {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            color: #000;
+            letter-spacing: 0.5px;
+        }
+        .lock-brand-tagline {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            color: var(--amber);
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        /* User Card */
+        .lock-user-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+        }
+        .lock-user-avatar-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+        .lock-user-avatar {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #3b82f6;
+        }
+        .lock-user-avatar-initials {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border: 2px solid rgba(255,255,255,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+        .lock-avatar-padlock {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 20px;
+            height: 20px;
+            background: var(--amber);
+            color: #000;
+            border-radius: 50%;
+            border: 2px solid var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+        .lock-user-details {
+            flex: 1;
+            min-width: 0;
+        }
+        .lock-user-fullname {
+            font-size: 16.5px;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .lock-user-role-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #60a5fa;
+            background: rgba(37, 99, 235, 0.15);
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-top: 3px;
+            border: 1px solid rgba(37, 99, 235, 0.3);
+        }
+
+        /* Tabs */
+        .lock-tab-selector {
+            display: flex;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 3px;
+            margin-bottom: 20px;
+        }
+        .lock-tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 9px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        .lock-tab-btn.active {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.4), rgba(30, 41, 59, 0.8));
+            color: #ffffff;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        /* Alert */
+        .lock-alert-message {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            color: #fca5a5;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 12.5px;
+            margin-bottom: 16px;
+        }
+
+        /* Input Field */
+        .lock-field-group {
+            margin-bottom: 18px;
+        }
+        .lock-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .lock-input-icon {
+            position: absolute;
+            left: 16px;
+            color: #94a3b8;
+            font-size: 18px;
+            pointer-events: none;
+            transition: color 0.2s;
+        }
+        .lock-text-input {
+            width: 100%;
+            background: #070c18 !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+            border-radius: 14px !important;
+            padding: 14px 46px 14px 48px !important;
+            font-size: 15px !important;
+            color: #ffffff !important;
+            font-family: inherit !important;
+            outline: none !important;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.4) !important;
+            transition: all 0.25s ease !important;
+        }
+        .lock-text-input:focus {
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3), inset 0 2px 6px rgba(0,0,0,0.4) !important;
+        }
+        .lock-text-input:focus ~ .lock-input-icon {
+            color: #3b82f6;
+        }
+        .lock-eye-toggle {
+            position: absolute;
+            right: 14px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
+        .lock-eye-toggle:hover { color: #ffffff; }
+
+        .lock-caps-banner {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            color: #fbbf24;
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            padding: 5px 10px;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        /* Action Button */
+        .lock-action-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #d97706 100%);
+            border: none;
+            border-radius: 14px;
+            padding: 14px 20px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 8px 24px -4px rgba(37, 99, 235, 0.6);
+            transition: all 0.25s ease;
+        }
+        .lock-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -4px rgba(245, 158, 11, 0.5);
+        }
+        .lock-action-btn:active { transform: translateY(0); }
+        .lock-action-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        /* PIN Numpad */
+        .lock-pin-dots {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .pin-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            background: transparent;
+            transition: all 0.2s ease;
+        }
+        .pin-dot.filled {
+            background: #f59e0b;
+            border-color: #fbbf24;
+            box-shadow: 0 0 10px #f59e0b;
+            transform: scale(1.15);
+        }
+        .lock-numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 280px;
+            margin: 0 auto 16px;
+        }
+        .numpad-key {
+            background: #070c18;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 12px 0;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .numpad-key:hover {
+            background: #1e293b;
+            border-color: #3b82f6;
+            transform: scale(1.05);
+        }
+        .numpad-key:active { transform: scale(0.95); }
+        .numpad-clear { color: #f87171; font-weight: 800; }
+        .numpad-back { color: #fbbf24; }
+
+        /* Footer Links */
+        .lock-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .lock-footer-link {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 12.5px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .lock-footer-link:hover { color: #ffffff; }
+
+        /* Security Footer Meta */
+        .lock-footer-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #64748b;
+        }
+        .meta-item { display: flex; align-items: center; gap: 5px; }
+        .meta-separator { color: #334155; }
+
+        /* Shake Animation */
+        .shake-card {
+            animation: lockShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+        @keyframes lockShake {
+            10%, 90% { transform: translate3d(-3px, 0, 0); }
+            20%, 80% { transform: translate3d(5px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-7px, 0, 0); }
+            40%, 60% { transform: translate3d(7px, 0, 0); }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <!-- 100% Solid Ambient Canvas -->
+    <div class="lock-screen-bg">
+        <div class="lock-ambient-sphere lock-sphere-1"></div>
+        <div class="lock-ambient-sphere lock-sphere-2"></div>
+        <div class="lock-blueprint-grid"></div>
+        <div class="lock-tech-crosshair lock-ch-tl"></div>
+        <div class="lock-tech-crosshair lock-ch-tr"></div>
+        <div class="lock-tech-crosshair lock-ch-bl"></div>
+        <div class="lock-tech-crosshair lock-ch-br"></div>
+    </div>
+
+    <div class="lock-container">
+
+        <!-- Top Live Clock & Greeting -->
+        <div class="lock-top-bar">
+            <div class="lock-security-pill">
+                <span class="lock-pulse-dot"></span>
+                <span>GÜVENLİ OTURUM KİLİTLENDİ</span>
+            </div>
+            <div class="lock-hero-clock">
+                <span id="liveHour">00:00</span><span class="lock-clock-colon">:</span><span id="liveSec" class="lock-hero-sec">00</span>
+            </div>
+            <div class="lock-hero-date" id="liveDate">14 Ağustos 2026, Cuma</div>
+        </div>
+
+        <!-- Central Luxury Card -->
+        <div class="lock-main-card" id="lockCard">
+
+            <!-- Pergel Brand Emblem -->
+            <div class="lock-brand-center">
+                <div class="lock-emblem-halo">
+                    <div class="lock-halo-spin"></div>
+                    <div class="lock-emblem-box">
+                        <img src="{{ asset('favicon.svg') }}" alt="Pergel Logo">
+                    </div>
+                </div>
+                <div class="lock-brand-name">
+                    PERGEL
+                    <span class="lock-pro-badge"><i class="ri-vip-crown-2-fill"></i> PRO</span>
+                </div>
+                <div class="lock-brand-tagline">ŞANTİYE & GAYRİMENKUL YÖNETİM SİSTEMİ</div>
+            </div>
+
+            <!-- User Profile Section -->
+            @php
+                $authUser = Auth::user();
+                $avatar = $authUser && $authUser->avatar ? (str_starts_with($authUser->avatar, 'http') ? $authUser->avatar : \Illuminate\Support\Facades\Storage::url($authUser->avatar)) : null;
+                $userName = $authUser->name ?? 'Erdem Eroğlu';
+                $userRole = $authUser ? ($authUser->department ?? ($authUser->title ?? ($authUser->is_admin ? 'Proje & Şantiye Direktörü' : 'Şantiye Sorumlusu'))) : 'Yetkili';
+            @endphp
+            <div class="lock-user-card">
+                <div class="lock-user-avatar-wrap">
+                    @if($avatar)
+                        <img src="{{ $avatar }}" alt="{{ $userName }}" class="lock-user-avatar">
+                    @else
+                        <div class="lock-user-avatar-initials">
+                            <span>{{ mb_substr($userName, 0, 1) }}</span>
+                        </div>
+                    @endif
+                    <div class="lock-avatar-padlock" title="Oturum Korumalı">
+                        <i class="ri-lock-fill"></i>
+                    </div>
+                </div>
+                <div class="lock-user-details">
+                    <div class="lock-user-fullname">{{ $userName }}</div>
+                    <div class="lock-user-role-badge">
+                        <i class="ri-shield-star-fill"></i>
+                        <span>{{ $userRole }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unlock Mode Tabs -->
+            <div class="lock-tab-selector">
+                <button type="button" class="lock-tab-btn active" id="tabPasswordBtn" onclick="switchUnlockTab('password')">
+                    <i class="ri-key-2-line"></i> Şifre ile Aç
+                </button>
+                <button type="button" class="lock-tab-btn" id="tabPinBtn" onclick="switchUnlockTab('pin')">
+                    <i class="ri-grid-fill"></i> Hızlı PIN
+                </button>
+            </div>
+
+            <!-- Alert Box -->
+            <div id="alertBox" class="lock-alert-message" style="display:none;">
+                <i class="ri-error-warning-fill"></i>
+                <span id="alertMessage"></span>
+            </div>
+
+            <!-- TAB 1: Password Form -->
+            <div id="unlockTabPassword" class="lock-tab-panel">
+                <form id="unlockForm" onsubmit="handleUnlock(event)">
+                    @csrf
+                    <div class="lock-field-group">
+                        <div class="lock-input-container">
+                            <i class="ri-lock-password-fill lock-input-icon"></i>
+                            <input type="password" 
+                                   id="passwordInput" 
+                                   class="lock-text-input" 
+                                   placeholder="Oturum şifrenizi girin..." 
+                                   autocomplete="current-password" 
+                                   required 
+                                   autofocus>
+                            <button type="button" class="lock-eye-toggle" onclick="togglePasswordVisibility()" title="Şifreyi Göster/Gizle">
+                                <i class="ri-eye-line" id="toggleEyeIcon"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="lock-caps-banner" id="capsWarning" style="display:none;">
+                            <i class="ri-alert-fill"></i>
+                            <span>Büyük Harf Kilidi (Caps Lock) Açık!</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="lock-action-btn" id="unlockBtn">
+                        <span id="btnText">Oturum Kilidini Aç</span>
+                        <i class="ri-arrow-right-line" id="btnIcon"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- TAB 2: Interactive PIN Pad -->
+            <div id="unlockTabPin" class="lock-tab-panel" style="display:none;">
+                <div class="lock-pin-dots">
+                    <span class="pin-dot" id="pDot1"></span>
+                    <span class="pin-dot" id="pDot2"></span>
+                    <span class="pin-dot" id="pDot3"></span>
+                    <span class="pin-dot" id="pDot4"></span>
+                    <span class="pin-dot" id="pDot5"></span>
+                    <span class="pin-dot" id="pDot6"></span>
+                </div>
+                <div class="lock-numpad">
+                    <button type="button" class="numpad-key" onclick="pressPin('1')">1</button>
+                    <button type="button" class="numpad-key" onclick="pressPin('2')">2</button>
+                    <button type="button" class="numpad-key" onclick="pressPin('3')">3</button>
+                    <button type="button" class="numpad-key" onclick="pressPin('4')">4</button>
+                    <button type="button" class="numpad-key" onclick="pressPin('5')">5</button>
+                    <button type="button" class="numpad-key" onclick="pressPin('6')">6</button>
+                    <button type="button" class="numpad-key" onclick="pressPin('7')">7</button>
+                    <button type="button" class="numpad-key" onclick="pressPin('8')">8</button>
+                    <button type="button" class="numpad-key" onclick="pressPin('9')">9</button>
+                    <button type="button" class="numpad-key numpad-clear" onclick="clearPin()">C</button>
+                    <button type="button" class="numpad-key" onclick="pressPin('0')">0</button>
+                    <button type="button" class="numpad-key numpad-back" onclick="backspacePin()"><i class="ri-delete-back-2-line"></i></button>
+                </div>
+            </div>
+
+            <!-- Bottom Actions -->
+            <div class="lock-card-footer">
+                <form action="{{ route('logout') }}" method="POST" style="margin:0;">
+                    @csrf
+                    <button type="submit" class="lock-footer-link">
+                        <i class="ri-user-shared-line"></i>
+                        <span>Farklı Kullanıcı</span>
+                    </button>
+                </form>
+                <a href="{{ route('logout') }}" class="lock-footer-link" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">
+                    <i class="ri-logout-box-r-line"></i>
+                    <span>Güvenli Çıkış</span>
+                </a>
+                <form id="logoutForm" action="{{ route('logout') }}" method="POST" style="display:none;">@csrf</form>
+            </div>
+
+        </div>
+
+        <!-- Security Badge Footer -->
+        <div class="lock-footer-meta">
+            <div class="meta-item"><i class="ri-shield-keyhole-fill" style="color: #10b981;"></i> 256-Bit SSL Şifreli Koruma</div>
+            <div class="meta-separator">&bull;</div>
+            <div class="meta-item"><i class="ri-map-pin-2-fill" style="color: #f59e0b;"></i> Şantiye Güvenli Mod</div>
+            <div class="meta-separator">&bull;</div>
+            <div class="meta-item">Pergel OS v2.4</div>
+        </div>
+
+    </div>
+
+    <script>
+        var pinValue = '';
+
+        // Live Clock
+        function updateClock() {
+            var now = new Date();
+            var h = String(now.getHours()).padStart(2, '0');
+            var m = String(now.getMinutes()).padStart(2, '0');
+            var s = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('liveHour').textContent = h + ':' + m;
+            document.getElementById('liveSec').textContent = s;
+
+            var options = { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' };
+            document.getElementById('liveDate').textContent = now.toLocaleDateString('tr-TR', options);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function togglePasswordVisibility() {
+            var input = document.getElementById('passwordInput');
+            var eyeIcon = document.getElementById('toggleEyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.className = 'ri-eye-off-line';
+            } else {
+                input.type = 'password';
+                eyeIcon.className = 'ri-eye-line';
+            }
+        }
+
+        // CapsLock
+        var passwordInput = document.getElementById('passwordInput');
+        var capsWarning = document.getElementById('capsWarning');
+        passwordInput.addEventListener('keyup', function(e) {
+            if (e.getModifierState && e.getModifierState('CapsLock')) {
+                capsWarning.style.display = 'flex';
+            } else {
+                capsWarning.style.display = 'none';
+            }
+        });
+
+        // Tabs
+        function switchUnlockTab(mode) {
+            var tabPwd = document.getElementById('unlockTabPassword');
+            var tabPin = document.getElementById('unlockTabPin');
+            var btnPwd = document.getElementById('tabPasswordBtn');
+            var btnPin = document.getElementById('tabPinBtn');
+
+            if (mode === 'password') {
+                tabPwd.style.display = 'block';
+                tabPin.style.display = 'none';
+                btnPwd.classList.add('active');
+                btnPin.classList.remove('active');
+                passwordInput.focus();
+            } else {
+                tabPwd.style.display = 'none';
+                tabPin.style.display = 'block';
+                btnPwd.classList.remove('active');
+                btnPin.classList.add('active');
+                clearPin();
+            }
+        }
+
+        function pressPin(digit) {
+            if (pinValue.length >= 6) return;
+            pinValue += digit;
+            updatePinDots();
+            if (pinValue.length >= 4) {
+                passwordInput.value = pinValue;
+            }
+        }
+
+        function clearPin() {
+            pinValue = '';
+            updatePinDots();
+        }
+
+        function backspacePin() {
+            pinValue = pinValue.slice(0, -1);
+            updatePinDots();
+        }
+
+        function updatePinDots() {
+            for (var i = 1; i <= 6; i++) {
+                var dot = document.getElementById('pDot' + i);
+                if (dot) {
+                    if (i <= pinValue.length) {
+                        dot.classList.add('filled');
+                    } else {
+                        dot.classList.remove('filled');
+                    }
+                }
+            }
+        }
+
+        // Unlock
+        async function handleUnlock(e) {
+            e.preventDefault();
+            var password = passwordInput.value;
+            var btn = document.getElementById('unlockBtn');
+            var btnText = document.getElementById('btnText');
+            var btnIcon = document.getElementById('btnIcon');
+            var card = document.getElementById('lockCard');
+            var alertBox = document.getElementById('alertBox');
+            var alertMessage = document.getElementById('alertMessage');
+            var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            if (!password) return;
+
+            btn.disabled = true;
+            btnText.textContent = 'Doğrulanıyor...';
+            btnIcon.className = 'spinner';
+            alertBox.style.display = 'none';
+
+            try {
+                var response = await fetch('{{ route("lock-screen.unlock") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({ password: password })
+                });
+
+                var data = await response.json();
+
+                if (response.ok && data.success) {
+                    btnText.textContent = 'Açıldı!';
+                    btnIcon.className = 'ri-check-line';
+                    try {
+                        sessionStorage.removeItem('page-locked');
+                        localStorage.removeItem('page-locked');
+                    } catch(e){}
+                    window.location.replace(data.redirect || '{{ url("/") }}');
+                } else {
+                    btn.disabled = false;
+                    btnText.textContent = 'Oturum Kilidini Aç';
+                    btnIcon.className = 'ri-arrow-right-line';
+
+                    alertBox.style.display = 'flex';
+                    alertMessage.textContent = data.message || 'Şifre hatalı!';
+
+                    card.classList.remove('shake-card');
+                    void card.offsetWidth;
+                    card.classList.add('shake-card');
+
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                    clearPin();
+                }
+            } catch (err) {
+                btn.disabled = false;
+                btnText.textContent = 'Oturum Kilidini Aç';
+                btnIcon.className = 'ri-arrow-right-line';
+
+                alertBox.style.display = 'flex';
+                alertMessage.textContent = 'Bağlantı hatası oluştu. Lütfen tekrar deneyin.';
+            }
+        }
+    </script>
+</body>
+</html>

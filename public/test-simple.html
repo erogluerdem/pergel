@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Basit Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .debug {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Basit Login Test</h2>
+        <p>Bu alanlara yazabilir misiniz?</p>
+        
+        <form method="POST" action="http://127.0.0.1:8001/auth-login">
+            <input type="hidden" name="_token" value="test-token">
+            
+            <input type="email" name="email" placeholder="E-posta adresinizi girin" required>
+            
+            <input type="password" name="password" placeholder="Şifrenizi girin" required>
+            
+            <button type="submit">Giriş Yap</button>
+        </form>
+        
+        <div class="debug" id="debug">
+            Test: Sayfa yüklendi
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const debug = document.getElementById('debug');
+            const inputs = document.querySelectorAll('input[type="email"], input[type="password"]');
+            
+            debug.innerHTML += '<br>JavaScript çalışıyor. Input sayısı: ' + inputs.length;
+            
+            inputs.forEach((input, index) => {
+                input.addEventListener('focus', function() {
+                    debug.innerHTML += '<br>Input ' + (index + 1) + ' odaklandı';
+                });
+                
+                input.addEventListener('input', function() {
+                    debug.innerHTML += '<br>Input ' + (index + 1) + ' içeriği değişti: ' + this.value.length + ' karakter';
+                });
+                
+                input.addEventListener('click', function() {
+                    debug.innerHTML += '<br>Input ' + (index + 1) + ' tıklandı';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

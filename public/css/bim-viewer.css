@@ -1,0 +1,915 @@
+/* BIM 3D Viewer Professional Styles */
+.bim-viewer-container {
+    background: linear-gradient(135deg, #f0fff0 0%, #fff8dc 100%);
+    min-height: 100vh;
+    padding: 20px 0;
+}
+
+.bim-viewer-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 25px 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.bim-viewer-title {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(45deg, #2d3748, #4a5568);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.bim-viewer-subtitle {
+    color: #6c757d;
+    font-size: 1rem;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.bim-info-badge {
+    background: rgba(30, 60, 114, 0.1);
+    color: #1e3c72;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.bim-viewer-layout {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 25px;
+    height: calc(100vh - 200px);
+}
+
+.bim-viewer-main {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.bim-viewer-toolbar {
+    background: linear-gradient(135deg, rgba(30, 60, 114, 0.1), rgba(42, 82, 152, 0.1));
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.bim-tool-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+}
+
+.bim-tool-btn {
+    background: transparent;
+    border: 2px solid rgba(30, 60, 114, 0.2);
+    border-radius: 10px;
+    padding: 8px 12px;
+    color: #1e3c72;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.bim-tool-btn:hover {
+    background: linear-gradient(45deg, #1e3c72, #2a5298);
+    color: white;
+    border-color: #1e3c72;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(30, 60, 114, 0.3);
+}
+
+.bim-tool-btn.active {
+    background: linear-gradient(45deg, #1e3c72, #2a5298);
+    color: white;
+    border-color: #1e3c72;
+}
+
+.bim-tool-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.bim-viewer-canvas-container {
+    flex: 1;
+    position: relative;
+    background: #f8f9fa;
+    overflow: hidden;
+}
+
+.bim-viewer-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    flex-direction: column;
+}
+
+.bim-loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #e3f2fd;
+    border-top: 4px solid #2196f3;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.bim-loading-text {
+    text-align: center;
+    color: #333;
+}
+
+.bim-loading-text h5 {
+    margin-bottom: 10px;
+    color: #2196f3;
+    font-weight: 600;
+}
+
+.bim-loading-progress {
+    margin-top: 20px;
+    width: 300px;
+    max-width: 80%;
+}
+
+.bim-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.bim-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2196f3, #21cbf3);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.bim-progress-text {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.bim-viewer-canvas {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+}
+
+.bim-viewer-status {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(30, 60, 114, 0.9);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 25px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+}
+
+.bim-viewer-status.loading::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.bim-viewer-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.bim-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.bim-panel-header {
+    background: linear-gradient(135deg, rgba(30, 60, 114, 0.1), rgba(42, 82, 152, 0.1));
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bim-panel-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e3c72;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.bim-panel-body {
+    padding: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.bim-panel-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.bim-panel-body::-webkit-scrollbar-track {
+    background: rgba(30, 60, 114, 0.1);
+    border-radius: 3px;
+}
+
+.bim-panel-body::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #1e3c72, #2a5298);
+    border-radius: 3px;
+}
+
+.bim-properties-view {
+    background: rgba(30, 60, 114, 0.05);
+    border-radius: 12px;
+    padding: 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid rgba(30, 60, 114, 0.2);
+}
+
+.bim-properties-empty {
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.bim-properties-empty i {
+    font-size: 2rem;
+    opacity: 0.3;
+}
+
+.bim-tree-search {
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(30, 60, 114, 0.2);
+    border-radius: 12px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    width: 100%;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.bim-tree-search:focus {
+    border-color: #1e3c72;
+    box-shadow: 0 0 0 0.2rem rgba(30, 60, 114, 0.15);
+    background: white;
+    outline: none;
+}
+
+.bim-model-tree {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.bim-tree-node {
+    padding: 8px 12px;
+    margin-bottom: 2px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+    border-left: 3px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bim-tree-node:hover {
+    background: rgba(30, 60, 114, 0.1);
+    border-left-color: #1e3c72;
+}
+
+.bim-tree-node.selected {
+    background: linear-gradient(45deg, rgba(30, 60, 114, 0.2), rgba(42, 82, 152, 0.2));
+    border-left-color: #1e3c72;
+    color: #1e3c72;
+    font-weight: 600;
+}
+
+.bim-tree-children {
+    padding-left: 20px;
+    margin-top: 5px;
+}
+
+.bim-measure-info {
+    background: rgba(30, 60, 114, 0.1);
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    color: #1e3c72;
+    font-weight: 600;
+    border: 2px solid rgba(30, 60, 114, 0.2);
+}
+
+.bim-measure-info.active {
+    background: linear-gradient(45deg, rgba(30, 60, 114, 0.2), rgba(42, 82, 152, 0.2));
+    border-color: #1e3c72;
+    animation: pulse 2s infinite;
+}
+
+.bim-conversion-alert {
+    background: linear-gradient(45deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.2));
+    border: 2px solid rgba(255, 193, 7, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.bim-conversion-icon {
+    font-size: 2rem;
+    color: #ffc107;
+}
+
+.bim-conversion-content h6 {
+    color: #856404;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.bim-conversion-content p {
+    color: #6c5700;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.bim-convert-btn {
+    background: linear-gradient(45deg, #ffc107, #ffca2c);
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    color: #212529;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.bim-convert-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
+}
+
+.bim-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(30, 60, 114, 0.9);
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.bim-loading-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.bim-loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+.bim-progress-bar {
+    width: 300px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.bim-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1e3c72, #2a5298);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.bim-keyboard-shortcuts {
+    background: rgba(30, 60, 114, 0.05);
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+.bim-shortcut-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.bim-shortcut-key {
+    background: rgba(30, 60, 114, 0.1);
+    color: #1e3c72;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-family: monospace;
+}
+
+.bim-minimap {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 200px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    border: 2px solid rgba(30, 60, 114, 0.2);
+    backdrop-filter: blur(10px);
+    z-index: 10;
+    overflow: hidden;
+}
+
+.bim-minimap-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.bim-performance-monitor {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(30, 60, 114, 0.9);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-family: monospace;
+    backdrop-filter: blur(10px);
+    z-index: 10;
+    min-width: 120px;
+}
+
+.bim-performance-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .bim-viewer-layout {
+        grid-template-columns: 1fr 300px;
+    }
+}
+
+@media (max-width: 992px) {
+    .bim-viewer-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+        height: auto;
+    }
+
+    .bim-viewer-main {
+        height: 70vh;
+    }
+
+    .bim-viewer-sidebar {
+        flex-direction: row;
+        overflow-x: auto;
+    }
+
+    .bim-panel {
+        min-width: 300px;
+    }
+
+    .bim-tool-group {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 768px) {
+    .bim-viewer-container {
+        padding: 10px 0;
+    }
+
+    .bim-viewer-header {
+        padding: 20px;
+        margin-bottom: 15px;
+    }
+
+    .bim-viewer-title {
+        font-size: 1.5rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .bim-viewer-subtitle {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .bim-viewer-toolbar {
+        padding: 15px;
+        justify-content: center;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .bim-tool-group {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .bim-tool-btn {
+        flex: 1;
+        min-width: 120px;
+        justify-content: center;
+        font-size: 0.8rem;
+        padding: 10px 8px;
+    }
+
+    .bim-viewer-main {
+        height: 60vh;
+    }
+
+    .bim-panel-body {
+        max-height: 200px;
+    }
+
+    .bim-keyboard-shortcuts {
+        display: none;
+    }
+
+    .bim-minimap,
+    .bim-performance-monitor {
+        display: none;
+    }
+
+    .bim-viewer-status {
+        position: static;
+        margin-top: 10px;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Touch-specific optimizations */
+@media (pointer: coarse) {
+    .bim-tool-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .bim-tree-node {
+        padding: 12px;
+        min-height: 44px;
+    }
+
+    .bim-tree-search {
+        padding: 12px 15px;
+    }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .bim-viewer-canvas {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .bim-viewer-container {
+        background: linear-gradient(135deg, #0f1419 0%, #1a202c 100%);
+    }
+
+    .bim-viewer-header,
+    .bim-panel,
+    .bim-viewer-main {
+        background: rgba(26, 32, 44, 0.95);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .bim-viewer-title {
+        background: linear-gradient(45deg, #4299e1, #667eea);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .bim-tool-btn {
+        background: rgba(255, 255, 255, 0.05);
+        color: #e2e8f0;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .bim-tool-btn:hover {
+        background: linear-gradient(45deg, #4299e1, #667eea);
+        color: white;
+    }
+
+    .bim-properties-view {
+        background: rgba(0, 0, 0, 0.3);
+        color: #e2e8f0;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .bim-tree-search {
+        background: rgba(255, 255, 255, 0.05);
+        color: #e2e8f0;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .bim-tree-node {
+        color: #e2e8f0;
+    }
+
+    .bim-tree-node:hover {
+        background: rgba(66, 153, 225, 0.2);
+    }
+}
+
+/* Print styles */
+@media print {
+    .bim-viewer-container {
+        background: white !important;
+    }
+
+    .bim-viewer-toolbar,
+    .bim-viewer-sidebar {
+        display: none !important;
+    }
+
+    .bim-viewer-layout {
+        grid-template-columns: 1fr !important;
+    }
+
+    .bim-viewer-main {
+        height: 80vh !important;
+    }
+}
+
+/* Model Comparison Styles */
+.bim-comparison-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    height: calc(100vh - 200px);
+    margin-bottom: 20px;
+}
+
+.bim-comparison-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.bim-comparison-header {
+    padding: 15px 20px;
+    background: linear-gradient(45deg, #2d3748, #4a5568);
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bim-comparison-header h5 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.bim-comparison-header small {
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+.bim-comparison-viewer {
+    height: calc(100% - 70px);
+    position: relative;
+}
+
+/* Metadata Panel Styles */
+.bim-metadata-panel {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.bim-metadata-section {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 15px;
+}
+
+.bim-metadata-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.bim-metadata-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bim-metadata-title i {
+    color: #667eea;
+    width: 16px;
+}
+
+.bim-metadata-content {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+.bim-metadata-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    padding: 4px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.bim-metadata-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.bim-metadata-label {
+    font-weight: 500;
+    color: #495057;
+    font-size: 0.85rem;
+    flex: 1;
+    margin-right: 10px;
+}
+
+.bim-metadata-value {
+    color: #212529;
+    font-size: 0.85rem;
+    flex: 1;
+    text-align: right;
+    word-break: break-word;
+}
+
+.bim-metadata-value small {
+    display: block;
+    color: #6c757d;
+    font-size: 0.75rem;
+    margin-top: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .bim-metadata-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .bim-metadata-value {
+        text-align: left;
+        margin-top: 4px;
+    }
+}
+
+.bim-comparison-header small {
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+.bim-comparison-viewer {
+    height: calc(100% - 70px);
+    position: relative;
+}
+
+.bim-comparison-controls {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+    .bim-comparison-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .bim-comparison-panel {
+        margin-bottom: 20px;
+    }
+
+    .bim-comparison-viewer {
+        height: 400px;
+    }
+}

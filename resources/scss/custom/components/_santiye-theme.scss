@@ -1,0 +1,29 @@
+// ŞantiyeConnect / Pergel Temel Tema Stilleri
+// NOT: Artık global tema CSS değişkenleri _themes.scss dosyasında tanımlı.
+// Bu dosya, eski SCSS değişkenlerine dayalı .santiye-theme sınıf stillerini
+// korur (geriye uyumluluk) ve yeni [data-theme] sistemiyle köprü kurar.
+
+// Eski .santiye-theme sınıfı desteği (geriye uyumluluk — yeni kod data-theme kullanır)
+.santiye-theme {
+    // Yeni sistemle uyumluluk — data-theme="santiye" yeterli
+}
+
+// Utility — santiye-* prefix'li sınıflar (eski blade şablonlarında kullanılıyor)
+.santiye-primary { color: #3b82f6 !important; }
+.santiye-accent   { color: #f59e0b !important; }
+.santiye-success  { color: #22c55e !important; }
+.santiye-danger   { color: #ef4444 !important; }
+.santiye-warning  { color: #f59e0b !important; }
+.santiye-info     { color: #0ea5e9 !important; }
+.santiye-dark     { color: #1e293b !important; }
+.santiye-light    { color: #94a3b8 !important; }
+
+.bg-santiye-primary { background-color: #3b82f6 !important; }
+.bg-santiye-accent  { background-color: #f59e0b !important; }
+.bg-santiye-success { background-color: #22c55e !important; }
+.bg-santiye-danger  { background-color: #ef4444 !important; }
+.bg-santiye-warning { background-color: #f59e0b !important; }
+.bg-santiye-info    { background-color: #0ea5e9 !important; }
+.bg-santiye-light   { background-color: #f8fafc !important; }
+.bg-santiye-white   { background-color: #ffffff !important; }
+.bg-santiye-dark    { background-color: #1e293b !important; }

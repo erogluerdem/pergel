@@ -1,0 +1,263 @@
+/**
+ * Pergel Native Mobile App Experience System
+ * Mobile ergonomics, Touch target optimization & Native App Navigation
+ */
+
+/* Root Mobile Variables */
+:root {
+    --mobile-dock-height: 64px;
+    --mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Touch Ergonomics & Prevent Unintended Selections */
+* {
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+body {
+    -webkit-overflow-scrolling: touch;
+    touch-action: manipulation;
+}
+
+button, a, input, select, textarea {
+    touch-action: manipulation;
+}
+
+/* Mobile Screen Layout & Bottom Dock Offset */
+@media (max-width: 991.98px) {
+    body .main-content,
+    .content-wrapper,
+    #layout-wrapper {
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .page-content {
+        padding-bottom: 16px !important;
+    }
+
+    footer.footer,
+    [data-app-footer].footer {
+        position: relative !important;
+        background: transparent !important;
+        border-top: 1px solid rgba(148, 163, 184, 0.15) !important;
+        padding: 16px 20px calc(var(--mobile-dock-height) + var(--mobile-safe-bottom) + 20px) 20px !important;
+        margin-top: 24px !important;
+        margin-bottom: 0 !important;
+        text-align: center !important;
+        color: #64748b !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding-top: 10px;
+    }
+
+    /* Page Titles & Headers */
+    .page-title-box {
+        padding: 12px 14px !important;
+        margin-bottom: 14px !important;
+        background: rgba(30, 41, 59, 0.4);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .page-title-box h4 {
+        font-size: 1.1rem !important;
+    }
+
+    .breadcrumb {
+        display: none !important;
+    }
+
+    /* Table Optimization for Mobile Touch */
+    .table-responsive {
+        border-radius: 12px !important;
+        border: 1px solid rgba(226, 232, 240, 0.8) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    html[data-bs-theme="dark"] .table-responsive {
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .table th, .table td {
+        padding: 10px 12px !important;
+        font-size: 0.82rem !important;
+        white-space: nowrap;
+    }
+
+    /* Min-touch targets for mobile buttons */
+    .btn {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-sm {
+        min-height: 36px;
+        padding: 6px 14px;
+        font-size: 0.8rem;
+    }
+
+    /* Form Controls on Mobile */
+    .form-control, .form-select {
+        min-height: 42px;
+        font-size: 0.9rem !important;
+        border-radius: 10px !important;
+    }
+}
+
+/* ==========================================
+   NATIVE MOBILE BOTTOM DOCK (ALT GEZİNME BARI)
+   ========================================== */
+.pergel-mobile-dock {
+    display: none;
+}
+
+@media (max-width: 991.98px) {
+    .pergel-mobile-dock {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: calc(var(--mobile-dock-height) + var(--mobile-safe-bottom));
+        padding-bottom: var(--mobile-safe-bottom);
+        background: var(--pt-topbar-bg, linear-gradient(180deg, rgba(15, 23, 42, 0.92) 0%, rgba(15, 23, 42, 0.98) 100%));
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid var(--pt-topbar-border, rgba(255, 255, 255, 0.12));
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.4);
+        z-index: 1040;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    .mobile-dock-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: var(--pt-topbar-text-muted, #94a3b8);
+        text-decoration: none !important;
+        font-size: 10px;
+        font-weight: 600;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+    }
+
+    .mobile-dock-item i {
+        font-size: 20px;
+        margin-bottom: 2px;
+        transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .mobile-dock-item:active {
+        transform: scale(0.9);
+    }
+
+    .mobile-dock-item.active {
+        color: var(--pt-primary, #60a5fa) !important;
+    }
+
+    .mobile-dock-item.active i {
+        color: var(--pt-primary, #3b82f6) !important;
+        transform: translateY(-2px);
+    }
+
+    .mobile-dock-item.active::after {
+        content: '';
+        position: absolute;
+        bottom: calc(var(--mobile-safe-bottom) + 4px);
+        width: 16px;
+        height: 3px;
+        background: var(--pt-primary, #3b82f6);
+        border-radius: 2px;
+        box-shadow: 0 0 8px var(--pt-primary, #3b82f6);
+    }
+
+    /* Special Center AI / Radio Dock Button */
+    .mobile-dock-item.dock-center-btn {
+        margin-top: -16px;
+    }
+
+    .mobile-dock-item.dock-center-btn .dock-icon-circle {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.5), 0 0 0 4px #0f172a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+    }
+
+    .mobile-dock-item.dock-center-btn i {
+        font-size: 22px;
+        margin-bottom: 0;
+        color: #ffffff !important;
+    }
+}
+
+/* ==========================================
+   NATIVE MOBILE DRAWER MENU (SLIDE OVER)
+   ========================================== */
+.pergel-mobile-drawer {
+    width: 310px !important;
+    background: linear-gradient(165deg, #0d1b2a 0%, #1a2744 50%, #0f1e38 100%) !important;
+    color: #ffffff !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+.pergel-mobile-drawer .offcanvas-header {
+    background: rgba(7, 12, 28, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px;
+}
+
+.pergel-mobile-drawer .drawer-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    border-radius: 10px;
+    margin-bottom: 2px;
+    transition: all 0.2s ease;
+}
+
+.pergel-mobile-drawer .drawer-nav-link:hover,
+.pergel-mobile-drawer .drawer-nav-link.active {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    border-left: 3px solid #3b82f6;
+}
+
+.pergel-mobile-drawer .drawer-nav-link i {
+    font-size: 1.1rem;
+    width: 24px;
+    text-align: center;
+    color: #94a3b8;
+}
+
+.pergel-mobile-drawer .drawer-nav-link.active i {
+    color: #60a5fa;
+}
+
+.pergel-mobile-drawer .drawer-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748b;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 16px 16px 6px;
+}

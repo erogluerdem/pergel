@@ -1,0 +1,770 @@
+@extends('layouts.master')
+@section('title', 'Müşteri Detay - ' . $customer->name)
+@section('topbar-title', 'Finans - Müşteri Detay')
+
+@push('styles')
+<link href="{{ asset('css/customer-show.css') }}" rel="stylesheet" type="text/css" />
+@endpush
+
+@section('content')
+<div class="container-fluid">
+    <!-- Customer Header Card -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-lg me-3">
+                            <div class="avatar-title bg-primary rounded-circle text-white">
+                                <i class="mdi mdi-account-outline font-size-24"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="mb-1">{{ $customer->name }}</h3>
+                            <p class="text-muted mb-0">
+                                <i class="mdi mdi-account-tie me-1"></i>{{ $customer->contact_person ?? 'N/A' }} |
+                                <i class="mdi mdi-phone me-1"></i>{{ $customer->phone ?? 'N/A' }} |
+                                <i class="mdi mdi-email me-1"></i>{{ $customer->email ?? 'N/A' }}
+                            </p>
+                            <span class="badge badge-soft-{{ ($customer->balance ?? 0) > 0 ? 'warning' : 'success' }} mt-1">
+                                {{ ($customer->balance ?? 0) > 0 ? 'Borçlu' : 'Borçsuz' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="dropdown mb-2">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" data-bs-toggle="dropdown">
+                            <i class="mdi mdi-cog me-1"></i> İşlemler
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('finance.accounts.customers.edit', $customer->id) }}">
+                                <i class="mdi mdi-pencil me-2"></i>Düzenle
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="POST" action="{{ route('finance.accounts.customers.reconcile', ['id' => $customer->id]) }}" style="display: inline;">
+                                    @csrf
+                                    <button class="dropdown-item" type="submit">
+                                        <i class="mdi mdi-email-send me-2"></i>Mutabakat Gönder
+                                    </button>
+                                </form>
+                            </li>
+                            <li><a class="dropdown-item" href="{{ route('finance.accounts.customers.reconcile.download', ['id' => $customer->id]) }}">
+                                <i class="mdi mdi-download me-2"></i>Mutabakat İndir (PDF)
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Metrics Row -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-1 overflow-hidden">
+                            <p class="text-truncate font-size-14 mb-2">Toplam Borç</p>
+                            <h4 class="mb-0">{{ number_format($customer->balance ?? 0, 2, ',', '.') }} ₺</h4>
+                        </div>
+                        <div class="flex-shrink-0 align-self-center">
+                            <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
+                                <span class="avatar-title">
+                                    <i class="bx bx-credit-card font-size-20"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-1 overflow-hidden">
+                            <p class="text-truncate font-size-14 mb-2">Vadesi Geçen</p>
+                            <h4 class="mb-0 text-danger">{{ number_format($customer->overdue_balance ?? 0, 2, ',', '.') }} ₺</h4>
+                        </div>
+                        <div class="flex-shrink-0 align-self-center">
+                            <div class="mini-stat-icon avatar-sm rounded-circle bg-danger">
+                                <span class="avatar-title">
+                                    <i class="bx bx-time font-size-20"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-1 overflow-hidden">
+                            <p class="text-truncate font-size-14 mb-2">Kredi Limiti</p>
+                            <h4 class="mb-0">{{ number_format($customer->credit_limit ?? 0, 2, ',', '.') }} ₺</h4>
+                            @if(($customer->credit_limit ?? 0) > 0)
+                                @php $utilization = (($customer->balance ?? 0) / $customer->credit_limit) * 100; @endphp
+                                <small class="text-muted">%{{ number_format($utilization, 1) }} kullanılmış</small>
+                            @endif
+                        </div>
+                        <div class="flex-shrink-0 align-self-center">
+                            <div class="mini-stat-icon avatar-sm rounded-circle bg-success">
+                                <span class="avatar-title">
+                                    <i class="bx bx-wallet font-size-20"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-1 overflow-hidden">
+                            <p class="text-truncate font-size-14 mb-2">Risk Skoru</p>
+                            <h4 class="mb-0">{{ $customer->risk_score ?? 0 }}/100</h4>
+                            @php 
+                                $riskLevel = 'success';
+                                if(($customer->risk_score ?? 0) > 70) $riskLevel = 'danger';
+                                elseif(($customer->risk_score ?? 0) > 40) $riskLevel = 'warning';
+                            @endphp
+                            <span class="badge badge-soft-{{ $riskLevel }}">
+                                @if(($customer->risk_score ?? 0) > 70) Yüksek Risk
+                                @elseif(($customer->risk_score ?? 0) > 40) Orta Risk
+                                @else Düşük Risk
+                                @endif
+                            </span>
+                        </div>
+                        <div class="flex-shrink-0 align-self-center">
+                            <div class="mini-stat-icon avatar-sm rounded-circle bg-{{ $riskLevel }}">
+                                <span class="avatar-title">
+                                    <i class="bx bx-shield font-size-20"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Tabs -->
+    <div class="card">
+        <div class="card-body">
+            <ul class="nav nav-pills nav-justified" role="tablist">
+                <li class="nav-item waves-effect waves-light">
+                    <a class="nav-link active" data-toggle="tab" data-bs-toggle="tab" href="#overview" role="tab">
+                        <span class="d-block d-sm-none"><i class="fas fa-chart-line"></i></span>
+                        <span class="d-none d-sm-block"><i class="fas fa-chart-line me-2"></i>Genel Bakış</span>
+                    </a>
+                </li>
+                <li class="nav-item waves-effect waves-light">
+                    <a class="nav-link" data-toggle="tab" data-bs-toggle="tab" href="#statement" role="tab">
+                        <span class="d-block d-sm-none"><i class="fas fa-list"></i></span>
+                        <span class="d-none d-sm-block"><i class="fas fa-list me-2"></i>Hesap Ekstresi</span>
+                    </a>
+                </li>
+                <li class="nav-item waves-effect waves-light">
+                    <a class="nav-link" data-toggle="tab" data-bs-toggle="tab" href="#ageing" role="tab">
+                        <span class="d-block d-sm-none"><i class="fas fa-clock"></i></span>
+                        <span class="d-none d-sm-block"><i class="fas fa-clock me-2"></i>Yaşlandırma</span>
+                    </a>
+                </li>
+                <li class="nav-item waves-effect waves-light">
+                    <a class="nav-link" data-toggle="tab" data-bs-toggle="tab" href="#profile" role="tab">
+                        <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                        <span class="d-none d-sm-block"><i class="far fa-user me-2"></i>Bilgiler</span>
+                    </a>
+                </li>
+                <li class="nav-item waves-effect waves-light">
+                    <a class="nav-link" data-toggle="tab" data-bs-toggle="tab" href="#activity" role="tab">
+                        <span class="d-block d-sm-none"><i class="fas fa-history"></i></span>
+                        <span class="d-none d-sm-block"><i class="fas fa-history me-2"></i>Aktivite</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content p-3 text-muted">
+                <!-- Overview Tab -->
+                <div class="tab-pane active" id="overview" role="tabpanel">
+                    <div class="row">
+                        <!-- Ageing Analysis Chart -->
+                        <div class="col-lg-6 mb-4">
+                            <h5 class="font-size-16 mb-3"><i class="mdi mdi-chart-donut text-primary me-2"></i>Borç Yaşlandırma Analizi</h5>
+                            <div class="text-center">
+                                <canvas id="ageingChart" width="300" height="300"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Trend Chart -->
+                        <div class="col-lg-6 mb-4">
+                            <h5 class="font-size-16 mb-3"><i class="mdi mdi-chart-line text-success me-2"></i>Ödeme Trendi (Son 12 Ay)</h5>
+                            <canvas id="paymentTrendChart" width="400" height="300"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="font-size-16 mb-3"><i class="mdi mdi-flash text-warning me-2"></i>Hızlı Tahsilat Girişi</h5>
+                            <div class="card bg-light border">
+                                <div class="card-body">
+                                    <form method="POST" action="{{ route('finance.accounts.invoices.receipts.store.body') }}" class="row g-3">
+                                        @csrf
+                                        <div class="col-md-3">
+                                            <label class="form-label">Fatura</label>
+                                            <select name="invoice_id" class="form-select">
+                                                @php
+                                                    $invoicesSelect = [];
+                                                    if(class_exists(\Illuminate\Support\Facades\Schema::class) && 
+                                                       \Illuminate\Support\Facades\Schema::hasTable('invoices')) {
+                                                        $invoicesSelect = $customer->invoices()->whereRaw('amount - COALESCE(paid_amount, 0) > 0')->get();
+                                                    }
+                                                @endphp
+                                                @forelse($invoicesSelect as $inv)
+                                                    <option value="{{ $inv->id }}">
+                                                        {{ $inv->no }} - Kalan: {{ number_format($inv->amount - ($inv->paid_amount ?? 0), 2, ',', '.') }} ₺
+                                                    </option>
+                                                @empty
+                                                    <option value="">Açık fatura bulunamadı</option>
+                                                @endforelse
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">Tarih</label>
+                                            <input name="date" type="date" class="form-control" value="{{ date('Y-m-d') }}">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">Tutar (₺)</label>
+                                            <input name="amount" type="number" step="0.01" class="form-control" placeholder="0,00">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">Ödeme Yöntemi</label>
+                                            <select name="method" class="form-select">
+                                                <option value="Nakit">Nakit</option>
+                                                <option value="Havale">Havale</option>
+                                                <option value="Kredi Kartı">Kredi Kartı</option>
+                                                <option value="Çek">Çek</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">Referans</label>
+                                            <input name="reference" class="form-control" placeholder="Referans No">
+                                        </div>
+                                        <div class="col-md-1 d-flex align-items-end">
+                                            <button type="submit" class="btn btn-success w-100">
+                                                <i class="mdi mdi-check"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statement Tab -->
+                <div class="tab-pane" id="statement" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="font-size-16 mb-0"><i class="mdi mdi-format-list-bulleted text-primary me-2"></i>Hesap Ekstresi</h5>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-primary" onclick="exportStatement()">
+                                <i class="mdi mdi-export me-1"></i>Dışa Aktar
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="printStatement()">
+                                <i class="mdi mdi-printer me-1"></i>Yazdır
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-nowrap table-hover" id="statementTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>Tip</th>
+                                    <th>Fatura/Belge</th>
+                                    <th class="text-end">Borç</th>
+                                    <th class="text-end">Alacak</th>
+                                    <th class="text-end">Bakiye</th>
+                                    <th>Açıklama</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php $runningBalance = 0; @endphp
+                                @forelse($statement as $s)
+                                    @php
+                                        $isDebit = in_array($s['type'], ['Invoice']);
+                                        $amount = $s['amount'];
+                                        $runningBalance += $isDebit ? $amount : -$amount;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $s['date'] ? \Carbon\Carbon::parse($s['date'])->format('d.m.Y') : '-' }}</td>
+                                        <td>
+                                            @if($s['type'] == 'Invoice')
+                                                <span class="badge badge-soft-danger">Fatura</span>
+                                            @elseif($s['type'] == 'Receipt')
+                                                <span class="badge badge-soft-success">Tahsilat</span>
+                                            @else
+                                                <span class="badge badge-soft-info">{{ $s['type'] }}</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $s['notes'] }}</td>
+                                        <td class="text-end">
+                                            @if($isDebit)
+                                                <span class="text-danger">{{ number_format($amount, 2, ',', '.') }} ₺</span>
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td class="text-end">
+                                            @if(!$isDebit)
+                                                <span class="text-success">{{ number_format(abs($amount), 2, ',', '.') }} ₺</span>
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td class="text-end">
+                                            <strong class="{{ $runningBalance > 0 ? 'text-danger' : 'text-success' }}">
+                                                {{ number_format($runningBalance, 2, ',', '.') }} ₺
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            @if($s['type'] == 'Receipt')
+                                                <small class="text-muted">{{ $s['notes'] }}</small>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center py-4">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <i class="mdi mdi-file-document-outline font-size-48 text-muted mb-2"></i>
+                                                <span class="text-muted">Henüz kayıt bulunmuyor</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Ageing Tab -->
+                <div class="tab-pane" id="ageing" role="tabpanel">
+                    <h5 class="font-size-16 mb-3"><i class="mdi mdi-clock-outline text-warning me-2"></i>Borç Yaşlandırma Detayı</h5>
+                    
+                    <div class="row mb-4">
+                        @foreach($ageing as $period => $amount)
+                            <div class="col-md-3">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <h4 class="text-{{ $period == '91+' ? 'danger' : ($period == '61-90' ? 'warning' : 'success') }}">
+                                            {{ number_format($amount, 2, ',', '.') }} ₺
+                                        </h4>
+                                        <p class="text-muted mb-0">{{ $period }} gün</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    @if(isset($ageingDetails) && count($ageingDetails) > 0)
+                        <div class="table-responsive">
+                            <table class="table table-nowrap table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Fatura No</th>
+                                        <th>Fatura Tarihi</th>
+                                        <th>Vade Tarihi</th>
+                                        <th class="text-end">Tutar</th>
+                                        <th class="text-end">Ödenen</th>
+                                        <th class="text-end">Kalan</th>
+                                        <th class="text-center">Gecikme</th>
+                                        <th class="text-center">Dönem</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($ageingDetails as $detail)
+                                        <tr>
+                                            <td>{{ $detail['invoice_no'] }}</td>
+                                            <td>{{ $detail['date'] ? \Carbon\Carbon::parse($detail['date'])->format('d.m.Y') : '-' }}</td>
+                                            <td>{{ $detail['due_date'] ? \Carbon\Carbon::parse($detail['due_date'])->format('d.m.Y') : '-' }}</td>
+                                            <td class="text-end">{{ number_format($detail['amount'], 2, ',', '.') }} ₺</td>
+                                            <td class="text-end text-success">{{ number_format($detail['paid'], 2, ',', '.') }} ₺</td>
+                                            <td class="text-end text-danger"><strong>{{ number_format($detail['balance'], 2, ',', '.') }} ₺</strong></td>
+                                            <td class="text-center">
+                                                @if($detail['days_overdue'] > 0)
+                                                    <span class="badge badge-soft-danger">{{ $detail['days_overdue'] }} gün</span>
+                                                @else
+                                                    <span class="badge badge-soft-success">Vade içi</span>
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                @php
+                                                    $badgeClass = 'primary';
+                                                    if ($detail['bucket'] == '91+') $badgeClass = 'danger';
+                                                    elseif ($detail['bucket'] == '61-90') $badgeClass = 'warning';
+                                                @endphp
+                                                <span class="badge badge-soft-{{ $badgeClass }}">
+                                                    {{ $detail['bucket'] }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Profile Tab -->
+                <div class="tab-pane" id="profile" role="tabpanel">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h5 class="font-size-16 mb-3"><i class="mdi mdi-account-details text-primary me-2"></i>Temel Bilgiler</h5>
+                            <div class="table-responsive">
+                                <table class="table table-nowrap">
+                                    <tbody>
+                                        <tr>
+                                            <td class="fw-medium">Unvan</td>
+                                            <td>{{ $customer->name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium">Vergi No</td>
+                                            <td>{{ $customer->tax_number ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium">Vergi Dairesi</td>
+                                            <td>{{ $customer->tax_office ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium">MERSİS No</td>
+                                            <td>{{ $customer->mersis ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium">Yetkili Kişi</td>
+                                            <td>{{ $customer->contact_person ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium">Telefon</td>
+                                            <td>
+                                                @if($customer->phone)
+                                                    <a href="tel:{{ $customer->phone }}">{{ $customer->phone }}</a>
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium">E-posta</td>
+                                            <td>
+                                                @if($customer->email)
+                                                    <a href="mailto:{{ $customer->email }}">{{ $customer->email }}</a>
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <h5 class="font-size-16 mb-3"><i class="mdi mdi-map-marker text-success me-2"></i>Adres & İletişim</h5>
+                            <div class="table-responsive">
+                                <table class="table table-nowrap">
+                                    <tbody>
+                                        <tr>
+                                            <td class="fw-medium">Adres</td>
+                                            <td>{{ $customer->address ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium">Şehir</td>
+                                            <td>{{ $customer->city ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium">İlçe</td>
+                                            <td>{{ $customer->district ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium">Posta Kodu</td>
+                                            <td>{{ $customer->postcode ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium">Ülke</td>
+                                            <td>{{ $customer->country ?? 'Türkiye' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium">IBAN</td>
+                                            <td>{{ $customer->iban ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium">Banka</td>
+                                            <td>{{ $customer->bank ?? '-' }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Risk Assessment -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h5 class="font-size-16 mb-3"><i class="mdi mdi-shield-check text-warning me-2"></i>Risk Değerlendirmesi</h5>
+                            <div class="card border-0 bg-light">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="text-center">
+                                                <div class="avatar-lg mx-auto mb-3">
+                                                    <div class="avatar-title bg-{{ ($customer->risk_score ?? 0) > 70 ? 'danger' : (($customer->risk_score ?? 0) > 40 ? 'warning' : 'success') }} rounded-circle">
+                                                        <i class="mdi mdi-shield font-size-24"></i>
+                                                    </div>
+                                                </div>
+                                                <h4>{{ $customer->risk_score ?? 0 }}/100</h4>
+                                                <p class="text-muted">Risk Skoru</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <h6>Risk Durumu</h6>
+                                            @php
+                                                $riskNotes = [];
+                                                if (($customer->balance ?? 0) > ($customer->credit_limit ?? 0) * 0.9) {
+                                                    $riskNotes[] = "⚠️ Kredi limitinin %90'ına yaklaşmış durumda.";
+                                                }
+                                                if (($customer->overdue_balance ?? 0) > 0) {
+                                                    $riskNotes[] = "🔴 Vadesi geçmiş borcu bulunmaktadır.";
+                                                }
+                                                if (($customer->risk_score ?? 0) > 70) {
+                                                    $riskNotes[] = "⚡ Risk skoru yüksek, dikkatli takip gereklidir.";
+                                                }
+                                            @endphp
+                                            
+                                            @if(empty($riskNotes))
+                                                <p class="text-success mb-0">✅ Risk faktörü tespit edilmemiştir.</p>
+                                            @else
+                                                @foreach($riskNotes as $note)
+                                                    <p class="mb-1">{{ $note }}</p>
+                                                @endforeach
+                                            @endif
+
+                                            <hr>
+                                            <h6>Öneriler</h6>
+                                            @php
+                                                $recommendations = [];
+                                                $utilization = ($customer->credit_limit ?? 0) > 0 ? (($customer->balance ?? 0) / $customer->credit_limit) * 100 : 0;
+                                                
+                                                if ($utilization > 80) {
+                                                    $recommendations[] = "📈 Kredi limitini artırmayı değerlendirin.";
+                                                }
+                                                if (($customer->balance ?? 0) > 0) {
+                                                    $recommendations[] = "📞 Müşteri ile iletişime geçerek ödeme planı oluşturun.";
+                                                }
+                                                if (($customer->risk_score ?? 0) > 60) {
+                                                    $recommendations[] = "🛡️ Teminat veya avans ödemesi talep edin.";
+                                                }
+                                            @endphp
+                                            
+                                            @if(empty($recommendations))
+                                                <p class="text-muted mb-0">Özel bir öneri bulunmuyor.</p>
+                                            @else
+                                                @foreach($recommendations as $rec)
+                                                    <p class="mb-1">{{ $rec }}</p>
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Tab -->
+                <div class="tab-pane" id="activity" role="tabpanel">
+                    <h5 class="font-size-16 mb-3"><i class="mdi mdi-history text-info me-2"></i>Mutabakat Geçmişi</h5>
+                    @if($logs && $logs->count())
+                        <div class="table-responsive">
+                            <table class="table table-nowrap table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Tarih</th>
+                                        <th>Eylem</th>
+                                        <th>Kullanıcı</th>
+                                        <th>E-posta</th>
+                                        <th>Dosya</th>
+                                        <th>IP Adresi</th>
+                                        <th>Notlar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($logs as $log)
+                                        <tr>
+                                            <td>{{ $log->created_at->format('d.m.Y H:i') }}</td>
+                                            <td>
+                                                <span class="badge badge-soft-{{ $log->action == 'send' ? 'primary' : 'info' }}">
+                                                    {{ ucfirst($log->action) }}
+                                                </span>
+                                            </td>
+                                            <td>{{ optional($log->user)->name ?? 'System' }}</td>
+                                            <td>{{ $log->email }}</td>
+                                            <td>
+                                                @if($log->filename)
+                                                    <a href="#" class="text-decoration-none">
+                                                        <i class="mdi mdi-file-pdf text-danger me-1"></i>{{ $log->filename }}
+                                                    </a>
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                            <td><small class="text-muted">{{ $log->ip }}</small></td>
+                                            <td><small>{{ $log->notes }}</small></td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="text-center py-4">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="mdi mdi-history font-size-48 text-muted mb-2"></i>
+                                <h5 class="text-muted">Henüz aktivite bulunmuyor</h5>
+                                <p class="text-muted">Mutabakat işlemleri burada görünecektir.</p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Ageing Chart
+    const ageingData = @json($ageing ?? ['0-30'=>0,'31-60'=>0,'61-90'=>0,'91_plus'=>0]);
+    const ageingValues = Object.values(ageingData);
+    const ageingLabels = Object.keys(ageingData).map(key => key.replace('_plus', '+') + ' gün');
+    
+    const ageingCtx = document.getElementById('ageingChart');
+    if (ageingCtx) {
+        new Chart(ageingCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ageingLabels,
+                datasets: [{
+                    data: ageingValues,
+                    backgroundColor: ['#28a745', '#ffc107', '#fd7e14', '#dc3545'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Payment Trend Chart
+    const monthlyTrend = @json($monthlyTrend ?? []);
+    const trendLabels = monthlyTrend.map(item => item.month);
+    const trendData = monthlyTrend.map(item => item.amount);
+    
+    const trendCtx = document.getElementById('paymentTrendChart');
+    if (trendCtx) {
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: trendLabels,
+                datasets: [{
+                    label: 'Tahsilat (₺)',
+                    data: trendData,
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return new Intl.NumberFormat('tr-TR', {
+                                    style: 'currency',
+                                    currency: 'TRY'
+                                }).format(value);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+
+// Utility functions
+function exportStatement() {
+    // Implementation for exporting statement
+    alert('Ekstre dışa aktarma özelliği yakında eklenecek.');
+}
+
+function printStatement() {
+    window.print();
+}
+
+// Enhanced DataTable for statement if needed
+if (typeof $ !== 'undefined' && $.fn.DataTable) {
+    $(document).ready(function() {
+        try {
+            $('#statementTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'excel', 'pdf', 'print'],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/tr.json'
+                },
+                order: [[0, 'desc']], // Sort by date descending
+                columnDefs: [
+                    { targets: [3, 4, 5], className: 'text-end' }
+                ]
+            });
+        } catch (e) {
+            console.log('DataTables initialization failed:', e);
+        }
+    });
+}
+</script>
+@endsection

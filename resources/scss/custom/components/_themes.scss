@@ -1,0 +1,2079 @@
+// =============================================================================
+// PERGEL — Çoklu Tema Sistemi
+// Her tema kendi CSS Custom Properties setini tanımlar.
+// data-theme="santiye|corporate|nature|industrial|health" ile aktifleşir.
+// Her temanın light (varsayılan) ve dark ([data-dark="true"]) versiyonu vardır.
+// =============================================================================
+
+// Google Fonts — tüm tema fontları
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+// =============================================================================
+// ██████  TEMA 1: ŞANTİYE (VARSAYILAN)
+// Endüstriyel şantiye karakteri — lacivert derinlik, amber güç
+// =============================================================================
+[data-theme="santiye"],
+:root:not([data-theme]) {
+
+  // --- Sidebar — Derin okyanus laciverdinden petrol tonuna geçiş ---
+  --pt-sidebar-bg:           linear-gradient(165deg, #0a1628 0%, #0d1f3e 35%, #152844 65%, #0f1e38 100%);
+  --pt-sidebar-overlay:      radial-gradient(ellipse at 30% 0%, rgba(79,158,248,0.09) 0%, transparent 65%),
+                             radial-gradient(ellipse at 80% 100%, rgba(245,158,11,0.04) 0%, transparent 50%);
+  --pt-sidebar-border:       rgba(79,158,248,0.13);
+  --pt-sidebar-shadow:       4px 0 30px rgba(0,0,0,0.55), 0 0 0 1px rgba(79,158,248,0.04);
+  --pt-sidebar-text:         #9db8cc;
+  --pt-sidebar-text-bright:  #dde8f0;
+  --pt-sidebar-text-dim:     #6b8499;
+  --pt-sidebar-hover-bg:     rgba(79,158,248,0.10);
+  --pt-sidebar-active-bg:    linear-gradient(90deg, rgba(79,158,248,0.22) 0%, rgba(79,158,248,0.08) 100%);
+  --pt-sidebar-active-text:  #63b3ed;
+  --pt-sidebar-accent:       #4f9ef8;
+  --pt-sidebar-icon-color:   #5da8e8;
+  --pt-sidebar-scrollbar:    rgba(79,158,248,0.22);
+  --pt-sidebar-section-color:#4e6a80;
+  --pt-sidebar-submenu-bg:   rgba(0,0,0,0.18);
+
+  // --- Topbar — Kömür mavisi ---
+  --pt-topbar-bg:            #0c1424;
+  --pt-topbar-border:        rgba(79,158,248,0.10);
+  --pt-topbar-shadow:        0 2px 0 rgba(79,158,248,0.06), 0 4px 24px rgba(0,0,0,0.35);
+  --pt-topbar-text:          #d8e8f4;
+  --pt-topbar-text-muted:    #7b96aa;
+  --pt-topbar-icon-hover-bg: rgba(79,158,248,0.13);
+  --pt-logo-box-bg:          #0a1220;
+  --pt-logo-box-border:      rgba(79,158,248,0.10);
+  --pt-logo-gradient:        linear-gradient(135deg, #1e56d0 0%, #1540b0 50%, #d97706 100%);
+  --pt-logo-text-color:      #f0f6ff;
+  --pt-logo-subtext-color:   #6e90aa;
+
+  // --- Body & Page ---
+  --pt-body-bg:              #0b1526;
+  --pt-body-bg-pattern:      none;
+  --pt-page-content-bg:      rgba(13,22,44,0.80);
+  --pt-page-content-radius:  20px 0 0 0;
+  --pt-page-content-border:  rgba(79,158,248,0.07);
+
+  // --- Kartlar — Hafif derin cam efekti ---
+  --pt-card-bg:              rgba(22,34,56,0.88);
+  --pt-card-bg-glass:        rgba(26,38,62,0.92);
+  --pt-card-border:          rgba(79,158,248,0.09);
+  --pt-card-radius:          12px;
+  --pt-card-shadow:          0 2px 8px rgba(0,0,0,0.20), 0 8px 28px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);
+  --pt-card-header-bg:       rgba(255,255,255,0.025);
+  --pt-card-header-border:   rgba(79,158,248,0.08);
+
+  // --- Ana Renkler — Güçlü amber + soğuk mavi ---
+  --pt-primary:              #f5a623;
+  --pt-primary-hover:        #e08c0c;
+  --pt-primary-rgb:          245, 166, 35;
+  --pt-primary-subtle:       rgba(245,166,35,0.14);
+  --pt-accent:               #4a8fe8;
+  --pt-accent-rgb:           74, 143, 232;
+  --pt-success:              #10b981;
+  --pt-danger:               #f05252;
+  --pt-warning:              #f5a623;
+  --pt-info:                 #0ea5e9;
+
+  // --- Tipografi ---
+  --pt-font-sans:            'Inter', sans-serif;
+  --pt-font-heading:         'Inter', sans-serif;
+  --pt-font-weight-heading:  700;
+  --pt-body-color:           #c8dce8;
+  --pt-heading-color:        #eaf2f8;
+  --pt-text-muted:           #7b96aa;
+  --pt-text-subtle:          #4e6a80;
+  --pt-link-color:           #63b3ed;
+
+  // --- Butonlar ---
+  --pt-btn-radius:           8px;
+  --pt-btn-font-weight:      600;
+  --pt-btn-primary-bg:       #f5a623;
+  --pt-btn-primary-text:     #0a1220;
+  --pt-btn-primary-border:   #f5a623;
+  --pt-btn-primary-hover-bg: #e08c0c;
+
+  // --- Formlar ---
+  --pt-input-bg:             rgba(11,21,38,0.65);
+  --pt-input-border:         rgba(79,158,248,0.18);
+  --pt-input-radius:         8px;
+  --pt-input-text:           #eaf2f8;
+  --pt-input-placeholder:    #4e6a80;
+  --pt-input-focus-border:   #4a8fe8;
+  --pt-input-focus-shadow:   rgba(74,143,232,0.22);
+  --pt-label-color:          #9db8cc;
+
+  // --- Tablolar ---
+  --pt-table-color:          #c8dce8;
+  --pt-table-border:         rgba(79,158,248,0.09);
+  --pt-table-head-bg:        rgba(18,30,52,0.95);
+  --pt-table-head-color:     #eaf2f8;
+  --pt-table-stripe-bg:      rgba(79,158,248,0.035);
+  --pt-table-hover-bg:       rgba(79,158,248,0.07);
+
+  // --- Modal & Overlay ---
+  --pt-modal-bg:             #162238;
+  --pt-modal-border:         rgba(79,158,248,0.10);
+  --pt-modal-header-bg:      #0f1a2e;
+
+  // --- Dropdown ---
+  --pt-dropdown-bg:          #162238;
+  --pt-dropdown-border:      rgba(79,158,248,0.10);
+  --pt-dropdown-shadow:      0 12px 30px rgba(0,0,0,0.45);
+  --pt-dropdown-item-color:  #9db8cc;
+  --pt-dropdown-item-hover-bg:rgba(79,158,248,0.10);
+  --pt-dropdown-item-hover-color:#63b3ed;
+
+  // --- Badge & Pill ---
+  --pt-badge-radius:         6px;
+
+  // --- Page Title ---
+  --pt-page-title-bg:        rgba(22,34,56,0.75);
+  --pt-page-title-border:    rgba(79,158,248,0.08);
+  --pt-breadcrumb-bg:        rgba(18,28,48,0.65);
+
+  // --- Pagination ---
+  --pt-pagination-bg:        #162238;
+  --pt-pagination-border:    rgba(79,158,248,0.12);
+  --pt-pagination-color:     #63b3ed;
+  --pt-pagination-active-bg: #f5a623;
+
+  // --- Alert ---
+  --pt-alert-bg:             rgba(22,34,56,0.92);
+  --pt-alert-border:         rgba(79,158,248,0.10);
+
+  // --- Offcanvas & Sidebar Panel ---
+  --pt-offcanvas-bg:         #162238;
+  --pt-offcanvas-color:      #eaf2f8;
+}
+
+// Şantiye Dark (daha derin, neredeyse siyah okyanus)
+[data-theme="santiye"][data-dark="true"] {
+  --pt-body-bg:              #050c18;
+  --pt-page-content-bg:      rgba(5,12,24,0.90);
+  --pt-card-bg:              rgba(10,18,34,0.96);
+  --pt-card-border:          rgba(79,158,248,0.07);
+  --pt-sidebar-bg:           linear-gradient(165deg, #040a16 0%, #080f22 40%, #0a1428 100%);
+  --pt-topbar-bg:            #050c18;
+  --pt-modal-bg:             #0a1628;
+  --pt-modal-header-bg:      #070e1e;
+  --pt-dropdown-bg:          #0a1628;
+  --pt-offcanvas-bg:         #0a1628;
+  --pt-heading-color:        #f0f8ff;
+  --pt-body-color:           #a8c8e0;
+}
+
+
+// =============================================================================
+// ██████  TEMA 2: KURUMSAL (CORPORATE)
+// Güven, netlik, prestij — koyu mavi derinlik, yeşil başarı
+// Hedef: Gayrimenkul, Finans, Yönetim
+// =============================================================================
+[data-theme="corporate"] {
+
+  // --- Sidebar — Derin Prusya mavisi, kurumsal dikey gradient ---
+  --pt-sidebar-bg:           linear-gradient(185deg, #0a1d3e 0%, #102448 40%, #172e56 70%, #0e2045 100%);
+  --pt-sidebar-overlay:      linear-gradient(180deg, rgba(26,86,219,0.06) 0%, transparent 60%);
+  --pt-sidebar-border:       rgba(26,86,219,0.14);
+  --pt-sidebar-shadow:       4px 0 28px rgba(0,0,0,0.40), 1px 0 0 rgba(26,86,219,0.08);
+  --pt-sidebar-text:         #a8c0e0;
+  --pt-sidebar-text-bright:  #dde8f8;
+  --pt-sidebar-text-dim:     #5a7aaa;
+  --pt-sidebar-hover-bg:     rgba(26,86,219,0.12);
+  --pt-sidebar-active-bg:    linear-gradient(90deg, rgba(26,86,219,0.28) 0%, rgba(26,86,219,0.08) 100%);
+  --pt-sidebar-active-text:  #74b5fa;
+  --pt-sidebar-accent:       #2563eb;
+  --pt-sidebar-icon-color:   #5a9af0;
+  --pt-sidebar-scrollbar:    rgba(26,86,219,0.28);
+  --pt-sidebar-section-color:#3d5e8a;
+  --pt-sidebar-submenu-bg:   rgba(0,0,0,0.14);
+
+  // --- Topbar — Lacivert kurumsal çizgi ---
+  --pt-topbar-bg:            #0a1d3e;
+  --pt-topbar-border:        rgba(26,86,219,0.14);
+  --pt-topbar-shadow:        0 1px 0 rgba(26,86,219,0.12), 0 4px 16px rgba(0,0,0,0.28);
+  --pt-topbar-text:          #cce0f8;
+  --pt-topbar-text-muted:    #5a7aaa;
+  --pt-topbar-icon-hover-bg: rgba(26,86,219,0.16);
+  --pt-logo-box-bg:          #071630;
+  --pt-logo-box-border:      rgba(26,86,219,0.12);
+  --pt-logo-gradient:        linear-gradient(135deg, #1a56db 0%, #0d3b9e 55%, #047857 100%);
+  --pt-logo-text-color:      #e8f2ff;
+  --pt-logo-subtext-color:   #5a7aaa;
+
+  // --- Body & Page — Serin nötr keten ---
+  --pt-body-bg:              #eef2f8;
+  --pt-body-bg-pattern:      none;
+  --pt-page-content-bg:      rgba(252,254,255,0.97);
+  --pt-page-content-radius:  16px 0 0 0;
+  --pt-page-content-border:  rgba(186,210,240,0.45);
+
+  // --- Kartlar — Keskin kenarlı, minimal gölge ---
+  --pt-card-bg:              #ffffff;
+  --pt-card-bg-glass:        rgba(255,255,255,0.99);
+  --pt-card-border:          rgba(186,210,240,0.55);
+  --pt-card-radius:          8px;
+  --pt-card-shadow:          0 1px 3px rgba(15,37,90,0.06), 0 4px 18px rgba(15,37,90,0.05);
+  --pt-card-header-bg:       #f5f9ff;
+  --pt-card-header-border:   rgba(186,210,240,0.45);
+
+  // --- Renkler — Safir mavi + zümrüt yeşil denge ---
+  --pt-primary:              #1e54d8;
+  --pt-primary-hover:        #1543bb;
+  --pt-primary-rgb:          30, 84, 216;
+  --pt-primary-subtle:       rgba(30,84,216,0.09);
+  --pt-accent:               #047857;
+  --pt-accent-rgb:           4, 120, 87;
+  --pt-success:              #047857;
+  --pt-danger:               #c81e1e;
+  --pt-warning:              #b45309;
+  --pt-info:                 #0369a1;
+
+  // --- Tipografi — Profesyonel ve geniş aralıklı ---
+  --pt-font-sans:            'Plus Jakarta Sans', sans-serif;
+  --pt-font-heading:         'Plus Jakarta Sans', sans-serif;
+  --pt-font-weight-heading:  700;
+  --pt-body-color:           #1a3060;
+  --pt-heading-color:        #0c1e44;
+  --pt-text-muted:           #5a7090;
+  --pt-text-subtle:          #8aa2bc;
+  --pt-link-color:           #1e54d8;
+
+  // --- Butonlar ---
+  --pt-btn-radius:           6px;
+  --pt-btn-font-weight:      600;
+  --pt-btn-primary-bg:       #1e54d8;
+  --pt-btn-primary-text:     #ffffff;
+  --pt-btn-primary-border:   #1e54d8;
+  --pt-btn-primary-hover-bg: #1543bb;
+
+  // --- Formlar ---
+  --pt-input-bg:             #ffffff;
+  --pt-input-border:         #bed0ea;
+  --pt-input-radius:         6px;
+  --pt-input-text:           #0c1e44;
+  --pt-input-placeholder:    #8aa2bc;
+  --pt-input-focus-border:   #1e54d8;
+  --pt-input-focus-shadow:   rgba(30,84,216,0.16);
+  --pt-label-color:          #2a4070;
+
+  // --- Tablolar ---
+  --pt-table-color:          #1a3060;
+  --pt-table-border:         #d8e8f8;
+  --pt-table-head-bg:        #edf5ff;
+  --pt-table-head-color:     #0c1e44;
+  --pt-table-stripe-bg:      rgba(238,244,255,0.65);
+  --pt-table-hover-bg:       rgba(30,84,216,0.045);
+
+  // --- Modal & Overlay ---
+  --pt-modal-bg:             #ffffff;
+  --pt-modal-border:         rgba(186,210,240,0.55);
+  --pt-modal-header-bg:      #f5f9ff;
+
+  // --- Dropdown ---
+  --pt-dropdown-bg:          #ffffff;
+  --pt-dropdown-border:      rgba(186,210,240,0.65);
+  --pt-dropdown-shadow:      0 8px 28px rgba(15,37,90,0.10);
+  --pt-dropdown-item-color:  #2a4070;
+  --pt-dropdown-item-hover-bg:rgba(237,245,255,0.9);
+  --pt-dropdown-item-hover-color:#1e54d8;
+
+  // --- Badge & Pill ---
+  --pt-badge-radius:         4px;
+
+  // --- Page Title ---
+  --pt-page-title-bg:        rgba(255,255,255,0.92);
+  --pt-page-title-border:    rgba(186,210,240,0.38);
+  --pt-breadcrumb-bg:        rgba(245,249,255,0.92);
+
+  // --- Pagination ---
+  --pt-pagination-bg:        #ffffff;
+  --pt-pagination-border:    #bed0ea;
+  --pt-pagination-color:     #1e54d8;
+  --pt-pagination-active-bg: #1e54d8;
+
+  // --- Alert ---
+  --pt-alert-bg:             rgba(255,255,255,0.96);
+  --pt-alert-border:         rgba(186,210,240,0.55);
+
+  // --- Offcanvas ---
+  --pt-offcanvas-bg:         #ffffff;
+  --pt-offcanvas-color:      #1a3060;
+}
+
+// Kurumsal Dark — Derin lacivert tünel
+[data-theme="corporate"][data-dark="true"] {
+  --pt-body-bg:              #07111e;
+  --pt-page-content-bg:      rgba(8,16,32,0.94);
+  --pt-page-content-border:  rgba(30,84,216,0.09);
+  --pt-card-bg:              rgba(14,26,52,0.92);
+  --pt-card-bg-glass:        rgba(18,32,62,0.96);
+  --pt-card-border:          rgba(30,84,216,0.10);
+  --pt-card-header-bg:       rgba(10,20,42,0.85);
+  --pt-card-shadow:          0 4px 24px rgba(0,0,0,0.45);
+  --pt-sidebar-bg:           linear-gradient(185deg, #04090f 0%, #070e1e 40%, #0a152a 100%);
+  --pt-topbar-bg:            #04090f;
+  --pt-body-color:           #8ab0d8;
+  --pt-heading-color:        #c8dff8;
+  --pt-text-muted:           #4a6888;
+  --pt-input-bg:             rgba(8,16,32,0.75);
+  --pt-input-border:         rgba(30,84,216,0.18);
+  --pt-input-text:           #c8dff8;
+  --pt-label-color:          #8ab0d8;
+  --pt-table-color:          #8ab0d8;
+  --pt-table-border:         rgba(30,84,216,0.10);
+  --pt-table-head-bg:        rgba(12,22,44,0.98);
+  --pt-table-head-color:     #c8dff8;
+  --pt-table-stripe-bg:      rgba(30,84,216,0.04);
+  --pt-modal-bg:             #0b1a32;
+  --pt-modal-header-bg:      #071224;
+  --pt-modal-border:         rgba(30,84,216,0.12);
+  --pt-dropdown-bg:          #0b1a32;
+  --pt-dropdown-border:      rgba(30,84,216,0.12);
+  --pt-dropdown-item-color:  #8ab0d8;
+  --pt-dropdown-item-hover-bg:rgba(30,84,216,0.14);
+  --pt-dropdown-item-hover-color:#74b5fa;
+  --pt-page-title-bg:        rgba(12,22,44,0.85);
+  --pt-page-title-border:    rgba(30,84,216,0.10);
+  --pt-breadcrumb-bg:        rgba(8,16,32,0.75);
+  --pt-pagination-bg:        #0b1a32;
+  --pt-pagination-border:    rgba(30,84,216,0.14);
+  --pt-pagination-color:     #74b5fa;
+  --pt-alert-bg:             rgba(14,26,52,0.94);
+  --pt-alert-border:         rgba(30,84,216,0.12);
+  --pt-offcanvas-bg:         #0b1a32;
+  --pt-offcanvas-color:      #c8dff8;
+}
+
+
+// =============================================================================
+// ██████  TEMA 3: DOĞA / ÇEVRE (NATURE)
+// Organik, yaşayan, sürdürülebilir — derin yeşil, altın toprak tonu
+// Hedef: Çevre, Tarım, Orman, Yenilenebilir Enerji
+// =============================================================================
+[data-theme="nature"] {
+
+  // --- Sidebar — Koyu orman yeşilinden yosun tonuna ---
+  --pt-sidebar-bg:           linear-gradient(165deg, #0a2014 0%, #112d1c 40%, #183826 70%, #0c2816 100%);
+  --pt-sidebar-overlay:      radial-gradient(ellipse at 40% 0%, rgba(16,185,129,0.10) 0%, transparent 65%),
+                             radial-gradient(ellipse at 90% 90%, rgba(180,133,32,0.05) 0%, transparent 50%);
+  --pt-sidebar-border:       rgba(16,185,129,0.16);
+  --pt-sidebar-shadow:       4px 0 28px rgba(0,0,0,0.50), 1px 0 0 rgba(16,185,129,0.06);
+  --pt-sidebar-text:         #90b89e;
+  --pt-sidebar-text-bright:  #c4e0cc;
+  --pt-sidebar-text-dim:     #547860;
+  --pt-sidebar-hover-bg:     rgba(16,185,129,0.11);
+  --pt-sidebar-active-bg:    linear-gradient(90deg, rgba(16,185,129,0.24) 0%, rgba(16,185,129,0.06) 100%);
+  --pt-sidebar-active-text:  #4ade80;
+  --pt-sidebar-accent:       #10b981;
+  --pt-sidebar-icon-color:   #34d399;
+  --pt-sidebar-scrollbar:    rgba(16,185,129,0.22);
+  --pt-sidebar-section-color:#3e6848;
+  --pt-sidebar-submenu-bg:   rgba(0,0,0,0.18);
+
+  // --- Topbar — Koyu zeytin yeşili ---
+  --pt-topbar-bg:            #081a0d;
+  --pt-topbar-border:        rgba(16,185,129,0.13);
+  --pt-topbar-shadow:        0 2px 0 rgba(16,185,129,0.07), 0 4px 20px rgba(0,0,0,0.28);
+  --pt-topbar-text:          #b4d8be;
+  --pt-topbar-text-muted:    #547860;
+  --pt-topbar-icon-hover-bg: rgba(16,185,129,0.16);
+  --pt-logo-box-bg:          #060f08;
+  --pt-logo-box-border:      rgba(16,185,129,0.12);
+  --pt-logo-gradient:        linear-gradient(135deg, #059669 0%, #047857 50%, #b45309 100%);
+  --pt-logo-text-color:      #c4e0cc;
+  --pt-logo-subtext-color:   #4a7858;
+
+  // --- Body & Page — Açık nane krem ---
+  --pt-body-bg:              #edf6ee;
+  --pt-body-bg-pattern:      none;
+  --pt-page-content-bg:      rgba(248,254,250,0.94);
+  --pt-page-content-radius:  20px 0 0 0;
+  --pt-page-content-border:  rgba(16,185,129,0.12);
+
+  // --- Kartlar — Doğal yuvarlaklık, hafif yeşil ton ---
+  --pt-card-bg:              #ffffff;
+  --pt-card-bg-glass:        rgba(255,255,255,0.96);
+  --pt-card-border:          rgba(134,196,152,0.38);
+  --pt-card-radius:          16px;
+  --pt-card-shadow:          0 2px 6px rgba(0,60,24,0.07), 0 6px 22px rgba(0,60,24,0.04);
+  --pt-card-header-bg:       #f2fbf5;
+  --pt-card-header-border:   rgba(134,196,152,0.32);
+
+  // --- Renkler — Zümrüt birincil, bakır ikincil ---
+  --pt-primary:              #059669;
+  --pt-primary-hover:        #047857;
+  --pt-primary-rgb:          5, 150, 105;
+  --pt-primary-subtle:       rgba(5,150,105,0.11);
+  --pt-accent:               #b45309;
+  --pt-accent-rgb:           180, 83, 9;
+  --pt-success:              #059669;
+  --pt-danger:               #dc2626;
+  --pt-warning:              #d97706;
+  --pt-info:                 #0891b2;
+
+  // --- Tipografi — Yumuşak, organik ---
+  --pt-font-sans:            'Nunito', sans-serif;
+  --pt-font-heading:         'Nunito', sans-serif;
+  --pt-font-weight-heading:  800;
+  --pt-body-color:           #14432a;
+  --pt-heading-color:        #092214;
+  --pt-text-muted:           #4e7a5e;
+  --pt-text-subtle:          #7aaa88;
+  --pt-link-color:           #047857;
+
+  // --- Butonlar ---
+  --pt-btn-radius:           14px;
+  --pt-btn-font-weight:      700;
+  --pt-btn-primary-bg:       #059669;
+  --pt-btn-primary-text:     #ffffff;
+  --pt-btn-primary-border:   #059669;
+  --pt-btn-primary-hover-bg: #047857;
+
+  // --- Formlar ---
+  --pt-input-bg:             #ffffff;
+  --pt-input-border:         #8dc49a;
+  --pt-input-radius:         12px;
+  --pt-input-text:           #092214;
+  --pt-input-placeholder:    #7aaa88;
+  --pt-input-focus-border:   #059669;
+  --pt-input-focus-shadow:   rgba(5,150,105,0.18);
+  --pt-label-color:          #1e5c34;
+
+  // --- Tablolar ---
+  --pt-table-color:          #14432a;
+  --pt-table-border:         #aadab4;
+  --pt-table-head-bg:        #e0f5e6;
+  --pt-table-head-color:     #092214;
+  --pt-table-stripe-bg:      rgba(234,250,238,0.75);
+  --pt-table-hover-bg:       rgba(5,150,105,0.055);
+
+  // --- Modal & Overlay ---
+  --pt-modal-bg:             #ffffff;
+  --pt-modal-border:         rgba(134,196,152,0.42);
+  --pt-modal-header-bg:      #f2fbf5;
+
+  // --- Dropdown ---
+  --pt-dropdown-bg:          #ffffff;
+  --pt-dropdown-border:      rgba(134,196,152,0.50);
+  --pt-dropdown-shadow:      0 8px 26px rgba(0,60,24,0.10);
+  --pt-dropdown-item-color:  #14432a;
+  --pt-dropdown-item-hover-bg:rgba(234,250,238,0.92);
+  --pt-dropdown-item-hover-color:#047857;
+
+  // --- Badge & Pill ---
+  --pt-badge-radius:         20px;
+
+  // --- Page Title ---
+  --pt-page-title-bg:        rgba(255,255,255,0.88);
+  --pt-page-title-border:    rgba(134,196,152,0.36);
+  --pt-breadcrumb-bg:        rgba(234,250,238,0.92);
+
+  // --- Pagination ---
+  --pt-pagination-bg:        #ffffff;
+  --pt-pagination-border:    #8dc49a;
+  --pt-pagination-color:     #047857;
+  --pt-pagination-active-bg: #059669;
+
+  // --- Alert ---
+  --pt-alert-bg:             rgba(255,255,255,0.96);
+  --pt-alert-border:         rgba(134,196,152,0.42);
+
+  // --- Offcanvas ---
+  --pt-offcanvas-bg:         #ffffff;
+  --pt-offcanvas-color:      #14432a;
+}
+
+// Doğa Dark — Gecenin orman derinliği
+[data-theme="nature"][data-dark="true"] {
+  --pt-body-bg:              #040d07;
+  --pt-page-content-bg:      rgba(6,16,9,0.92);
+  --pt-page-content-border:  rgba(16,185,129,0.10);
+  --pt-card-bg:              rgba(12,28,18,0.92);
+  --pt-card-bg-glass:        rgba(16,36,22,0.96);
+  --pt-card-border:          rgba(16,185,129,0.10);
+  --pt-card-header-bg:       rgba(8,20,12,0.85);
+  --pt-card-shadow:          0 4px 22px rgba(0,0,0,0.48);
+  --pt-sidebar-bg:           linear-gradient(165deg, #020806 0%, #070f09 40%, #091408 100%);
+  --pt-topbar-bg:            #020806;
+  --pt-body-color:           #7aaa88;
+  --pt-heading-color:        #b4d8be;
+  --pt-text-muted:           #3e6848;
+  --pt-input-bg:             rgba(6,16,9,0.75);
+  --pt-input-border:         rgba(16,185,129,0.18);
+  --pt-input-text:           #b4d8be;
+  --pt-label-color:          #7aaa88;
+  --pt-table-color:          #7aaa88;
+  --pt-table-border:         rgba(16,185,129,0.10);
+  --pt-table-head-bg:        rgba(12,28,18,0.98);
+  --pt-table-head-color:     #b4d8be;
+  --pt-table-stripe-bg:      rgba(16,185,129,0.04);
+  --pt-modal-bg:             #0a1e10;
+  --pt-modal-header-bg:      #061208;
+  --pt-modal-border:         rgba(16,185,129,0.12);
+  --pt-dropdown-bg:          #0a1e10;
+  --pt-dropdown-border:      rgba(16,185,129,0.12);
+  --pt-dropdown-item-color:  #7aaa88;
+  --pt-dropdown-item-hover-bg:rgba(16,185,129,0.10);
+  --pt-dropdown-item-hover-color:#4ade80;
+  --pt-page-title-bg:        rgba(12,28,18,0.85);
+  --pt-page-title-border:    rgba(16,185,129,0.10);
+  --pt-breadcrumb-bg:        rgba(6,16,9,0.75);
+  --pt-pagination-bg:        #0a1e10;
+  --pt-pagination-border:    rgba(16,185,129,0.18);
+  --pt-pagination-color:     #4ade80;
+  --pt-alert-bg:             rgba(12,28,18,0.92);
+  --pt-alert-border:         rgba(16,185,129,0.12);
+  --pt-offcanvas-bg:         #0a1e10;
+  --pt-offcanvas-color:      #b4d8be;
+}
+
+
+// =============================================================================
+// ██████  TEMA 4: ENDÜSTRİYEL (INDUSTRIAL)
+// Güç, ısı, demir — antrasit zırh, turuncu alev
+// Hedef: Fabrika, Madencilik, Altyapı, Ağır Sanayi
+// =============================================================================
+[data-theme="industrial"] {
+
+  // --- Sidebar — Karbon siyahından fırın kömürüne ---
+  --pt-sidebar-bg:           linear-gradient(185deg, #111111 0%, #181818 40%, #1c1c1c 75%, #141414 100%);
+  --pt-sidebar-overlay:      linear-gradient(180deg, rgba(234,88,12,0.06) 0%, transparent 50%);
+  --pt-sidebar-border:       rgba(234,88,12,0.22);
+  --pt-sidebar-shadow:       4px 0 24px rgba(0,0,0,0.65), 1px 0 0 rgba(234,88,12,0.08);
+  --pt-sidebar-text:         #8c8c96;
+  --pt-sidebar-text-bright:  #d8d8dc;
+  --pt-sidebar-text-dim:     #484852;
+  --pt-sidebar-hover-bg:     rgba(234,88,12,0.11);
+  --pt-sidebar-active-bg:    linear-gradient(90deg, rgba(234,88,12,0.26) 0%, rgba(234,88,12,0.06) 100%);
+  --pt-sidebar-active-text:  #f97316;
+  --pt-sidebar-accent:       #ea580c;
+  --pt-sidebar-icon-color:   #f97316;
+  --pt-sidebar-scrollbar:    rgba(234,88,12,0.22);
+  --pt-sidebar-section-color:#464650;
+  --pt-sidebar-submenu-bg:   rgba(0,0,0,0.22);
+
+  // --- Topbar — Neredeyse tam siyah çelik ---
+  --pt-topbar-bg:            #0c0c0c;
+  --pt-topbar-border:        rgba(234,88,12,0.16);
+  --pt-topbar-shadow:        0 2px 0 rgba(234,88,12,0.08), 0 4px 16px rgba(0,0,0,0.55);
+  --pt-topbar-text:          #c8c8cc;
+  --pt-topbar-text-muted:    #606068;
+  --pt-topbar-icon-hover-bg: rgba(234,88,12,0.16);
+  --pt-logo-box-bg:          #080808;
+  --pt-logo-box-border:      rgba(234,88,12,0.16);
+  --pt-logo-gradient:        linear-gradient(135deg, #dc4a08 0%, #b83506 50%, #d4a008 100%);
+  --pt-logo-text-color:      #d8d8dc;
+  --pt-logo-subtext-color:   #606068;
+
+  // --- Body & Page — Karanlık metal yüzey ---
+  --pt-body-bg:              #0c0c0c;
+  --pt-body-bg-pattern:      repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(234,88,12,0.018) 40px, rgba(234,88,12,0.018) 41px),
+                             repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(234,88,12,0.018) 40px, rgba(234,88,12,0.018) 41px);
+  --pt-page-content-bg:      rgba(16,16,16,0.94);
+  --pt-page-content-radius:  0;
+  --pt-page-content-border:  rgba(234,88,12,0.12);
+
+  // --- Kartlar — Fırın kapağı gibi ağır, sert köşe ---
+  --pt-card-bg:              #181818;
+  --pt-card-bg-glass:        rgba(24,24,24,0.99);
+  --pt-card-border:          rgba(234,88,12,0.14);
+  --pt-card-radius:          3px;
+  --pt-card-shadow:          0 2px 10px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.03), inset 0 -1px 0 rgba(234,88,12,0.05);
+  --pt-card-header-bg:       #101010;
+  --pt-card-header-border:   rgba(234,88,12,0.16);
+
+  // --- Renkler — Alev turuncusu + demir sarısı ---
+  --pt-primary:              #e8510a;
+  --pt-primary-hover:        #c23d08;
+  --pt-primary-rgb:          232, 81, 10;
+  --pt-primary-subtle:       rgba(232,81,10,0.14);
+  --pt-accent:               #d4a008;
+  --pt-accent-rgb:           212, 160, 8;
+  --pt-success:              #15803d;
+  --pt-danger:               #dc2626;
+  --pt-warning:              #d4a008;
+  --pt-info:                 #0e7490;
+
+  // --- Tipografi — Sert, teknik ---
+  --pt-font-sans:            'Roboto', sans-serif;
+  --pt-font-heading:         'Roboto', sans-serif;
+  --pt-font-weight-heading:  700;
+  --pt-body-color:           #8c8c96;
+  --pt-heading-color:        #d8d8dc;
+  --pt-text-muted:           #606068;
+  --pt-text-subtle:          #404048;
+  --pt-link-color:           #f97316;
+
+  // --- Butonlar — Sert, köşeli ---
+  --pt-btn-radius:           2px;
+  --pt-btn-font-weight:      600;
+  --pt-btn-primary-bg:       #e8510a;
+  --pt-btn-primary-text:     #ffffff;
+  --pt-btn-primary-border:   #e8510a;
+  --pt-btn-primary-hover-bg: #c23d08;
+
+  // --- Formlar ---
+  --pt-input-bg:             #101010;
+  --pt-input-border:         rgba(234,88,12,0.22);
+  --pt-input-radius:         2px;
+  --pt-input-text:           #d8d8dc;
+  --pt-input-placeholder:    #404048;
+  --pt-input-focus-border:   #e8510a;
+  --pt-input-focus-shadow:   rgba(232,81,10,0.18);
+  --pt-label-color:          #8c8c96;
+
+  // --- Tablolar ---
+  --pt-table-color:          #8c8c96;
+  --pt-table-border:         rgba(234,88,12,0.11);
+  --pt-table-head-bg:        #101010;
+  --pt-table-head-color:     #d8d8dc;
+  --pt-table-stripe-bg:      rgba(255,255,255,0.018);
+  --pt-table-hover-bg:       rgba(232,81,10,0.055);
+
+  // --- Modal & Overlay ---
+  --pt-modal-bg:             #181818;
+  --pt-modal-border:         rgba(234,88,12,0.20);
+  --pt-modal-header-bg:      #101010;
+
+  // --- Dropdown ---
+  --pt-dropdown-bg:          #181818;
+  --pt-dropdown-border:      rgba(234,88,12,0.20);
+  --pt-dropdown-shadow:      0 10px 28px rgba(0,0,0,0.65);
+  --pt-dropdown-item-color:  #8c8c96;
+  --pt-dropdown-item-hover-bg:rgba(234,88,12,0.09);
+  --pt-dropdown-item-hover-color:#f97316;
+
+  // --- Badge & Pill ---
+  --pt-badge-radius:         2px;
+
+  // --- Page Title ---
+  --pt-page-title-bg:        rgba(24,24,24,0.96);
+  --pt-page-title-border:    rgba(234,88,12,0.14);
+  --pt-breadcrumb-bg:        rgba(16,16,16,0.82);
+
+  // --- Pagination ---
+  --pt-pagination-bg:        #181818;
+  --pt-pagination-border:    rgba(234,88,12,0.20);
+  --pt-pagination-color:     #f97316;
+  --pt-pagination-active-bg: #e8510a;
+
+  // --- Alert ---
+  --pt-alert-bg:             rgba(24,24,24,0.96);
+  --pt-alert-border:         rgba(234,88,12,0.20);
+
+  // --- Offcanvas ---
+  --pt-offcanvas-bg:         #181818;
+  --pt-offcanvas-color:      #d8d8dc;
+}
+
+// Endüstriyel Dark — Tam siyah çelik, demir perdesi
+[data-theme="industrial"][data-dark="true"] {
+  --pt-body-bg:              #040404;
+  --pt-page-content-bg:      rgba(6,6,6,0.97);
+  --pt-card-bg:              rgba(9,9,9,0.99);
+  --pt-card-bg-glass:        rgba(11,11,11,0.99);
+  --pt-card-border:          rgba(234,88,12,0.12);
+  --pt-sidebar-bg:           linear-gradient(185deg, #020202 0%, #060606 40%, #080808 100%);
+  --pt-topbar-bg:            #040404;
+  --pt-modal-bg:             #090909;
+  --pt-modal-header-bg:      #050505;
+  --pt-dropdown-bg:          #090909;
+  --pt-offcanvas-bg:         #090909;
+  --pt-heading-color:        #c8c8cc;
+  --pt-body-color:           #686872;
+}
+
+
+// =============================================================================
+// ██████  TEMA 5: SAĞLIK / İSG (HEALTH)
+// Güvenlik, temizlik, şeffaflık — steril beyaz, güven mavisi, acil kırmızı
+// Hedef: İş Güvenliği (ISG), Sağlık, Hastane, Tıbbi Yönetim
+// =============================================================================
+[data-theme="health"] {
+
+  // --- Sidebar — Steril beyaz, klinik çizgiler ---
+  --pt-sidebar-bg:           linear-gradient(180deg, #fafcff 0%, #f0f6ff 60%, #e8f0fe 100%);
+  --pt-sidebar-overlay:      none;
+  --pt-sidebar-border:       rgba(37,99,235,0.10);
+  --pt-sidebar-shadow:       2px 0 18px rgba(37,99,235,0.07), 1px 0 0 rgba(37,99,235,0.06);
+  --pt-sidebar-text:         #2d3d5c;
+  --pt-sidebar-text-bright:  #0c1322;
+  --pt-sidebar-text-dim:     #8898b4;
+  --pt-sidebar-hover-bg:     rgba(37,99,235,0.07);
+  --pt-sidebar-active-bg:    linear-gradient(90deg, rgba(37,99,235,0.14) 0%, rgba(37,99,235,0.04) 100%);
+  --pt-sidebar-active-text:  #1d4ed8;
+  --pt-sidebar-accent:       #2563eb;
+  --pt-sidebar-icon-color:   #3b82f6;
+  --pt-sidebar-scrollbar:    rgba(37,99,235,0.18);
+  --pt-sidebar-section-color:#8898b4;
+  --pt-sidebar-submenu-bg:   rgba(37,99,235,0.035);
+
+  // --- Topbar — Canlı medikal mavi ---
+  --pt-topbar-bg:            #1d4ed8;
+  --pt-topbar-border:        rgba(255,255,255,0.18);
+  --pt-topbar-shadow:        0 2px 0 rgba(29,78,216,0.5), 0 4px 20px rgba(29,78,216,0.28);
+  --pt-topbar-text:          #ffffff;
+  --pt-topbar-text-muted:    rgba(255,255,255,0.72);
+  --pt-topbar-icon-hover-bg: rgba(255,255,255,0.14);
+  --pt-logo-box-bg:          #1e40af;
+  --pt-logo-box-border:      rgba(255,255,255,0.14);
+  --pt-logo-gradient:        linear-gradient(135deg, #f8faff 0%, #dbeafe 40%, #dc2626 100%);
+  --pt-logo-text-color:      #ffffff;
+  --pt-logo-subtext-color:   rgba(255,255,255,0.72);
+
+  // --- Body & Page — Hastane beyazı ---
+  --pt-body-bg:              #eef4ff;
+  --pt-body-bg-pattern:      none;
+  --pt-page-content-bg:      rgba(250,253,255,0.97);
+  --pt-page-content-radius:  12px 0 0 0;
+  --pt-page-content-border:  rgba(37,99,235,0.08);
+
+  // --- Kartlar — Saf beyaz, üst mavi çizgi ---
+  --pt-card-bg:              #ffffff;
+  --pt-card-bg-glass:        rgba(255,255,255,0.99);
+  --pt-card-border:          rgba(37,99,235,0.09);
+  --pt-card-radius:          10px;
+  --pt-card-shadow:          0 1px 3px rgba(37,99,235,0.07), 0 4px 14px rgba(37,99,235,0.04);
+  --pt-card-header-bg:       #f0f6ff;
+  --pt-card-header-border:   rgba(37,99,235,0.10);
+
+  // --- Renkler — Güven mavisi, acil kırmızı ---
+  --pt-primary:              #1d4ed8;
+  --pt-primary-hover:        #1e40af;
+  --pt-primary-rgb:          29, 78, 216;
+  --pt-primary-subtle:       rgba(29,78,216,0.09);
+  --pt-accent:               #c81e1e;
+  --pt-accent-rgb:           200, 30, 30;
+  --pt-success:              #15803d;
+  --pt-danger:               #c81e1e;
+  --pt-warning:              #c27803;
+  --pt-info:                 #0369a1;
+
+  // --- Tipografi — Yüksek okunabilirlik ---
+  --pt-font-sans:            'DM Sans', sans-serif;
+  --pt-font-heading:         'DM Sans', sans-serif;
+  --pt-font-weight-heading:  700;
+  --pt-body-color:           #0e1c30;
+  --pt-heading-color:        #060d1c;
+  --pt-text-muted:           #546480;
+  --pt-text-subtle:          #8898b4;
+  --pt-link-color:           #1d4ed8;
+
+  // --- Butonlar ---
+  --pt-btn-radius:           8px;
+  --pt-btn-font-weight:      600;
+  --pt-btn-primary-bg:       #1d4ed8;
+  --pt-btn-primary-text:     #ffffff;
+  --pt-btn-primary-border:   #1d4ed8;
+  --pt-btn-primary-hover-bg: #1e40af;
+
+  // --- Formlar ---
+  --pt-input-bg:             #ffffff;
+  --pt-input-border:         #a8c4f0;
+  --pt-input-radius:         8px;
+  --pt-input-text:           #060d1c;
+  --pt-input-placeholder:    #8898b4;
+  --pt-input-focus-border:   #1d4ed8;
+  --pt-input-focus-shadow:   rgba(29,78,216,0.16);
+  --pt-label-color:          #2d3d5c;
+
+  // --- Tablolar ---
+  --pt-table-color:          #0e1c30;
+  --pt-table-border:         #c6d9f8;
+  --pt-table-head-bg:        #eef4ff;
+  --pt-table-head-color:     #1e3a8a;
+  --pt-table-stripe-bg:      rgba(238,244,255,0.65);
+  --pt-table-hover-bg:       rgba(29,78,216,0.045);
+
+  // --- Modal & Overlay ---
+  --pt-modal-bg:             #ffffff;
+  --pt-modal-border:         rgba(37,99,235,0.10);
+  --pt-modal-header-bg:      #f0f6ff;
+
+  // --- Dropdown ---
+  --pt-dropdown-bg:          #ffffff;
+  --pt-dropdown-border:      rgba(37,99,235,0.10);
+  --pt-dropdown-shadow:      0 8px 24px rgba(29,78,216,0.10);
+  --pt-dropdown-item-color:  #2d3d5c;
+  --pt-dropdown-item-hover-bg:rgba(238,244,255,0.92);
+  --pt-dropdown-item-hover-color:#1d4ed8;
+
+  // --- Badge & Pill ---
+  --pt-badge-radius:         20px;
+
+  // --- Page Title ---
+  --pt-page-title-bg:        rgba(255,255,255,0.92);
+  --pt-page-title-border:    rgba(37,99,235,0.09);
+  --pt-breadcrumb-bg:        rgba(238,244,255,0.92);
+
+  // --- Pagination ---
+  --pt-pagination-bg:        #ffffff;
+  --pt-pagination-border:    #a8c4f0;
+  --pt-pagination-color:     #1d4ed8;
+  --pt-pagination-active-bg: #1d4ed8;
+
+  // --- Alert ---
+  --pt-alert-bg:             rgba(255,255,255,0.97);
+  --pt-alert-border:         rgba(37,99,235,0.12);
+
+  // --- Offcanvas ---
+  --pt-offcanvas-bg:         #ffffff;
+  --pt-offcanvas-color:      #0e1c30;
+}
+
+// Sağlık Dark — Gece klinik, derin medikal mavi
+[data-theme="health"][data-dark="true"] {
+  --pt-body-bg:              #040c1c;
+  --pt-page-content-bg:      rgba(6,14,30,0.93);
+  --pt-page-content-border:  rgba(29,78,216,0.13);
+  --pt-card-bg:              rgba(12,24,52,0.93);
+  --pt-card-bg-glass:        rgba(16,30,64,0.97);
+  --pt-card-border:          rgba(29,78,216,0.12);
+  --pt-card-header-bg:       rgba(8,16,42,0.86);
+  --pt-card-shadow:          0 4px 22px rgba(0,0,0,0.42);
+  --pt-sidebar-bg:           linear-gradient(180deg, #030a18 0%, #06112a 50%, #081636 100%);
+  --pt-sidebar-text:         #7aa8e0;
+  --pt-sidebar-text-bright:  #a8caf8;
+  --pt-sidebar-text-dim:     #3258a0;
+  --pt-sidebar-hover-bg:     rgba(29,78,216,0.12);
+  --pt-sidebar-active-bg:    rgba(29,78,216,0.20);
+  --pt-sidebar-border:       rgba(29,78,216,0.13);
+  --pt-topbar-bg:            #1a42c4;
+  --pt-body-color:           #7aa8e0;
+  --pt-heading-color:        #a8caf8;
+  --pt-text-muted:           #4876b8;
+  --pt-input-bg:             rgba(6,14,30,0.78);
+  --pt-input-border:         rgba(29,78,216,0.22);
+  --pt-input-text:           #a8caf8;
+  --pt-label-color:          #7aa8e0;
+  --pt-table-color:          #7aa8e0;
+  --pt-table-border:         rgba(29,78,216,0.13);
+  --pt-table-head-bg:        rgba(12,24,52,0.99);
+  --pt-table-head-color:     #a8caf8;
+  --pt-table-stripe-bg:      rgba(29,78,216,0.04);
+  --pt-modal-bg:             #081636;
+  --pt-modal-header-bg:      #040c1c;
+  --pt-modal-border:         rgba(29,78,216,0.16);
+  --pt-dropdown-bg:          #081636;
+  --pt-dropdown-border:      rgba(29,78,216,0.16);
+  --pt-dropdown-item-color:  #7aa8e0;
+  --pt-dropdown-item-hover-bg:rgba(29,78,216,0.14);
+  --pt-dropdown-item-hover-color:#60a5fa;
+  --pt-page-title-bg:        rgba(12,24,52,0.88);
+  --pt-page-title-border:    rgba(29,78,216,0.13);
+  --pt-breadcrumb-bg:        rgba(6,14,30,0.78);
+  --pt-pagination-bg:        #081636;
+  --pt-pagination-border:    rgba(29,78,216,0.18);
+  --pt-pagination-color:     #60a5fa;
+  --pt-alert-bg:             rgba(12,24,52,0.94);
+  --pt-alert-border:         rgba(29,78,216,0.16);
+  --pt-offcanvas-bg:         #081636;
+  --pt-offcanvas-color:      #a8caf8;
+}
+
+
+// =============================================================================
+// GLOBAL TEMA UYGULAMA — CSS var'ları tüm bileşenlere yansıt
+// =============================================================================
+
+// Body & Font
+[data-theme] {
+  font-family: var(--pt-font-sans);
+  background-color: var(--pt-body-bg);
+  background-image: var(--pt-body-bg-pattern);
+  color: var(--pt-body-color);
+}
+
+// Headings
+[data-theme] h1,
+[data-theme] h2,
+[data-theme] h3,
+[data-theme] h4,
+[data-theme] h5,
+[data-theme] h6,
+[data-theme] .card-title {
+  font-family: var(--pt-font-heading);
+  font-weight: var(--pt-font-weight-heading);
+  color: var(--pt-heading-color);
+}
+
+// Topbar
+[data-theme] #page-topbar,
+[data-theme] .navbar-header {
+  background: var(--pt-topbar-bg) !important;
+  background-color: var(--pt-topbar-bg) !important;
+  border-bottom: 1px solid var(--pt-topbar-border) !important;
+  box-shadow: var(--pt-topbar-shadow) !important;
+}
+
+[data-theme] .navbar-logo-box {
+  background: var(--pt-logo-box-bg) !important;
+  border-right: 1px solid var(--pt-logo-box-border) !important;
+}
+
+[data-theme] .pergel-logo-emblem {
+  background: var(--pt-logo-gradient) !important;
+}
+
+[data-theme] .pergel-brand-name {
+  color: var(--pt-logo-text-color) !important;
+}
+
+[data-theme] .pergel-brand-tagline {
+  color: var(--pt-logo-subtext-color) !important;
+}
+
+// Topbar icons & items
+[data-theme] .topbar-icon-btn:hover,
+[data-theme] .header-item:hover {
+  background-color: var(--pt-topbar-icon-hover-bg) !important;
+}
+
+[data-theme] .topbar-icon-btn i,
+[data-theme] .header-item i {
+  color: var(--pt-topbar-text) !important;
+}
+
+// Sidebar
+[data-theme] .sidebar-left .vertical-menu {
+  background: var(--pt-sidebar-bg) !important;
+  border-right: 1px solid var(--pt-sidebar-border) !important;
+  box-shadow: var(--pt-sidebar-shadow) !important;
+  font-family: var(--pt-font-sans) !important;
+}
+
+[data-theme] .sidebar-left .vertical-menu::before {
+  background: var(--pt-sidebar-overlay) !important;
+}
+
+// Sidebar menu items
+[data-theme] #sidebar-menu ul li a,
+[data-theme] .sidebar-menu-item-link {
+  color: var(--pt-sidebar-text) !important;
+}
+
+[data-theme] #sidebar-menu ul li a:hover {
+  background-color: var(--pt-sidebar-hover-bg) !important;
+  color: var(--pt-sidebar-text-bright) !important;
+}
+
+[data-theme] #sidebar-menu ul li a.active,
+[data-theme] #sidebar-menu ul li.mm-active > a {
+  background-color: var(--pt-sidebar-active-bg) !important;
+  color: var(--pt-sidebar-active-text) !important;
+}
+
+[data-theme] #sidebar-menu ul li a i,
+[data-theme] #sidebar-menu ul li a .menu-icon {
+  color: var(--pt-sidebar-icon-color) !important;
+}
+
+[data-theme] #sidebar-menu ul li a.active i,
+[data-theme] #sidebar-menu ul li.mm-active > a i {
+  color: var(--pt-sidebar-accent) !important;
+}
+
+[data-theme] .sidebar-section-label,
+[data-theme] .menu-title {
+  color: var(--pt-sidebar-section-color) !important;
+}
+
+// Sub menu
+[data-theme] #sidebar-menu .sub-menu {
+  background-color: var(--pt-sidebar-submenu-bg) !important;
+}
+
+[data-theme] #sidebar-menu .sub-menu li a {
+  color: var(--pt-sidebar-text) !important;
+}
+
+// Scrollbar
+[data-theme] .sidebar-left .vertical-menu::-webkit-scrollbar-thumb {
+  background: var(--pt-sidebar-scrollbar) !important;
+}
+
+// Page Content
+[data-theme] .page-content {
+  background: var(--pt-page-content-bg) !important;
+  border-radius: var(--pt-page-content-radius) !important;
+  border: 1px solid var(--pt-page-content-border) !important;
+}
+
+// ── Dark Mode Varsayılan Fallback (data-dark="true") ───────────────────────
+[data-dark="true"]:not([data-theme]),
+:root[data-dark="true"] {
+  --pt-body-bg:              #0b1526;
+  --pt-body-bg-pattern:      none;
+  --pt-page-content-bg:      rgba(13,22,44,0.92);
+  --pt-page-content-radius:  16px;
+  --pt-page-content-border:  rgba(79,158,248,0.08);
+  --pt-card-bg:              rgba(22,34,56,0.92);
+  --pt-card-bg-glass:        rgba(26,38,62,0.96);
+  --pt-card-border:          rgba(79,158,248,0.10);
+  --pt-card-radius:          10px;
+  --pt-card-shadow:          0 4px 24px rgba(0,0,0,0.35);
+  --pt-card-header-bg:       rgba(15,25,44,0.85);
+  --pt-card-header-border:   rgba(79,158,248,0.09);
+  --pt-primary:              #f5a623;
+  --pt-primary-hover:        #e08c0c;
+  --pt-primary-rgb:          245, 166, 35;
+  --pt-primary-subtle:       rgba(245,166,35,0.14);
+  --pt-sidebar-bg:           linear-gradient(165deg, #070e1c 0%, #0c1a32 40%, #0f2240 100%);
+  --pt-topbar-bg:            #070e1c;
+  --pt-body-color:           #c8dce8;
+  --pt-heading-color:        #eaf2f8;
+  --pt-text-muted:           #7b96aa;
+  --pt-text-subtle:          #4e6a80;
+  --pt-input-bg:             rgba(11,21,38,0.75);
+  --pt-input-border:         rgba(79,158,248,0.18);
+  --pt-input-text:           #eaf2f8;
+  --pt-input-placeholder:    #4e6a80;
+  --pt-input-focus-border:   #f5a623;
+  --pt-input-focus-shadow:   rgba(245,166,35,0.20);
+  --pt-label-color:          #c8dce8;
+  --pt-table-color:          #c8dce8;
+  --pt-table-border:         rgba(79,158,248,0.10);
+  --pt-table-head-bg:        rgba(15,25,44,0.98);
+  --pt-table-head-color:     #eaf2f8;
+  --pt-table-stripe-bg:      rgba(79,158,248,0.04);
+  --pt-table-hover-bg:       rgba(245,166,35,0.06);
+  --pt-modal-bg:             #0f1d34;
+  --pt-modal-header-bg:      #0a1424;
+  --pt-modal-border:         rgba(79,158,248,0.14);
+  --pt-dropdown-bg:          #0f1d34;
+  --pt-dropdown-border:      rgba(79,158,248,0.14);
+  --pt-dropdown-item-color:  #c8dce8;
+  --pt-dropdown-item-hover-bg:rgba(79,158,248,0.14);
+  --pt-dropdown-item-hover-color:#63b3ed;
+  --pt-page-title-bg:        rgba(15,25,44,0.85);
+  --pt-page-title-border:    rgba(79,158,248,0.10);
+  --pt-breadcrumb-bg:        rgba(11,21,38,0.75);
+  --pt-pagination-bg:        #0f1d34;
+  --pt-pagination-border:    rgba(79,158,248,0.14);
+  --pt-pagination-color:     #63b3ed;
+  --pt-pagination-active-bg: #f5a623;
+  --pt-alert-bg:             rgba(22,34,56,0.94);
+  --pt-alert-border:         rgba(79,158,248,0.14);
+  --pt-offcanvas-bg:         #0f1d34;
+  --pt-offcanvas-color:      #eaf2f8;
+}
+
+// ── Bootstrap Utility Overrides — bg-white, bg-light, text-dark vb. ezilmesi ──
+[data-theme],
+[data-dark="true"] {
+
+  // Arka plan utilitileri temasal renge zorla
+  .bg-white,
+  .bg-light,
+  .bg-light-subtle,
+  .bg-body,
+  .bg-body-secondary,
+  .bg-body-tertiary {
+    background-color: var(--pt-card-bg) !important;
+    color: var(--pt-body-color) !important;
+  }
+
+  .bg-dark,
+  .bg-dark-subtle {
+    background-color: var(--pt-card-header-bg) !important;
+    color: var(--pt-heading-color) !important;
+  }
+
+  // Metin rengi utilitileri temasal renge zorla
+  .text-dark,
+  .text-body,
+  .text-black,
+  .text-dark-50 {
+    color: var(--pt-heading-color) !important;
+  }
+
+  .text-muted,
+  .text-secondary,
+  .text-black-50 {
+    color: var(--pt-text-muted) !important;
+  }
+
+  // Kenarlık utilitileri
+  .border,
+  .border-top,
+  .border-bottom,
+  .border-start,
+  .border-end,
+  .border-light,
+  .border-dark,
+  .border-secondary {
+    border-color: var(--pt-card-border) !important;
+  }
+
+  // Gölgeler
+  .shadow,
+  .shadow-sm,
+  .shadow-lg {
+    box-shadow: var(--pt-card-shadow) !important;
+  }
+
+  // ── Kartlar (Cards) ──
+  .card {
+    background: var(--pt-card-bg) !important;
+    border: 1px solid var(--pt-card-border) !important;
+    border-radius: var(--pt-card-radius) !important;
+    box-shadow: var(--pt-card-shadow) !important;
+    color: var(--pt-body-color) !important;
+    font-family: var(--pt-font-sans);
+  }
+
+  .card-header {
+    background: var(--pt-card-header-bg) !important;
+    border-bottom: 1px solid var(--pt-card-header-border) !important;
+    color: var(--pt-heading-color) !important;
+  }
+
+  .card-body {
+    color: var(--pt-body-color) !important;
+  }
+
+  .card-footer {
+    background: var(--pt-card-header-bg) !important;
+    border-top: 1px solid var(--pt-card-header-border) !important;
+    color: var(--pt-body-color) !important;
+  }
+
+  .card-title,
+  .card-subtitle {
+    color: var(--pt-heading-color) !important;
+  }
+
+  // ── Akordiyon (Accordion) ──
+  .accordion-item {
+    background-color: var(--pt-card-bg) !important;
+    border: 1px solid var(--pt-card-border) !important;
+    color: var(--pt-body-color) !important;
+    border-radius: var(--pt-card-radius) !important;
+  }
+
+  .accordion-button {
+    background-color: var(--pt-card-header-bg) !important;
+    color: var(--pt-heading-color) !important;
+    border-bottom: 1px solid var(--pt-card-border) !important;
+    font-family: var(--pt-font-heading);
+  }
+
+  .accordion-button:not(.collapsed) {
+    background-color: var(--pt-primary-subtle) !important;
+    color: var(--pt-primary) !important;
+    box-shadow: none !important;
+  }
+
+  .accordion-button::after {
+    filter: brightness(0.8) invert(0.2);
+  }
+
+  .accordion-body {
+    background-color: var(--pt-card-bg) !important;
+    color: var(--pt-body-color) !important;
+  }
+
+  // ── Tablolar (Tables) ──
+  .table {
+    color: var(--pt-table-color) !important;
+    border-color: var(--pt-table-border) !important;
+  }
+
+  .table th,
+  .table td {
+    color: var(--pt-table-color) !important;
+    border-color: var(--pt-table-border) !important;
+  }
+
+  .table thead th,
+  .table-light,
+  .table-light th,
+  .table-light td {
+    background-color: var(--pt-table-head-bg) !important;
+    color: var(--pt-table-head-color) !important;
+    border-color: var(--pt-table-border) !important;
+  }
+
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--pt-table-stripe-bg) !important;
+  }
+
+  .table-hover tbody tr:hover {
+    background-color: var(--pt-table-hover-bg) !important;
+    color: var(--pt-heading-color) !important;
+  }
+
+  .table-bordered {
+    border-color: var(--pt-table-border) !important;
+  }
+
+  // ── Form Elemanları ──
+  .form-control,
+  .form-select,
+  textarea,
+  select {
+    background-color: var(--pt-input-bg) !important;
+    border-color: var(--pt-input-border) !important;
+    border-radius: var(--pt-input-radius) !important;
+    color: var(--pt-input-text) !important;
+    font-family: var(--pt-font-sans) !important;
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    border-color: var(--pt-input-focus-border) !important;
+    box-shadow: 0 0 0 0.2rem var(--pt-input-focus-shadow) !important;
+    background-color: var(--pt-input-bg) !important;
+    color: var(--pt-input-text) !important;
+  }
+
+  .form-control::placeholder {
+    color: var(--pt-input-placeholder) !important;
+  }
+
+  .form-label,
+  label {
+    color: var(--pt-label-color) !important;
+    font-weight: 500;
+  }
+
+  .form-check-input {
+    background-color: var(--pt-input-bg) !important;
+    border-color: var(--pt-input-border) !important;
+  }
+
+  .form-check-input:checked {
+    background-color: var(--pt-primary) !important;
+    border-color: var(--pt-primary) !important;
+  }
+
+  .form-check-label {
+    color: var(--pt-body-color) !important;
+  }
+
+  .input-group-text {
+    background-color: var(--pt-card-header-bg) !important;
+    border-color: var(--pt-input-border) !important;
+    color: var(--pt-label-color) !important;
+  }
+
+  // ── Butonlar ──
+  .btn-primary {
+    background-color: var(--pt-btn-primary-bg) !important;
+    border-color: var(--pt-btn-primary-border) !important;
+    color: var(--pt-btn-primary-text) !important;
+    border-radius: var(--pt-btn-radius) !important;
+    font-weight: var(--pt-btn-font-weight) !important;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--pt-btn-primary-hover-bg) !important;
+    border-color: var(--pt-btn-primary-hover-bg) !important;
+  }
+
+  .btn {
+    border-radius: var(--pt-btn-radius) !important;
+    font-family: var(--pt-font-sans) !important;
+  }
+
+  // ── Modallar (Modals) & Offcanvas ──
+  .modal-content {
+    background-color: var(--pt-modal-bg) !important;
+    border: 1px solid var(--pt-modal-border) !important;
+    border-radius: var(--pt-card-radius) !important;
+    color: var(--pt-body-color) !important;
+  }
+
+  .modal-header,
+  .modal-footer {
+    background-color: var(--pt-modal-header-bg) !important;
+    border-color: var(--pt-modal-border) !important;
+  }
+
+  .modal-title {
+    color: var(--pt-heading-color) !important;
+    font-family: var(--pt-font-heading) !important;
+  }
+
+  .offcanvas {
+    background-color: var(--pt-offcanvas-bg) !important;
+    color: var(--pt-offcanvas-color) !important;
+    border-color: var(--pt-modal-border) !important;
+  }
+
+  .offcanvas-header {
+    border-bottom: 1px solid var(--pt-modal-border) !important;
+  }
+
+  // ── Açılır Menüler (Dropdowns) ──
+  .dropdown-menu {
+    background-color: var(--pt-dropdown-bg) !important;
+    border: 1px solid var(--pt-dropdown-border) !important;
+    box-shadow: var(--pt-dropdown-shadow) !important;
+    border-radius: var(--pt-card-radius) !important;
+  }
+
+  .dropdown-item {
+    color: var(--pt-dropdown-item-color) !important;
+    font-family: var(--pt-font-sans) !important;
+  }
+
+  .dropdown-item:hover,
+  .dropdown-item:focus {
+    background-color: var(--pt-dropdown-item-hover-bg) !important;
+    color: var(--pt-dropdown-item-hover-color) !important;
+  }
+
+  .dropdown-divider {
+    border-top-color: var(--pt-dropdown-border) !important;
+  }
+
+  // ── Sekmeler & Navigasyon (Tabs & Pills) ──
+  .nav-tabs {
+    border-bottom-color: var(--pt-card-border) !important;
+  }
+
+  .nav-tabs .nav-link {
+    color: var(--pt-text-muted) !important;
+  }
+
+  .nav-tabs .nav-link.active {
+    background-color: var(--pt-card-bg) !important;
+    border-color: var(--pt-card-border) var(--pt-card-border) var(--pt-card-bg) !important;
+    color: var(--pt-primary) !important;
+  }
+
+  .nav-pills .nav-link {
+    color: var(--pt-text-muted) !important;
+  }
+
+  .nav-pills .nav-link.active {
+    background-color: var(--pt-primary) !important;
+    color: var(--pt-btn-primary-text, #ffffff) !important;
+  }
+
+  // ── Liste Grupları (List Groups) ──
+  .list-group-item {
+    background-color: var(--pt-card-bg) !important;
+    border-color: var(--pt-card-border) !important;
+    color: var(--pt-body-color) !important;
+  }
+
+  .list-group-item.active {
+    background-color: var(--pt-primary) !important;
+    border-color: var(--pt-primary) !important;
+  }
+
+  // ── Rozetler (Badges) & Avatar ──
+  .badge {
+    border-radius: var(--pt-badge-radius) !important;
+    font-family: var(--pt-font-sans) !important;
+  }
+
+  .badge.bg-light,
+  .badge.bg-secondary {
+    background-color: var(--pt-card-header-bg) !important;
+    color: var(--pt-heading-color) !important;
+    border: 1px solid var(--pt-card-border) !important;
+  }
+
+  .avatar-title {
+    background-color: var(--pt-primary-subtle) !important;
+    color: var(--pt-primary) !important;
+  }
+
+  // ── Bildirimler (Alerts) & İlerleme Çubukları ──
+  .alert {
+    background: var(--pt-alert-bg) !important;
+    border: 1px solid var(--pt-alert-border) !important;
+    color: var(--pt-body-color) !important;
+    border-radius: var(--pt-card-radius) !important;
+  }
+
+  .progress {
+    background-color: var(--pt-table-stripe-bg) !important;
+  }
+
+  .progress-bar {
+    background-color: var(--pt-primary) !important;
+  }
+
+  // ── Sayfalama (Pagination) ──
+  .page-link {
+    background-color: var(--pt-pagination-bg) !important;
+    border-color: var(--pt-pagination-border) !important;
+    color: var(--pt-pagination-color) !important;
+    border-radius: var(--pt-btn-radius) !important;
+  }
+
+  .page-item.active .page-link {
+    background-color: var(--pt-pagination-active-bg) !important;
+    border-color: var(--pt-pagination-active-bg) !important;
+    color: #ffffff !important;
+  }
+
+  // ── Sayfa Başlık Kutusu (Page Title Box) ──
+  .page-title-box {
+    background: var(--pt-page-title-bg) !important;
+    border: 1px solid var(--pt-page-title-border) !important;
+    border-radius: var(--pt-card-radius) !important;
+    color: var(--pt-heading-color) !important;
+  }
+
+  .page-title-box h4 {
+    color: var(--pt-heading-color) !important;
+  }
+
+  .breadcrumb {
+    background: var(--pt-breadcrumb-bg) !important;
+  }
+
+  .breadcrumb-item,
+  .breadcrumb-item a {
+    color: var(--pt-text-muted) !important;
+  }
+
+  .breadcrumb-item.active {
+    color: var(--pt-body-color) !important;
+  }
+
+  // ── Subtly renkli arka plan kutuları ──
+  .bg-primary-subtle { background-color: var(--pt-primary-subtle) !important; color: var(--pt-primary) !important; }
+  .bg-success-subtle { background-color: rgba(16,185,129,0.14) !important; color: var(--pt-success, #10b981) !important; }
+  .bg-warning-subtle { background-color: rgba(245,158,11,0.14) !important; color: var(--pt-warning, #f59e0b) !important; }
+  .bg-danger-subtle  { background-color: rgba(239,68,68,0.14)  !important; color: var(--pt-danger, #ef4444) !important; }
+  .bg-info-subtle    { background-color: rgba(14,165,233,0.14) !important; color: var(--pt-info, #0ea5e9) !important; }
+}
+
+// Select2 theme compatibility
+[data-theme] .select2-container--default .select2-selection--single {
+  background-color: var(--pt-input-bg) !important;
+  border-color: var(--pt-input-border) !important;
+  border-radius: var(--pt-input-radius) !important;
+  color: var(--pt-input-text) !important;
+}
+
+[data-theme] .select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: var(--pt-input-text) !important;
+}
+
+[data-theme] .select2-dropdown {
+  background-color: var(--pt-dropdown-bg) !important;
+  border-color: var(--pt-dropdown-border) !important;
+}
+
+[data-theme] .select2-container--default .select2-results__option {
+  color: var(--pt-dropdown-item-color) !important;
+}
+
+[data-theme] .select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: var(--pt-primary) !important;
+}
+
+// =============================================================================
+// GÖRSEL İYİLEŞTİRMELER — Tema Geçiş Animasyonları & Tema Karakterleri
+// =============================================================================
+
+// ── Yumuşak tema geçiş animasyonu ─────────────────────────────────────────────
+[data-theme] {
+  --theme-transition: 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme] body,
+[data-theme] #page-topbar,
+[data-theme] .navbar-header,
+[data-theme] .sidebar-left .vertical-menu,
+[data-theme] .page-content,
+[data-theme] .card,
+[data-theme] .modal-content,
+[data-theme] .dropdown-menu {
+  transition:
+    background-color var(--theme-transition),
+    background    var(--theme-transition),
+    border-color  var(--theme-transition),
+    color         var(--theme-transition),
+    box-shadow    var(--theme-transition) !important;
+}
+
+// Animasyonlu input focus ring
+[data-theme] .form-control:focus,
+[data-theme] .form-select:focus {
+  transition:
+    border-color  0.2s ease,
+    box-shadow    0.2s ease,
+    background    var(--theme-transition) !important;
+}
+
+// ── Custom Setting Butonuna Tema Rengi Uygula ─────────────────────────────────
+[data-theme] .custom-setting {
+  background-color: var(--pt-primary) !important;
+}
+
+// ── KPI / İstatistik Kartları ─────────────────────────────────────────────────
+[data-theme] .kpi-card,
+[data-theme] .stat-card {
+  background: var(--pt-card-bg) !important;
+  border: 1px solid var(--pt-card-border) !important;
+  border-radius: var(--pt-card-radius) !important;
+  box-shadow: var(--pt-card-shadow) !important;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--pt-primary);
+    opacity: 0.8;
+  }
+}
+
+// ── Endüstriyel temaya özgü: Grid desen arka planı ────────────────────────────
+[data-theme="industrial"] .page-content {
+  background-image:
+    var(--pt-body-bg-pattern),
+    repeating-linear-gradient(
+      0deg, transparent, transparent 39px,
+      rgba(234, 88, 12, 0.025) 39px, rgba(234, 88, 12, 0.025) 40px
+    ),
+    repeating-linear-gradient(
+      90deg, transparent, transparent 39px,
+      rgba(234, 88, 12, 0.025) 39px, rgba(234, 88, 12, 0.025) 40px
+    ) !important;
+}
+
+// ── Endüstriyel: Metalik kenar + ısı efekti ──────────────────────────────────
+[data-theme="industrial"] .card {
+  border-top: 2px solid rgba(232, 81, 10, 0.28) !important;
+  border-left: 1px solid rgba(232, 81, 10, 0.10) !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.2) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-theme="industrial"] .card:hover {
+  border-top-color: rgba(232, 81, 10, 0.50) !important;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.60), 0 0 0 1px rgba(232,81,10,0.12) !important;
+  transform: translateY(-2px);
+}
+
+[data-theme="industrial"] .card-header {
+  border-left: 3px solid var(--pt-primary) !important;
+  letter-spacing: 0.03em;
+}
+
+// Endüstriyel: Butonlar sert, fabrika etiket stili
+[data-theme="industrial"] .btn {
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="industrial"] .btn-primary {
+  box-shadow: 0 2px 8px rgba(232, 81, 10, 0.30), inset 0 1px 0 rgba(255,255,255,0.10) !important;
+}
+
+[data-theme="industrial"] .btn-primary:hover {
+  box-shadow: 0 4px 16px rgba(232, 81, 10, 0.45), inset 0 1px 0 rgba(255,255,255,0.15) !important;
+}
+
+// Endüstriyel: Progress — alev gibi
+[data-theme="industrial"] .progress-bar {
+  background: linear-gradient(90deg, #e8510a, #d4a008) !important;
+}
+
+// ── Doğa / Çevre temasına özgü: Organik büyüme ──────────────────────────────
+[data-theme="nature"] .card {
+  border-bottom: 2px solid rgba(5, 150, 105, 0.18) !important;
+}
+
+[data-theme="nature"] .card:hover {
+  border-bottom-color: rgba(5, 150, 105, 0.38) !important;
+  box-shadow: 0 8px 28px rgba(0,60,24,0.12), 0 2px 6px rgba(0,60,24,0.07) !important;
+}
+
+[data-theme="nature"] .card-header {
+  border-top-left-radius: inherit !important;
+  border-top-right-radius: inherit !important;
+}
+
+[data-theme="nature"] .btn-primary {
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.22) !important;
+}
+
+[data-theme="nature"] .btn-primary:hover {
+  box-shadow: 0 4px 18px rgba(5, 150, 105, 0.32) !important;
+}
+
+// Doğa: Progress bar — yeşil + bakır degrade
+[data-theme="nature"] .progress-bar {
+  background: linear-gradient(90deg, #059669, #d97706) !important;
+  border-radius: 12px !important;
+}
+
+[data-theme="nature"] .progress {
+  border-radius: 12px !important;
+  background-color: rgba(5, 150, 105, 0.10) !important;
+}
+
+// ── Sağlık / ISG temasına özgü: Steril klinik görünüm ────────────────────────
+[data-theme="health"] .card {
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+  border-top: 3px solid rgba(29, 78, 216, 0.55) !important;
+  box-shadow: 0 1px 4px rgba(29, 78, 216, 0.07), 0 4px 16px rgba(29, 78, 216, 0.04) !important;
+}
+
+[data-theme="health"] .card:hover {
+  box-shadow: 0 4px 18px rgba(29, 78, 216, 0.14), 0 1px 4px rgba(29, 78, 216, 0.08) !important;
+  transform: translateY(-2px);
+}
+
+[data-theme="health"] .card-header {
+  border-top: none !important;
+  background: linear-gradient(90deg, rgba(29, 78, 216, 0.055), transparent) !important;
+}
+
+[data-theme="health"] .btn-primary {
+  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.28) !important;
+}
+
+[data-theme="health"] .btn-primary:hover {
+  box-shadow: 0 4px 18px rgba(29, 78, 216, 0.38) !important;
+}
+
+// Health: Progress bar — güven mavi + iyileşme yeşili
+[data-theme="health"] .progress-bar {
+  background: linear-gradient(90deg, #1d4ed8, #15803d) !important;
+}
+
+// Health dark — mavi kenar korunur, biraz daha parlak
+[data-theme="health"][data-dark="true"] .card {
+  border-top: 3px solid rgba(29, 78, 216, 0.55) !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+}
+
+// ── Kurumsal temaya özgü: Prestijli çizgiler ─────────────────────────────────
+[data-theme="corporate"] .card {
+  border-top: 2px solid rgba(30, 84, 216, 0.18) !important;
+}
+
+[data-theme="corporate"] .card:hover {
+  border-top-color: rgba(30, 84, 216, 0.40) !important;
+  box-shadow: 0 6px 22px rgba(15, 37, 90, 0.10) !important;
+  transform: translateY(-2px);
+}
+
+[data-theme="corporate"] .card-header {
+  font-weight: 700 !important;
+  letter-spacing: 0.01em;
+  border-left: 3px solid var(--pt-primary) !important;
+}
+
+[data-theme="corporate"] .table thead th {
+  font-weight: 700 !important;
+  letter-spacing: 0.05em;
+  font-size: 0.76rem !important;
+  text-transform: uppercase !important;
+}
+
+[data-theme="corporate"] .btn {
+  letter-spacing: 0.02em;
+}
+
+[data-theme="corporate"] .btn-primary {
+  box-shadow: 0 2px 8px rgba(30, 84, 216, 0.22) !important;
+}
+
+[data-theme="corporate"] .btn-primary:hover {
+  box-shadow: 0 4px 16px rgba(30, 84, 216, 0.32) !important;
+}
+
+// ── Şantiye: Güçlü amber vurgu ──────────────────────────────────────────────
+[data-theme="santiye"] .card {
+  border-top: 1px solid rgba(79, 158, 248, 0.10) !important;
+}
+
+[data-theme="santiye"] .card:hover {
+  border-top-color: rgba(245, 166, 35, 0.35) !important;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.20) !important;
+  transform: translateY(-2px);
+}
+
+[data-theme="santiye"] .card-header {
+  border-left: 3px solid rgba(245, 166, 35, 0.55) !important;
+}
+
+[data-theme="santiye"] .btn-primary {
+  box-shadow: 0 2px 10px rgba(245, 166, 35, 0.28) !important;
+}
+
+[data-theme="santiye"] .btn-primary:hover {
+  box-shadow: 0 4px 18px rgba(245, 166, 35, 0.42) !important;
+}
+
+// Şantiye: Progress bar — amber alev
+[data-theme="santiye"] .progress-bar {
+  background: linear-gradient(90deg, #f5a623, #4a8fe8) !important;
+}
+
+// ── Tablo iyileştirmeleri ─────────────────────────────────────────────────────
+[data-theme] .dataTables_wrapper {
+  font-family: var(--pt-font-sans) !important;
+  color: var(--pt-body-color) !important;
+}
+
+[data-theme] .dataTables_wrapper .dataTables_info,
+[data-theme] .dataTables_wrapper .dataTables_length label,
+[data-theme] .dataTables_wrapper .dataTables_filter label {
+  color: var(--pt-text-muted) !important;
+  font-family: var(--pt-font-sans) !important;
+}
+
+[data-theme] .dataTables_wrapper .dataTables_filter input,
+[data-theme] .dataTables_wrapper .dataTables_length select {
+  background-color: var(--pt-input-bg) !important;
+  border-color: var(--pt-input-border) !important;
+  border-radius: var(--pt-input-radius) !important;
+  color: var(--pt-input-text) !important;
+  font-family: var(--pt-font-sans) !important;
+}
+
+// ── Page title başlık stillemesi ─────────────────────────────────────────────
+[data-theme] .page-title-box h4 {
+  font-family: var(--pt-font-heading) !important;
+  font-weight: var(--pt-font-weight-heading) !important;
+  font-size: 1.2rem !important;
+  letter-spacing: -0.01em;
+}
+
+// ── Toastr bildirim stili ────────────────────────────────────────────────────
+[data-theme] .toast {
+  background: var(--pt-card-bg) !important;
+  border: 1px solid var(--pt-card-border) !important;
+  color: var(--pt-body-color) !important;
+  border-radius: var(--pt-card-radius) !important;
+  font-family: var(--pt-font-sans) !important;
+}
+
+// ── SweetAlert2 tema uyumu ───────────────────────────────────────────────────
+[data-theme] .swal2-popup {
+  background: var(--pt-modal-bg) !important;
+  color: var(--pt-body-color) !important;
+  border-radius: var(--pt-card-radius) !important;
+  font-family: var(--pt-font-sans) !important;
+  border: 1px solid var(--pt-modal-border) !important;
+}
+
+[data-theme] .swal2-title {
+  color: var(--pt-heading-color) !important;
+  font-family: var(--pt-font-heading) !important;
+}
+
+[data-theme] .swal2-html-container {
+  color: var(--pt-body-color) !important;
+}
+
+[data-theme] .swal2-confirm {
+  background-color: var(--pt-primary) !important;
+  border-radius: var(--pt-btn-radius) !important;
+}
+
+[data-theme] .swal2-cancel {
+  border-radius: var(--pt-btn-radius) !important;
+}
+
+// ── Mobil Alt Navigasyon Dock & Drawer — Tema Uyumu (v2.0) ────────────────────
+[data-theme] .pergel-mobile-dock {
+  background: var(--pt-sidebar-bg) !important;
+  border-top: 1px solid var(--pt-sidebar-border) !important;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25) !important;
+  transition: background 0.32s ease, border-color 0.32s ease !important;
+}
+
+[data-theme] .mobile-dock-item {
+  color: var(--pt-sidebar-text, #94a3b8) !important;
+  transition: color 0.2s ease !important;
+}
+
+[data-theme] .mobile-dock-item.active,
+[data-theme] .mobile-dock-item:hover {
+  color: var(--pt-primary) !important;
+}
+
+[data-theme] .dock-center-btn .dock-icon-circle {
+  background: linear-gradient(135deg,
+    var(--pt-primary) 0%,
+    var(--pt-accent, var(--pt-primary)) 100%
+  ) !important;
+  color: var(--pt-btn-primary-text, #ffffff) !important;
+  box-shadow: 0 4px 16px rgba(var(--pt-primary-rgb, 245, 158, 11), 0.5) !important;
+  transition: background 0.32s ease, box-shadow 0.32s ease, transform 0.18s ease !important;
+}
+
+[data-theme] .dock-center-btn:hover .dock-icon-circle {
+  transform: scale(1.08) translateY(-2px) !important;
+  box-shadow: 0 6px 22px rgba(var(--pt-primary-rgb, 245, 158, 11), 0.65) !important;
+}
+
+[data-theme] .pergel-mobile-drawer {
+  background: var(--pt-sidebar-bg) !important;
+  color: var(--pt-sidebar-text-bright, #ffffff) !important;
+  border-right: 1px solid var(--pt-sidebar-border) !important;
+}
+
+[data-theme] .pergel-mobile-drawer .offcanvas-header .avatar-sm {
+  background-color: rgba(var(--pt-primary-rgb, 245, 158, 11), 0.18) !important;
+  color: var(--pt-primary) !important;
+  transition: background-color 0.32s ease, color 0.32s ease !important;
+}
+
+[data-theme] .pergel-mobile-drawer .drawer-nav-link {
+  color: var(--pt-sidebar-text, #cbd5e1) !important;
+}
+
+[data-theme] .pergel-mobile-drawer .drawer-nav-link:hover {
+  color: var(--pt-sidebar-text-bright, #ffffff) !important;
+  background: var(--pt-sidebar-hover-bg) !important;
+}
+
+[data-theme] .pergel-mobile-drawer .drawer-nav-link.active {
+  color: var(--pt-sidebar-active-text, #ffffff) !important;
+  background: var(--pt-sidebar-active-bg) !important;
+  border-left-color: var(--pt-primary) !important;
+}
+
+[data-theme] .pergel-mobile-drawer .drawer-section-title {
+  color: var(--pt-sidebar-section-color, #94a3b8) !important;
+}
+
+[data-theme] .pergel-mobile-drawer .offcanvas-header {
+  background: rgba(0, 0, 0, 0.15) !important;
+  border-bottom: 1px solid var(--pt-sidebar-border) !important;
+}
+
+// ── Tema Seçici Panel — Tema rengine uyum ───────────────────────────────────
+[data-theme="nature"] #pergel-theme-panel {
+  border-left: 1px solid rgba(16, 185, 129, 0.2) !important;
+}
+
+[data-theme="industrial"] #pergel-theme-panel {
+  border-left: 2px solid rgba(234, 88, 12, 0.3) !important;
+}
+
+[data-theme="health"] #pergel-theme-panel {
+  border-left: 1px solid rgba(37, 99, 235, 0.2) !important;
+}
+
+// ── Responsive kart boyutları ─────────────────────────────────────────────────
+@media (max-width: 768px) {
+  [data-theme] .card {
+    border-radius: calc(var(--pt-card-radius) * 0.7) !important;
+  }
+
+  [data-theme] .page-content {
+    border-radius: 10px 0 0 0 !important;
+  }
+
+  [data-theme] .page-title-box {
+    border-radius: 8px !important;
+  }
+}
+
+// ── Scrollbar tema uyumu ─────────────────────────────────────────────────────
+[data-theme] ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+[data-theme] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-theme] ::-webkit-scrollbar-thumb {
+  background: rgba(var(--pt-primary-rgb, 245, 158, 11), 0.3);
+  border-radius: 4px;
+}
+
+[data-theme] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--pt-primary-rgb, 245, 158, 11), 0.5);
+}
+
+// ── Metin seçim rengi ─────────────────────────────────────────────────────────
+[data-theme] ::selection {
+  background: rgba(var(--pt-primary-rgb, 245, 158, 11), 0.25);
+  color: var(--pt-heading-color);
+}
+
+
+
+
+// ── Sağ Kenar Çubuğu (.custom-setting) Tema Uyumu ────────────────────────────
+[data-theme] .custom-setting {
+  background: var(--pt-primary) !important;
+  box-shadow: -4px 0 16px rgba(var(--pt-primary-rgb, 59, 130, 246), 0.35) !important;
+}
+
+[data-theme] .custom-setting .btn {
+  color: var(--pt-btn-primary-text, #ffffff) !important;
+}
+
+[data-theme] .custom-setting .btn:hover {
+  background: rgba(255, 255, 255, 0.18) !important;
+}
+
+// ── Yüzen Radyo Çaları (.pergel-radio-widget) ──────────────────────────────────
+[data-theme] .pergel-radio-widget {
+  background: var(--pt-modal-bg) !important;
+  border: 1px solid var(--pt-modal-border) !important;
+  box-shadow: var(--pt-card-shadow, 0 10px 30px rgba(0, 0, 0, 0.35)), 0 0 24px rgba(var(--pt-primary-rgb, 59, 130, 246), 0.2) !important;
+}
+
+[data-theme] #radio-minimized-view {
+  background: var(--pt-card-bg) !important;
+  border: 1px solid var(--pt-card-border) !important;
+}
+
+// ── AI Modülü (Komuta Merkezi & Alt Menüleri) — Çoklu Tema Entegrasyonu ──────
+[data-theme] {
+  --ai-page-bg:        var(--pt-body-bg);
+  --ai-card-bg:        var(--pt-card-bg);
+  --ai-card-border:    var(--pt-card-border);
+  --ai-text-primary:   var(--pt-heading-color);
+  --ai-text-secondary: var(--pt-body-color);
+  --ai-text-muted:     var(--pt-text-muted);
+  --ai-feed-bg:        var(--pt-table-head-bg);
+  --ai-chip-bg:        var(--pt-primary-subtle);
+  --ai-input-bg:       var(--pt-input-bg);
+  --ai-input-border:   var(--pt-input-border);
+  --ai-input-text:     var(--pt-input-text);
+  --ai-shadow:         var(--pt-card-shadow);
+  --ai-primary:        var(--pt-primary);
+  --ai-primary-hover:  var(--pt-primary-hover);
+  --ai-primary-subtle: var(--pt-primary-subtle);
+  --ai-accent:         var(--pt-accent);
+}
+
+[data-theme] .ai-hero-header,
+[data-theme] .ai-stat-card,
+[data-theme] .module-card,
+[data-theme] .ai-card,
+[data-theme] .ai-feed-card,
+[data-theme] .ai-tool-card,
+[data-theme] .ai-chat-container,
+[data-theme] .ai-panel,
+[data-theme] .ocr-box,
+[data-theme] .risk-card,
+[data-theme] .compliance-card,
+[data-theme] .predictive-card,
+[data-theme] .chat-box-card {
+  background: var(--pt-card-bg) !important;
+  border-color: var(--pt-card-border) !important;
+  color: var(--pt-body-color) !important;
+  box-shadow: var(--pt-card-shadow) !important;
+}
+
+[data-theme] .ai-hero-title,
+[data-theme] .module-title,
+[data-theme] .stat-value,
+[data-theme] .ai-heading,
+[data-theme] .section-heading,
+[data-theme] .risk-title {
+  color: var(--pt-heading-color) !important;
+}
+
+[data-theme] .ai-hero-subtitle,
+[data-theme] .module-desc,
+[data-theme] .stat-label,
+[data-theme] .ai-subtext {
+  color: var(--pt-text-muted) !important;
+}
+
+[data-theme] .ai-search-bar {
+  background: var(--pt-input-bg) !important;
+  border-color: var(--pt-primary) !important;
+}
+
+[data-theme] .ai-search-input {
+  color: var(--pt-input-text) !important;
+}
+
+[data-theme] .ai-search-btn {
+  background: var(--pt-primary) !important;
+  color: var(--pt-btn-primary-text, #ffffff) !important;
+}
+
+[data-theme] .ai-search-btn:hover {
+  background: var(--pt-primary-hover) !important;
+}
+
+[data-theme] .module-card:hover {
+  border-color: var(--pt-primary) !important;
+  box-shadow: 0 12px 32px rgba(var(--pt-primary-rgb, 59, 130, 246), 0.25) !important;
+  transform: translateY(-6px);
+}
+
+[data-theme] .btn-theme-toggle {
+  background: var(--pt-card-header-bg) !important;
+  border-color: var(--pt-card-border) !important;
+  color: var(--pt-heading-color) !important;
+}
+
+[data-theme] .btn-theme-toggle:hover {
+  background: var(--pt-primary-subtle) !important;
+  border-color: var(--pt-primary) !important;
+  color: var(--pt-primary) !important;
+}
+
+/* AI Sub-Module Navigation Bar */
+.ai-subnav-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 4px 14px 4px;
+  margin-bottom: 20px;
+  scrollbar-width: thin;
+}
+
+.ai-subnav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--pt-card-radius, 12px);
+  background: var(--pt-card-bg, rgba(255,255,255,0.06));
+  border: 1.5px solid var(--pt-card-border, rgba(255,255,255,0.1));
+  color: var(--pt-body-color, #cbd5e1) !important;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none !important;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ai-subnav-link:hover {
+  background: var(--pt-sidebar-hover-bg, rgba(255,255,255,0.15)) !important;
+  color: var(--pt-heading-color, #ffffff) !important;
+  border-color: var(--pt-primary, #f59e0b) !important;
+  transform: translateY(-2px);
+}
+
+.ai-subnav-link.active {
+  background: var(--pt-primary, #f59e0b) !important;
+  color: var(--pt-btn-primary-text, #ffffff) !important;
+  border-color: var(--pt-primary, #f59e0b) !important;
+  box-shadow: 0 4px 16px rgba(var(--pt-primary-rgb, 245, 158, 11), 0.35) !important;
+}
+
+.ai-subnav-link i {
+  font-size: 16px;
+}
+
+
+
