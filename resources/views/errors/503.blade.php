@@ -1,0 +1,5 @@
+@extends('errors.layout')
+@section('code','503')
+@section('illustration','maintenance')
+@section('title','Bakım çalışması')
+@section('message','Pergel kısa süreli bakımda. Birkaç dakika içinde yeniden hizmetinizdeyiz.')

@@ -76,6 +76,9 @@ class QhseInspectionController extends Controller
     public function uploadMedia(Request $req)
     {
         if($req->hasFile('file')){
+            $req->validate([
+                'file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,webp,dwg,zip|max:20480',
+            ]);
             $f = $req->file('file');
             // store in public disk under qhse_media (requires php artisan storage:link to expose)
             try{

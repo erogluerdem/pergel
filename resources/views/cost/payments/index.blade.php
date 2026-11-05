@@ -58,7 +58,7 @@
                         <tbody id="payments-body">
                             @foreach($payments as $p)
                             <tr>
-                                <td><a href="{{ route('cost.payments.show', $p['id']) }}">{{ $p['no'] }}</a></td>
+                                <td><a href="{{ route('cost.payments.edit', $p['id']) }}">{{ $p['no'] }}</a></td>
                                 <td>{{ $p['contractor'] }}</td>
                                 <td>{{ $p['contract'] }}</td>
                                 <td>{{ $p['date'] }}</td>

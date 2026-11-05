@@ -185,7 +185,12 @@ class Project extends Model
     // Accessor for calculated spent from approved payments
     public function getCalculatedSpentAttribute()
     {
-        return $this->payments()->whereNotNull('approved')->sum('approved');
+        return $this->payments()->where('approved', true)->sum('amount');
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
     }
 
     public function expenses(): HasMany

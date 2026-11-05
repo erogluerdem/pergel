@@ -1,0 +1,169 @@
+/* ==========================================================================
+   PERGEL — GİRİŞ & KİLİT EKRANI TEMASI (auth-theme.css) v1.0
+   - "Gece gökyüzü" sahnesi: inşaat ikonları gezegen/yıldız gibi süzülür
+   - Giriş sayfası ve kilit ekranı (tam sayfa + sayfa içi kilit) tema değişkenlerine bağlı
+   Gerekli: eye-comfort.css, icon-system.css, auth-scene.js
+   ========================================================================== */
+
+html[data-theme] {
+  --sky-1: color-mix(in srgb, var(--pt-hero-bg) 82%, #ffffff);
+  --sky-2: var(--pt-hero-bg);
+  --sky-3: color-mix(in srgb, var(--pt-hero-bg) 70%, #000000);
+  --sky-accent: #f0c36d;
+}
+html[data-theme="industrial"] { --sky-accent: #eda070; }
+html[data-theme="corporate"]  { --sky-accent: #9fc0f0; }
+html[data-theme="nature"]     { --sky-accent: #9ad7b2; }
+html[data-theme="health"]     { --sky-accent: #9cb9ec; }
+
+/* ───────────── 1) SAHNE ───────────── */
+.pergel-sky {
+  position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  background: radial-gradient(120% 90% at 50% 0%, var(--sky-1) 0%, var(--sky-2) 52%, var(--sky-3) 100%);
+}
+.lock-screen-bg.pergel-sky-host { background: radial-gradient(120% 90% at 50% 0%, var(--sky-1) 0%, var(--sky-2) 52%, var(--sky-3) 100%) !important; }
+.ps-layer { position: absolute; inset: -4%; transition: transform .6s cubic-bezier(.2,.7,.2,1); will-change: transform; }
+
+.ps-star { position: absolute; width: var(--s); height: var(--s); border-radius: 50%; background: #fff; opacity: .55;
+  animation: ps-twinkle var(--d) ease-in-out infinite; animation-delay: var(--dl); }
+@keyframes ps-twinkle { 0%,100% { opacity: .15; transform: scale(.8); } 50% { opacity: .85; transform: scale(1.25); } }
+
+.ps-body { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); display: grid; place-items: center;
+  border-radius: 50%; opacity: var(--o); filter: blur(var(--b)); color: var(--c);
+  background: radial-gradient(circle at 30% 28%, rgba(255,255,255,.16), rgba(255,255,255,.04) 58%, rgba(255,255,255,0) 100%);
+  border: 1px solid rgba(255,255,255,.10);
+  animation: ps-drift var(--dur) ease-in-out infinite alternate; animation-delay: var(--dl); will-change: transform; }
+.ps-body.bare { background: none; border-color: transparent; }
+.ps-body.ring::after { content: ""; position: absolute; left: -26%; right: -26%; top: 50%; height: 26%; transform: translateY(-50%) rotate(-18deg);
+  border: 1px solid rgba(255,255,255,.18); border-radius: 50%; }
+.ps-body > i { font-size: calc(var(--s) * .46); line-height: 1; animation: ps-spin var(--spin) linear infinite; animation-play-state: var(--spin-state, paused); }
+.ps-body.spin > i { --spin-state: running; }
+@keyframes ps-drift { from { transform: translate3d(0,0,0) rotate(0deg); } to { transform: translate3d(var(--dx), var(--dy), 0) rotate(var(--rot)); } }
+@keyframes ps-spin { to { transform: rotate(360deg); } }
+
+.ps-shoot { position: absolute; left: var(--x); top: var(--y); width: 120px; height: 2px; opacity: 0; transform: rotate(28deg);
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.85)); border-radius: 2px;
+  animation: ps-shoot 11s linear infinite; animation-delay: var(--dl); }
+@keyframes ps-shoot { 0% { opacity: 0; transform: translate3d(0,0,0) rotate(28deg); } 3% { opacity: .9; } 9% { opacity: 0; transform: translate3d(320px,170px,0) rotate(28deg); } 100% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ps-star, .ps-body, .ps-body > i, .ps-shoot { animation: none !important; }
+  .ps-shoot { display: none; }
+}
+@media (max-width: 640px) { .ps-body.hide-sm { display: none; } }
+
+/* ───────────── 2) GİRİŞ SAYFASI ───────────── */
+html[data-theme] body:has(.auth-login-page, .login-card, .lock-container) { background: var(--sky-2) !important; }
+html[data-theme] body:has(.auth-login-page, .login-card)::before, html[data-theme] body:has(.auth-login-page, .login-card)::after,
+html[data-theme] .auth-login-page::before, html[data-theme] .auth-login-page::after,
+html[data-theme] .auth-login-page .modern-login-container::before, html[data-theme] .auth-login-page .modern-login-container::after { display: none !important; }
+html[data-theme] .auth-login-page { background: transparent !important; position: relative; z-index: 1; }
+html[data-theme] .auth-login-page .bg-construction-element, html[data-theme] #particle-canvas { display: none !important; }
+
+html[data-theme] .login-card {
+  background: var(--pt-card-bg) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  border: 1px solid var(--pt-card-border) !important; color: var(--pt-body-color) !important;
+  box-shadow: 0 28px 70px rgba(0,0,0,.38), 0 0 0 1px rgba(255,255,255,.04) !important;
+}
+html[data-theme] .login-card h1, html[data-theme] .login-card h2, html[data-theme] .login-card h3, html[data-theme] .login-card h4 {
+  color: var(--pt-heading-color) !important; -webkit-text-fill-color: var(--pt-heading-color) !important; background: none !important; animation: none !important;
+}
+html[data-theme] .login-card .logo-text, html[data-theme] .login-card .welcome-text { -webkit-text-fill-color: var(--pt-heading-color) !important; background: none !important; color: var(--pt-heading-color) !important; }
+html[data-theme] .login-card .logo-icon { color: var(--pt-primary) !important; stroke: currentColor; }
+html[data-theme] .login-card .construction-icon { color: var(--pt-primary) !important; opacity: .9; }
+html[data-theme] .login-card .text-muted { color: var(--pt-text-muted) !important; }
+html[data-theme] .login-card a { color: var(--pt-link-color) !important; }
+html[data-theme] .login-card .form-check-input:checked { background-color: var(--pt-primary); border-color: var(--pt-primary); }
+html[data-theme] .login-card .btn-primary {
+  background: var(--pt-btn-primary-bg) !important; background-image: none !important; color: var(--pt-btn-primary-text) !important;
+  box-shadow: none !important; border: none !important;
+}
+html[data-theme] .login-card .btn-primary:hover { background: var(--pt-btn-primary-hover-bg) !important; transform: none !important; box-shadow: none !important; }
+html[data-theme] .login-card .btn-primary i { color: inherit !important; }
+
+html[data-theme] .pf-field { background: var(--pt-input-bg) !important; border-color: var(--pt-input-border) !important; }
+html[data-theme] .pf-field:focus-within, html[data-theme] .pf-field.has-value {
+  background: var(--pt-input-bg) !important; border-color: var(--pt-input-focus-border) !important; box-shadow: 0 0 0 4px var(--pt-input-focus-shadow) !important;
+}
+html[data-theme] .pf-icon, html[data-theme] .pf-eye, html[data-theme] .pf-label { color: var(--pt-text-muted) !important; }
+html[data-theme] .pf-field:focus-within .pf-icon, html[data-theme] .pf-field.has-value .pf-icon,
+html[data-theme] .pf-field:focus-within .pf-label, html[data-theme] .pf-field.has-value .pf-label,
+html[data-theme] .pf-field:has(input:not(:placeholder-shown)) .pf-label { color: var(--pt-link-color) !important; }
+html[data-theme] .pf-eye:hover { color: var(--pt-heading-color) !important; }
+html[data-theme] .pf-divider { background: var(--pt-input-border) !important; }
+html[data-theme] .pf-input { color: var(--pt-input-text) !important; }
+html[data-theme] .pf-input:-webkit-autofill, html[data-theme] .pf-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--pt-input-bg) inset !important; -webkit-text-fill-color: var(--pt-input-text) !important;
+}
+html[data-theme] .security-carousel .badge-security { background: var(--pt-primary-subtle) !important; color: var(--pt-link-color) !important; border: 1px solid var(--pt-card-border) !important; }
+
+/* ───────────── 3) KİLİT EKRANI (tam sayfa + sayfa içi) ───────────── */
+html[data-theme] .lock-ambient-sphere, html[data-theme] .lock-blueprint-grid { display: none !important; }
+html[data-theme] .lock-tech-crosshair { border-color: rgba(255,255,255,.18) !important; }
+html[data-theme] .lock-security-pill { background: rgba(255,255,255,.08) !important; border: 1px solid rgba(255,255,255,.22) !important; color: var(--sky-accent) !important; box-shadow: none !important; }
+html[data-theme] .lock-pulse-dot { background: var(--sky-accent) !important; box-shadow: 0 0 0 4px rgba(255,255,255,.08) !important; }
+html[data-theme] .lock-hero-clock { color: #f4f7fa !important; text-shadow: 0 2px 18px rgba(0,0,0,.35) !important; }
+html[data-theme] .lock-hero-sec { color: var(--sky-accent) !important; }
+html[data-theme] .lock-clock-colon { color: rgba(255,255,255,.55) !important; }
+html[data-theme] .lock-hero-date { color: rgba(255,255,255,.72) !important; }
+
+html[data-theme] .lock-main-card {
+  background: var(--pt-card-bg) !important; border: 1px solid var(--pt-card-border) !important;
+  box-shadow: 0 30px 70px rgba(0,0,0,.40) !important; color: var(--pt-body-color);
+}
+html[data-theme] .lock-main-card::before { background: var(--pt-primary) !important; opacity: .9; }
+html[data-theme] .lock-halo-spin { border-color: var(--pt-primary) !important; opacity: .45; }
+html[data-theme] .lock-emblem-box { background: var(--pt-hero-bg) !important; border: 1px solid rgba(255,255,255,.18) !important; box-shadow: 0 6px 16px rgba(0,0,0,.25) !important; }
+html[data-theme] .lock-brand-name { color: var(--pt-heading-color) !important; }
+html[data-theme] .lock-pro-badge { background: var(--pt-btn-primary-bg) !important; color: var(--pt-btn-primary-text) !important; }
+html[data-theme] .lock-brand-tagline { color: var(--pt-text-muted) !important; }
+html[data-theme] .lock-user-card { background: var(--pt-card-header-bg) !important; border: 1px solid var(--pt-card-border) !important; }
+html[data-theme] .lock-user-avatar { border-color: var(--pt-primary) !important; }
+html[data-theme] .lock-user-avatar-initials { background: var(--pt-hero-bg) !important; border-color: var(--pt-card-border) !important; color: #fff !important; }
+html[data-theme] .lock-avatar-padlock { background: var(--pt-btn-primary-bg) !important; color: var(--pt-btn-primary-text) !important; border-color: var(--pt-card-bg) !important; }
+html[data-theme] .lock-user-fullname { color: var(--pt-heading-color) !important; }
+html[data-theme] .lock-user-role-badge { background: var(--pt-primary-subtle) !important; color: var(--pt-link-color) !important; border: 1px solid var(--pt-card-border) !important; }
+
+html[data-theme] .lock-tab-selector { background: var(--pt-card-header-bg) !important; border: 1px solid var(--pt-card-border) !important; }
+html[data-theme] .lock-tab-btn { color: var(--pt-text-muted) !important; background: transparent !important; border: 1px solid transparent !important; }
+html[data-theme] .lock-tab-btn.active { background: var(--pt-card-bg) !important; color: var(--pt-heading-color) !important; border: 1px solid var(--pt-card-border) !important; box-shadow: 0 1px 3px rgba(0,0,0,.15) !important; }
+
+html[data-theme] .lock-alert-message { background: rgba(177,62,56,.12) !important; border: 1px solid rgba(177,62,56,.35) !important; color: #b13e38 !important; }
+html[data-theme][data-dark="true"] .lock-alert-message { color: #f29a93 !important; }
+html[data-theme] .lock-caps-banner { background: rgba(217,153,46,.14) !important; border: 1px solid rgba(217,153,46,.35) !important; color: #8a5a0c !important; }
+html[data-theme][data-dark="true"] .lock-caps-banner { color: #f0c36d !important; }
+
+html[data-theme] .lock-text-input { background: var(--pt-input-bg) !important; border: 1.5px solid var(--pt-input-border) !important; color: var(--pt-input-text) !important; box-shadow: none !important; }
+html[data-theme] .lock-text-input::placeholder { color: var(--pt-input-placeholder) !important; }
+html[data-theme] .lock-text-input:focus { border-color: var(--pt-input-focus-border) !important; box-shadow: 0 0 0 3px var(--pt-input-focus-shadow) !important; }
+html[data-theme] .lock-input-icon, html[data-theme] .lock-eye-toggle { color: var(--pt-text-muted) !important; }
+html[data-theme] .lock-text-input:focus ~ .lock-input-icon, html[data-theme] .lock-eye-toggle:hover { color: var(--pt-link-color) !important; }
+
+html[data-theme] .lock-action-btn { background: var(--pt-btn-primary-bg) !important; background-image: none !important; color: var(--pt-btn-primary-text) !important; box-shadow: none !important; }
+html[data-theme] .lock-action-btn:hover { filter: brightness(.93); box-shadow: none !important; transform: none !important; }
+html[data-theme] .lock-action-btn i { color: inherit !important; }
+html[data-theme] .spinner { border-color: rgba(0,0,0,.2) !important; border-top-color: var(--pt-btn-primary-text) !important; }
+
+html[data-theme] .pin-dot { border-color: var(--pt-input-border) !important; background: transparent !important; box-shadow: none !important; }
+html[data-theme] .pin-dot.filled { background: var(--pt-primary) !important; border-color: var(--pt-primary) !important; box-shadow: none !important; }
+html[data-theme] .numpad-key { background: var(--pt-input-bg) !important; border: 1px solid var(--pt-input-border) !important; color: var(--pt-heading-color) !important; }
+html[data-theme] .numpad-key:hover { background: var(--pt-table-hover-bg) !important; border-color: var(--pt-primary) !important; }
+html[data-theme] .numpad-clear { color: #b13e38 !important; }
+html[data-theme][data-dark="true"] .numpad-clear { color: #f29a93 !important; }
+html[data-theme] .numpad-back { color: #8a5a0c !important; }
+html[data-theme][data-dark="true"] .numpad-back { color: #f0c36d !important; }
+
+html[data-theme] .lock-card-footer { border-top-color: var(--pt-card-border) !important; }
+html[data-theme] .lock-footer-link { color: var(--pt-text-muted) !important; }
+html[data-theme] .lock-footer-link:hover { color: var(--pt-heading-color) !important; }
+html[data-theme] .lock-footer-meta { color: rgba(255,255,255,.62) !important; }
+html[data-theme] .meta-separator { color: rgba(255,255,255,.28) !important; }
+
+/* ───────────── 4) Giriş sayfasındaki destek balonu ───────────── */
+html[data-theme] .support-trigger { background: var(--pt-btn-primary-bg) !important; color: var(--pt-btn-primary-text) !important; box-shadow: 0 6px 18px rgba(0,0,0,.35) !important; }
+html[data-theme] .support-trigger .mdi, html[data-theme] .support-trigger i { color: inherit !important; }
+html[data-theme] .support-pulse { display: none !important; }
+html[data-theme] .support-popup { background: var(--pt-card-bg) !important; color: var(--pt-body-color) !important; border: 1px solid var(--pt-card-border) !important; box-shadow: 0 20px 50px rgba(0,0,0,.35) !important; }
+html[data-theme] .support-header { background: var(--pt-hero-bg) !important; background-image: none !important; color: #fff !important; }
+html[data-theme] .support-content-area { background: var(--pt-card-header-bg) !important; color: var(--pt-body-color) !important; }
+html[data-theme] .support-footer { background: var(--pt-card-bg) !important; border-top-color: var(--pt-card-border) !important; }

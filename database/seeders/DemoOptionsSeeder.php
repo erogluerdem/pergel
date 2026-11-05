@@ -80,21 +80,29 @@ class DemoOptionsSeeder extends Seeder
             Asset::firstOrCreate(['asset_code' => $data['asset_code']], $data);
         }
 
-        $assets = Asset::all();
-        $customers = Customer::take(8)->get();
-        $opportunities = Opportunity::take(8)->get();
+        $assets = Asset::all()->values();
+        $customers = Customer::take(8)->get()->values();
+        $opportunities = Opportunity::take(8)->get()->values();
 
         if ($customers->isEmpty()) {
-            return;
+            $customer = Customer::create([
+                'name' => 'Demo Müşteri A.Ş.',
+                'email' => 'demo@musteri.com',
+                'phone' => '0532 000 0000',
+            ]);
+            $customers = collect([$customer]);
         }
+
+        $cCount = $customers->count();
+        $aCount = $assets->count();
 
         // Clear existing demo options
         Option::truncate();
 
         $demoOptions = [
             [
-                'asset_id' => $assets[0]->id ?? 1,
-                'customer_id' => $customers[0]->id,
+                'asset_id' => $assets[0 % $aCount]->id ?? 1,
+                'customer_id' => $customers[0 % $cCount]->id,
                 'opportunity_id' => $opportunities[0]->id ?? null,
                 'option_date' => now()->subDays(3),
                 'duration_days' => 14,
@@ -103,8 +111,8 @@ class DemoOptionsSeeder extends Seeder
                 'notes' => 'Müşteri 11 gün içerisinde %15 kaparo ödemesi gerçekleştirip satış sözleşmesini imzalayacağını belirtti.'
             ],
             [
-                'asset_id' => $assets[1]->id ?? 1,
-                'customer_id' => $customers[1]->id,
+                'asset_id' => $assets[1 % $aCount]->id ?? 1,
+                'customer_id' => $customers[1 % $cCount]->id,
                 'opportunity_id' => $opportunities[1]->id ?? null,
                 'option_date' => now()->subDays(13),
                 'duration_days' => 14,
@@ -113,8 +121,8 @@ class DemoOptionsSeeder extends Seeder
                 'notes' => 'Acil opsiyon! Süresinin dolmasına 1 gün kaldı. Müşteri temsilcisi tarafından takip ediliyor.'
             ],
             [
-                'asset_id' => $assets[2]->id ?? 1,
-                'customer_id' => $customers[2]->id,
+                'asset_id' => $assets[2 % $aCount]->id ?? 1,
+                'customer_id' => $customers[2 % $cCount]->id,
                 'opportunity_id' => $opportunities[2]->id ?? null,
                 'option_date' => now()->subDays(5),
                 'duration_days' => 30,
@@ -123,8 +131,8 @@ class DemoOptionsSeeder extends Seeder
                 'notes' => 'Ticari alan kiralama ön opsiyonu. Şirket yönetim kurulu onay süreci beklenmektedir.'
             ],
             [
-                'asset_id' => $assets[3]->id ?? 1,
-                'customer_id' => $customers[3]->id,
+                'asset_id' => $assets[3 % $aCount]->id ?? 1,
+                'customer_id' => $customers[3 % $cCount]->id,
                 'opportunity_id' => $opportunities[3]->id ?? null,
                 'option_date' => now()->subDays(20),
                 'duration_days' => 14,
@@ -133,8 +141,8 @@ class DemoOptionsSeeder extends Seeder
                 'notes' => 'Opsiyon süresi dolmuştur. Müşteri süre uzatımı talep etmediği için portföye geri alındı.'
             ],
             [
-                'asset_id' => $assets[4]->id ?? 1,
-                'customer_id' => $customers[4]->id,
+                'asset_id' => $assets[4 % $aCount]->id ?? 1,
+                'customer_id' => $customers[4 % $cCount]->id,
                 'opportunity_id' => $opportunities[4]->id ?? null,
                 'option_date' => now()->subDays(10),
                 'duration_days' => 7,
@@ -143,8 +151,8 @@ class DemoOptionsSeeder extends Seeder
                 'notes' => 'Opsiyon başarıyla kesinleşti ve projeye dönüştürüldü. Satış sözleşmesi tamamlandı.'
             ],
             [
-                'asset_id' => $assets[5]->id ?? 1,
-                'customer_id' => $customers[5]->id,
+                'asset_id' => $assets[5 % $aCount]->id ?? 1,
+                'customer_id' => $customers[5 % $cCount]->id,
                 'opportunity_id' => $opportunities[5]->id ?? null,
                 'option_date' => now()->subDays(8),
                 'duration_days' => 14,
@@ -153,8 +161,8 @@ class DemoOptionsSeeder extends Seeder
                 'notes' => 'Müşteri banka kredi onayını bekliyor. Ekspertiz raporu tamamlandı.'
             ],
             [
-                'asset_id' => $assets[0]->id ?? 1,
-                'customer_id' => $customers[6]->id ?? $customers[0]->id,
+                'asset_id' => $assets[0 % $aCount]->id ?? 1,
+                'customer_id' => $customers[6 % $cCount]->id,
                 'opportunity_id' => null,
                 'option_date' => now()->subDays(15),
                 'duration_days' => 10,
@@ -163,8 +171,8 @@ class DemoOptionsSeeder extends Seeder
                 'notes' => 'Müşteri kendi isteğiyle opsiyondan vazgeçti. Kaparo iadesi yapıldı.'
             ],
             [
-                'asset_id' => $assets[1]->id ?? 1,
-                'customer_id' => $customers[7]->id ?? $customers[1]->id,
+                'asset_id' => $assets[1 % $aCount]->id ?? 1,
+                'customer_id' => $customers[7 % $cCount]->id,
                 'opportunity_id' => null,
                 'option_date' => now()->subDays(2),
                 'duration_days' => 21,

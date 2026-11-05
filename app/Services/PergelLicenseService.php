@@ -102,22 +102,23 @@ class PergelLicenseService
             return true;
         }
 
-        // Kurulu harici modül kontrolü (ModuleManager)
-        try {
-            if (app(\App\Services\ModuleManager::class)->providesFeature($module)) {
-                return true;
-            }
-        } catch (\Throwable $e) {
-        }
-
-        // Pro erişimi aktifse (Geliştirici modu veya aktif Pro lisans)
+        // Pro erişimi aktifse (PERGEL_DEV_LICENSE=true veya aktif Pro lisans)
         if ($this->proAccessActive()) {
             return true;
         }
 
-        // Aktif paket lisansı kontrolü
-        if ($this->isLicenseActive() && in_array($module, $this->modules(), true)) {
-            return true;
+        // Aktif paket lisansı kontrolü (erdemeroglu.com.tr üzerinden doğrulanmış lisans şarttır)
+        if ($this->isLicenseActive()) {
+            if (in_array($module, $this->modules(), true)) {
+                return true;
+            }
+
+            try {
+                if (app(\App\Services\ModuleManager::class)->providesFeature($module)) {
+                    return true;
+                }
+            } catch (\Throwable $e) {
+            }
         }
 
         return false;
@@ -172,11 +173,10 @@ class PergelLicenseService
     {
         $state = $this->state();
 
-        // .env içinde PERGEL_DEV_LICENSE açıkça false yapılmışsa test için Community moduna düş
-        $devFlag = env('PERGEL_DEV_LICENSE');
-        if ($devFlag !== null && filter_var($devFlag, FILTER_VALIDATE_BOOLEAN) === false) {
-            // Dev bypass kapalı; gerçek lisans doğrulamasına bak
-        } elseif (config('app.env') === 'local' || env('APP_ENV') === 'local' || filter_var($devFlag ?? true, FILTER_VALIDATE_BOOLEAN)) {
+        // Yalnızca PERGEL_DEV_LICENSE açıkça true ise geliştirici bypass'ı aktif olur;
+        // Git klonlarında varsayılan olarak kapalıdır (Topluluk modu).
+        $devFlag = config('pergel-license.dev_license', env('PERGEL_DEV_LICENSE'));
+        if ($devFlag !== null && filter_var($devFlag, FILTER_VALIDATE_BOOLEAN) === true) {
             return true;
         }
 
@@ -203,6 +203,14 @@ class PergelLicenseService
             }
 
             return 'PERGEL Pro (Geliştirme Ortamı Lisanslı - Sınırsız Modül)';
+        }
+
+        if ($this->isLicenseActive()) {
+            return match ($this->state()->tier) {
+                'field' => 'PERGEL Saha & Taşeron Paketi (Lisanslı)',
+                'compliance' => 'PERGEL Mevzuat & Finans Paketi (Lisanslı)',
+                default => 'PERGEL Paket Lisansı (' . strtoupper((string) $this->state()->tier) . ')',
+            };
         }
 
         return 'Topluluk Sürümü (Ücretsiz)';
@@ -245,6 +253,11 @@ class PergelLicenseService
         }
 
         $this->applyPayload($response, $licenseKey);
+
+        try {
+            app(\App\Services\ModuleManager::class)->syncPackageFromPayload($response, $licenseKey);
+        } catch (\Throwable $e) {
+        }
 
         return $response;
     }
@@ -325,7 +338,7 @@ class PergelLicenseService
         }
     }
 
-    protected function applyPayload(array $payload, ?string $licenseKey): void
+    public function applyPayload(array $payload, ?string $licenseKey): void
     {
         $state = $this->state();
         $state->update([
@@ -341,7 +354,7 @@ class PergelLicenseService
         Cache::put('pergel.license.modules', $this->modules(), now()->addHours(6));
     }
 
-    protected function post(string $action, array $body): array
+    public function post(string $action, array $body): array
     {
         $base = rtrim((string) config('pergel-license.api_base'), '/');
         $url = $base.'/'.$action;

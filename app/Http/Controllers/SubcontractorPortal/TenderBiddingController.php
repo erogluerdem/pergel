@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SubcontractorPortal;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\SubcontractorBid;
 // use App\Models\Tender; // Assuming this exists
 
@@ -11,7 +12,8 @@ class TenderBiddingController extends Controller
 {
     public function index()
     {
-        $bids = SubcontractorBid::where('subcontractor_id', 1)->get();
+        $subcontractorId = Auth::guard('subcontractor')->id() ?? auth()->user()?->subcontractor_id ?? 1;
+        $bids = SubcontractorBid::where('subcontractor_id', $subcontractorId)->get();
         return view('subcontractor-portal.bids.index', compact('bids'));
     }
 
@@ -32,8 +34,10 @@ class TenderBiddingController extends Controller
             'bid_amount' => 'required|numeric',
         ]);
 
+        $subcontractorId = Auth::guard('subcontractor')->id() ?? auth()->user()?->subcontractor_id ?? 1;
+
         SubcontractorBid::create([
-            'subcontractor_id' => 1,
+            'subcontractor_id' => $subcontractorId,
             'tender_id' => $request->tender_id,
             'bid_amount' => $request->bid_amount,
             'currency' => 'TRY',

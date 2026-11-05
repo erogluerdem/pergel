@@ -143,7 +143,7 @@ class PropertyController extends Controller
             ]);
 
             return redirect()
-                ->route('properties.show', $property)
+                ->route('operations.properties.show', $property)
                 ->with('success', 'Arsa başarıyla oluşturuldu.');
         } catch (\Exception $e) {
             return back()
@@ -218,7 +218,7 @@ class PropertyController extends Controller
             $property->update($validated);
 
             return redirect()
-                ->route('properties.show', $property)
+                ->route('operations.properties.show', $property)
                 ->with('success', 'Arsa başarıyla güncellendi.');
         } catch (\Exception $e) {
             return back()
@@ -236,7 +236,7 @@ class PropertyController extends Controller
             $property->delete();
 
             return redirect()
-                ->route('properties.index')
+                ->route('operations.properties.index')
                 ->with('success', 'Arsa başarıyla silindi.');
         } catch (\Exception $e) {
             return back()
@@ -293,7 +293,7 @@ class PropertyController extends Controller
             ]);
 
             return redirect()
-                ->route('properties.documents', $property)
+                ->route('operations.properties.documents', $property)
                 ->with('success', 'Belge başarıyla yüklendi.');
         } catch (\Exception $e) {
             return back()
@@ -325,7 +325,7 @@ class PropertyController extends Controller
             ]);
 
             return redirect()
-                ->route('properties.show', $property)
+                ->route('operations.properties.show', $property)
                 ->with('success', 'Yasal işlem başarıyla eklendi.');
         } catch (\Exception $e) {
             return back()
@@ -368,7 +368,7 @@ class PropertyController extends Controller
             ]);
 
             return redirect()
-                ->route('properties.show', $property)
+                ->route('operations.properties.show', $property)
                 ->with('success', 'Değerlendirme başarıyla eklendi.');
         } catch (\Exception $e) {
             return back()
@@ -422,7 +422,7 @@ class PropertyController extends Controller
             ]);
 
             return redirect()
-                ->route('properties.index')
+                ->route('operations.properties.index')
                 ->with('success', 'Arsaların durumu başarıyla güncellendi.');
         } catch (\Exception $e) {
             return back()

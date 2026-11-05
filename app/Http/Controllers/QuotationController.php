@@ -23,9 +23,33 @@ class QuotationController extends Controller
 
         $quotations = $query->orderBy('created_at', 'desc')->paginate(20);
         $vendors = Vendor::all();
+        $projects = class_exists(\App\Models\Project::class) ? \App\Models\Project::all() : collect();
         $statuses = ['active', 'approved', 'rejected', 'expired'];
 
-        return view('purchasing.quotations.index', compact('quotations', 'vendors', 'statuses'));
+        $totalQuotations = Quotation::count();
+        $totalQuotationValue = Quotation::sum('total_amount');
+        $pendingQuotations = Quotation::whereIn('status', ['pending', 'active'])->count();
+        $approvedQuotations = Quotation::where('status', 'approved')->count();
+        $rejectedQuotations = Quotation::where('status', 'rejected')->count();
+
+        $pendingCount = $pendingQuotations;
+        $approvedCount = $approvedQuotations;
+        $rejectedCount = $rejectedQuotations;
+
+        return view('purchasing.quotations.index', compact(
+            'quotations',
+            'vendors',
+            'projects',
+            'statuses',
+            'totalQuotations',
+            'totalQuotationValue',
+            'pendingQuotations',
+            'approvedQuotations',
+            'rejectedQuotations',
+            'pendingCount',
+            'approvedCount',
+            'rejectedCount'
+        ));
     }
 
     public function create(Request $request)
@@ -58,6 +82,9 @@ class QuotationController extends Controller
 
     public function show(Quotation $quotation)
     {
+        if (!$quotation->exists) {
+            $quotation = Quotation::findOrFail(request()->route('quotation') ?? request()->route('id'));
+        }
         $quotation->load('vendor', 'requisition', 'items');
 
         return view('purchasing.quotations.show', compact('quotation'));

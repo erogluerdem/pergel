@@ -60,7 +60,7 @@ class PropertyDocumentController extends Controller
             'document_type' => 'required|in:tapu,mesken,imar,yapı_ruhsat,yapı_kullanma,elektrik,su,doğalgaz',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'file' => 'nullable|file|max:10240', // 10MB
+            'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,webp,dwg,zip|max:20480', // 10MB
             'document_number' => 'nullable|string|max:100',
             'issue_date' => 'nullable|date',
             'expiry_date' => 'nullable|date',
@@ -116,7 +116,7 @@ class PropertyDocumentController extends Controller
             'document_type' => 'required|in:tapu,mesken,imar,yapı_ruhsat,yapı_kullanma,elektrik,su,doğalgaz',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'file' => 'nullable|file|max:10240',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,webp,dwg,zip|max:20480',
             'document_number' => 'nullable|string|max:100',
             'issue_date' => 'nullable|date',
             'expiry_date' => 'nullable|date',

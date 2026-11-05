@@ -1,0 +1,5 @@
+@extends('errors.layout')
+@section('code','403')
+@section('illustration','forbidden')
+@section('title','Erişim izniniz yok')
+@section('message','Bu sayfayı görüntülemek için gerekli yetkiye sahip değilsiniz. Gerekirse yöneticinizle iletişime geçin.')

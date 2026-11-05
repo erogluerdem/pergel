@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Services\ModuleManager;
 use App\Services\PergelLicenseService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 class ModuleController extends Controller
 {
@@ -28,7 +27,32 @@ class ModuleController extends Controller
             'installed' => $installed,
             'catalog' => $catalog,
             'licenseState' => $licenseState,
+            'installationId' => $this->licenseService->installationId(),
+            'isLicenseActive' => $this->licenseService->isLicenseActive() || $this->licenseService->proAccessActive(),
         ]);
+    }
+
+    /**
+     * erdemeroglu.com.tr üzerinden satın alınan Lisans Anahtarı ile
+     * modülü doğrular, indirir ve kurar.
+     */
+    public function installWithLicense(Request $request)
+    {
+        $data = $request->validate([
+            'license_key' => 'required|string|min:10|max:64',
+            'module_slug' => 'nullable|string|max:64',
+        ]);
+
+        $result = $this->moduleManager->installWithLicenseKey(
+            $data['license_key'],
+            $data['module_slug'] ?? null
+        );
+
+        if (! $result['ok']) {
+            return back()->withInput()->with('error', $result['message']);
+        }
+
+        return back()->with('success', $result['message']);
     }
 
     /**
@@ -38,6 +62,7 @@ class ModuleController extends Controller
     {
         $request->validate([
             'module_zip' => 'required|file|max:51200', // max 50MB
+            'license_key' => 'nullable|string|max:64',
         ]);
 
         $file = $request->file('module_zip');
@@ -47,7 +72,7 @@ class ModuleController extends Controller
             return back()->with('error', 'Lütfen geçerli bir .zip uzantılı modül paketi yükleyin.');
         }
 
-        $result = $this->moduleManager->installFromZip($file);
+        $result = $this->moduleManager->installFromZip($file, $request->input('license_key'));
 
         if (! $result['ok']) {
             return back()->with('error', $result['message']);

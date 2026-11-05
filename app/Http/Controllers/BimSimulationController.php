@@ -135,7 +135,7 @@ class BimSimulationController extends Controller
     {
         // Determine project budget
         $project = $sim->project;
-        $budget = $project->budget ?: 0;
+        $budget = $project ? ($project->budget ?: 0) : 0;
 
         // Get tasks from project planning controller if possible
         try {
@@ -185,24 +185,31 @@ class BimSimulationController extends Controller
         $cumulativePlanned = 0; $cumulativeActual = 0;
 
         while($cursor->lte($endCursor)){
-            // sum planned of tasks that have end <= current month end
+            // sum planned of tasks finishing in the current month
+            $monthStart = $cursor->copy()->startOfMonth();
             $monthEnd = $cursor->copy()->endOfMonth();
             $monthlyPlanned = 0; $monthlyActual = 0;
             foreach($tasks as $t){
                 $taskEnd = Carbon::parse($t['end'])->endOfDay();
-                if ($taskEnd->lte($monthEnd)){
+                if ($taskEnd->between($monthStart, $monthEnd)){
                     $monthlyPlanned += $plannedPerTask[$t['id']] ?? 0;
                 }
             }
             $cumulativePlanned += $monthlyPlanned;
 
             // actual: use project->spent proportionally across months if available
-            $projectSpent = $project->spent ?: 0;
+            $projectSpent = $project ? ($project->spent ?: 0) : 0;
             // naive actual: proportion of spent proportional to planned
             $monthlyActual = ($budget>0) ? ($monthlyPlanned * ($projectSpent / $budget)) : 0;
             $cumulativeActual += $monthlyActual;
 
-            $series[] = ['date'=>$cursor->format('Y-m-d'),'planned'=>round($cumulativePlanned,2),'actual'=>round($cumulativeActual,2)];
+            $series[] = [
+                'date'=>$cursor->format('Y-m-d'),
+                'monthly_planned'=>round($monthlyPlanned,2),
+                'monthly_actual'=>round($monthlyActual,2),
+                'planned'=>round($cumulativePlanned,2),
+                'actual'=>round($cumulativeActual,2)
+            ];
             $cursor->addMonth();
         }
 

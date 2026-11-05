@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 
 class UserSettingsController extends Controller
 {
@@ -263,10 +265,23 @@ class UserSettingsController extends Controller
             'session_timeout' => 'nullable|integer|min:30|max:480'
         ]);
 
-        // In a real application, you would update the user model
-        // $user->update($validated);
+        $updatable = [];
+        foreach ($validated as $key => $val) {
+            if (Schema::hasColumn('users', $key)) {
+                $updatable[$key] = $val;
+            }
+        }
+        if (isset($validated['position']) && !isset($updatable['position']) && Schema::hasColumn('users', 'title')) {
+            $updatable['title'] = $validated['position'];
+        }
+        $user->update($updatable);
 
-        return redirect()->route('profile.settings')
+        if (Route::has('settings.index')) {
+            return redirect()->route('settings.index')
+                ->with('success', 'Profil ayarları başarıyla güncellendi.');
+        }
+
+        return redirect()->back()
             ->with('success', 'Profil ayarları başarıyla güncellendi.');
     }
 }

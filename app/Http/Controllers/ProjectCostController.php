@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\Villa;
 use App\Models\ExpenseCategory;
-use App\Models\Supplier;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class ProjectCostController extends Controller
 {
@@ -48,7 +49,7 @@ class ProjectCostController extends Controller
     public function create(Project $project)
     {
         $categories = ExpenseCategory::all();
-        $suppliers = Supplier::all();
+        $suppliers = Schema::hasTable('vendors') ? Vendor::orderBy('name')->get() : collect();
         $villas = $project->villas;
 
         return view('projects.costs.create', compact('project', 'categories', 'suppliers', 'villas'));
@@ -56,10 +57,14 @@ class ProjectCostController extends Controller
 
     public function store(Request $request, Project $project)
     {
+        $supplierRule = Schema::hasTable('vendors')
+            ? 'nullable|exists:vendors,id'
+            : (Schema::hasTable('suppliers') ? 'nullable|exists:suppliers,id' : 'nullable|integer');
+
         $request->validate([
             'villa_id' => 'nullable|exists:villas,id',
             'category_id' => 'required|exists:expense_categories,id',
-            'supplier_id' => 'nullable|exists:suppliers,id',
+            'supplier_id' => $supplierRule,
             'amount' => 'required|numeric|min:0',
             'expense_date' => 'required|date',
             'description' => 'nullable|string|max:255',

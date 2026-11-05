@@ -30,7 +30,7 @@ class PaymentReminderSMS extends Notification implements ShouldQueue
             $this->installment->installment_number,
             $this->installment->due_date->format('d.m.Y'),
             $this->installment->amount,
-            route('invoices.show', $invoice)
+            route('finance.invoices.show', $invoice)
         );
     }
 }

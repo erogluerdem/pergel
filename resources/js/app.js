@@ -3,6 +3,9 @@
 
     'use strict';
 
+    if (window.__pergelAppJsInitialized) return;
+    window.__pergelAppJsInitialized = true;
+
 // Ensure chart is loaded when using Vite build - only on pages that need it
 if (document.querySelector('[data-needs-charts]') || window.location.pathname.includes('dashboard') || window.location.pathname.includes('finance')) {
     try {
@@ -343,14 +346,19 @@ if (document.querySelector('[data-needs-charts]') || window.location.pathname.in
         var initialDark = localStorage.getItem("pergel_dark") === 'true' || bodyElem.getAttribute("data-dark") === 'true' || bodyElem.getAttribute("data-bs-theme") === 'dark';
         syncThemeUI(initialDark ? 'dark' : 'light');
 
-        lightDarkBtns.forEach(function (btn) {
-            btn.addEventListener('click', function (event) {
-                event.preventDefault();
-                var currentDark = bodyElem.getAttribute('data-dark') === 'true' || bodyElem.getAttribute('data-bs-theme') === 'dark';
-                var nextDark = !currentDark;
-                syncThemeUI(nextDark ? 'dark' : 'light');
+        if (!window.PergelTheme) {
+            lightDarkBtns.forEach(function (btn) {
+                if (btn.dataset.themeListenerBound === '1') return;
+                btn.dataset.themeListenerBound = '1';
+                btn.addEventListener('click', function (event) {
+                    if (window.PergelTheme) return;
+                    event.preventDefault();
+                    var currentDark = bodyElem.getAttribute('data-dark') === 'true' || bodyElem.getAttribute('data-bs-theme') === 'dark';
+                    var nextDark = !currentDark;
+                    syncThemeUI(nextDark ? 'dark' : 'light');
+                });
             });
-        });
+        }
 
 
         // ── Pergel Modern Lock Screen Integration ──

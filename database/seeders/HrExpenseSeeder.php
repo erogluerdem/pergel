@@ -13,7 +13,7 @@ class HrExpenseSeeder extends Seeder
     {
         $users = User::all();
         if ($users->isEmpty()) {
-            $this->command->info('No users found. Creating sample user...');
+            $this->command?->info('No users found. Creating sample user...');
             $user = User::create([
                 'name' => 'John Doe',
                 'email' => 'john@example.com',
@@ -72,7 +72,7 @@ class HrExpenseSeeder extends Seeder
             }
         }
 
-        $this->command->info('Created 50 sample HR expenses');
+        $this->command?->info('Created 50 sample HR expenses');
     }
 
     private function generateExpenseTitle()

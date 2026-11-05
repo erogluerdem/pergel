@@ -43,9 +43,16 @@ class UserController extends Controller
             }
         }
 
-        // Sorting
+        // Sorting (whitelisted)
+        $allowedSortColumns = ['id', 'name', 'email', 'is_admin', 'email_verified_at', 'created_at', 'updated_at'];
         $sortBy = $request->input('sort_by', 'created_at');
-        $sortOrder = $request->input('sort_order', 'desc');
+        if (!in_array($sortBy, $allowedSortColumns, true)) {
+            $sortBy = 'created_at';
+        }
+        $sortOrder = strtolower($request->input('sort_order', 'desc'));
+        if (!in_array($sortOrder, ['asc', 'desc'], true)) {
+            $sortOrder = 'desc';
+        }
         $query->orderBy($sortBy, $sortOrder);
 
         $users = $query->paginate(10)->withQueryString();

@@ -9,6 +9,6 @@ trait UsesSubcontractorConnection
      */
     public function getConnectionName()
     {
-        return config('subcontractor.connection');
+        return config('subcontractor.connection') ?: config('database.default');
     }
 }

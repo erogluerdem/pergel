@@ -104,7 +104,7 @@ class ProcurementController extends Controller
             'active_projects' => Requisition::distinct('project_id')->count(),
             'avg_processing_time' => round(
                 Requisition::where('status', 'approved')
-                ->selectRaw('AVG(DATEDIFF(updated_at, created_at)) as avg_days')
+                ->selectRaw((DB::getDriverName() === 'sqlite' ? 'AVG(julianday(updated_at) - julianday(created_at))' : 'AVG(DATEDIFF(updated_at, created_at))') . ' as avg_days')
                 ->value('avg_days') ?? 0, 1
             ),
             'cost_savings' => 0,

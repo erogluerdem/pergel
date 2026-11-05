@@ -41,7 +41,7 @@ class SalesOptionController extends Controller
 
         $option = SalesOption::create($validated);
         
-        return redirect()->route('sales_options.show', $option)->with('success', 'Opsiyon başarıyla oluşturuldu.');
+        return redirect()->route('sales-options.show', $option)->with('success', 'Opsiyon başarıyla oluşturuldu.');
     }
 
     public function show(SalesOption $salesOption)
@@ -73,7 +73,7 @@ class SalesOptionController extends Controller
 
         $salesOption->update($validated);
         
-        return redirect()->route('sales_options.show', $salesOption)->with('success', 'Opsiyon güncellendi.');
+        return redirect()->route('sales-options.show', $salesOption)->with('success', 'Opsiyon güncellendi.');
     }
 
     public function destroy(SalesOption $salesOption)
@@ -81,6 +81,6 @@ class SalesOptionController extends Controller
         $this->authorize('delete', $salesOption);
         $salesOption->delete();
         
-        return redirect()->route('sales_options.index')->with('success', 'Opsiyon silindi.');
+        return redirect()->route('sales-options.index')->with('success', 'Opsiyon silindi.');
     }
 }

@@ -13,6 +13,7 @@ include_dirs = [
     "database",
     "docs",
     "kullanim_rehberi",
+    "packages",
     "resources",
     "routes",
     "scripts",
@@ -57,7 +58,16 @@ with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
                 continue
 
             for file in files:
-                if file.endswith(".stackdump") or file.endswith(".log"):
+                if (
+                    file.endswith(".stackdump")
+                    or file.endswith(".log")
+                    or file.endswith(".sqlite")
+                    or file.endswith(".sqlite-journal")
+                    or file.endswith(".sqlite-wal")
+                    or file.endswith(".sqlite-shm")
+                    or file.endswith(".bak")
+                    or "_old." in file
+                ):
                     continue
                 full_p = os.path.join(root, file)
                 rel_p = os.path.relpath(full_p, base_dir)
@@ -94,3 +104,14 @@ with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
 
 size_mb = os.path.getsize(zip_path) / (1024 * 1024)
 print(f"DONE: {zip_path} ({size_mb:.2f} MB)")
+
+remote_dir = r"I:\Projeler\erdemeroglu.com.tr\public\downloads\pergel"
+if os.path.exists(r"I:\Projeler\erdemeroglu.com.tr"):
+    import shutil
+    try:
+        os.makedirs(remote_dir, exist_ok=True)
+        remote_zip = os.path.join(remote_dir, "pergel-community-latest.zip")
+        shutil.copy2(zip_path, remote_zip)
+        print(f"Copied community release to: {remote_zip}")
+    except Exception as e:
+        print(f"Could not copy to remote directory: {e}")

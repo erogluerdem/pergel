@@ -4,13 +4,11 @@
 <!-- Icons Css -->
 <link href="{{ asset('build/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- Remix Icons -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css">
-<!-- Bootstrap Icons -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="{{ asset('libs/remixicon/remixicon.css') }}">
 <!-- Material Design Icons -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
-<!-- Font Awesome (use v5 to match local/font assets) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+<link rel="stylesheet" href="{{ asset('libs/mdi/css/materialdesignicons.min.css') }}">
+<!-- Font Awesome 7 (yerel) -->
+<link rel="stylesheet" href="{{ asset('libs/fontawesome/css/all.min.css') }}">
 <!-- SweetAlert2 -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <!-- App Css-->
@@ -33,3 +31,10 @@
 
 <!-- Native Mobile App Experience CSS -->
 <link href="{{ URL::asset('css/mobile-app.css') }}" rel="stylesheet" type="text/css" />
+
+<!-- Eye Comfort (göz konforu) — tema değişkenlerini yumuşatır, en son yüklenir -->
+<link href="{{ URL::asset('css/eye-comfort.css') }}?v=20261105a" rel="stylesheet" type="text/css" />
+<!-- İkon sistemi & ilüstrasyonlar -->
+<link href="{{ URL::asset('css/icon-system.css') }}?v=20261105a" rel="stylesheet" type="text/css" />
+<!-- Sidebar & navbar kabuğu -->
+<link href="{{ URL::asset('css/shell-theme.css') }}?v=20261105a" rel="stylesheet" type="text/css" />

@@ -293,6 +293,6 @@ class PlanningTaskSeeder extends Seeder
             }
         }
 
-        $this->command->info("Created " . count($createdTasks) . " planning tasks for project: {$project->name}");
+        $this->command?->info("Created " . count($createdTasks) . " planning tasks for project: {$project->name}");
     }
 }

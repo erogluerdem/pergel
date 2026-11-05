@@ -69,8 +69,10 @@ Route::get('api/activities/recent', [App\Http\Controllers\Api\ActivityController
 
 // Radio Stations SQL API Routes
 Route::get('api/radio-stations', [App\Http\Controllers\RadioStationController::class, 'index'])->name('api.radio-stations.index');
-Route::post('api/radio-stations', [App\Http\Controllers\RadioStationController::class, 'store'])->name('api.radio-stations.store');
-Route::delete('api/radio-stations/{id}', [App\Http\Controllers\RadioStationController::class, 'destroy'])->name('api.radio-stations.destroy');
+Route::middleware('auth')->group(function () {
+    Route::post('api/radio-stations', [App\Http\Controllers\RadioStationController::class, 'store'])->name('api.radio-stations.store');
+    Route::delete('api/radio-stations/{id}', [App\Http\Controllers\RadioStationController::class, 'destroy'])->name('api.radio-stations.destroy');
+});
 
 // Notifications require authentication
 Route::middleware('auth')->group(function(){
@@ -101,15 +103,10 @@ Route::get('help/videos', [App\Http\Controllers\HelpController::class, 'videos']
 // Gallery alias
 Route::get('gallery', function(){ return View::exists('gallery.index') ? view('gallery.index') : redirect('/'); })->name('gallery.index');
 
-// Inventory route aliases (simple stubs redirecting to inventory index if exists)
-Route::get('inventory/create', function(){ return redirect()->route('inventory.index'); })->name('inventory.create');
-Route::get('inventory/{id}', function($id){ return redirect()->route('inventory.index'); })->name('inventory.show');
-Route::get('inventory/{id}/edit', function($id){ return redirect()->route('inventory.index'); })->name('inventory.edit');
-// Provide a safe fallback for inventory.index used by views
-Route::get('inventory', function(){
-	// Directly redirect to portfolio management (avoid self-redirect loop)
-	return redirect()->route('portfolio.management.index');
-})->name('inventory.index');
+// Inventory CRUD routes connected to InventoryController
+Route::get('inventory/export', [App\Http\Controllers\InventoryController::class, 'export'])->name('inventory.export');
+Route::get('inventory/low-stock', [App\Http\Controllers\InventoryController::class, 'lowStock'])->name('inventory.low-stock');
+Route::resource('inventory', App\Http\Controllers\InventoryController::class);
 
 // Tasks full REST alias (map missing names to TaskController methods)
 // Use numeric constraint on {id} to avoid capturing literal segments like `create`.
@@ -337,19 +334,19 @@ Route::get('portfolio/programs/{id}', [App\Http\Controllers\ProgramController::c
 	// User settings: set page lock state (AJAX)
 	Route::post('user/settings/page-lock', [App\Http\Controllers\UserSettingsController::class, 'setPageLock'])->name('user.settings.page-lock');
 
-Route::middleware('auth')->group(function(){
+Route::middleware(['auth', 'admin'])->group(function(){
 	// Admin - Kullanıcı Yönetimi
 	Route::get('admin/users', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users.index');
 	Route::get('admin/users/create', [App\Http\Controllers\Admin\UserController::class, 'create'])->name('admin.users.create');
 	Route::post('admin/users', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('admin.users.store');
+	Route::get('admin/users/export/csv', [App\Http\Controllers\Admin\UserController::class, 'exportCsv'])->name('admin.users.export');
+	Route::post('admin/users/bulk-action', [App\Http\Controllers\Admin\UserController::class, 'bulkAction'])->name('admin.users.bulk-action');
 	Route::get('admin/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'show'])->name('admin.users.show');
 	Route::get('admin/users/{user}/edit', [App\Http\Controllers\Admin\UserController::class, 'edit'])->name('admin.users.edit');
 	Route::put('admin/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('admin.users.update');
 	Route::delete('admin/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('admin.users.destroy');
 	Route::post('admin/users/{user}/toggle-admin', [App\Http\Controllers\Admin\UserController::class, 'toggleAdmin'])->name('admin.users.toggle-admin');
 	Route::post('admin/users/{user}/toggle-verification', [App\Http\Controllers\Admin\UserController::class, 'toggleVerification'])->name('admin.users.toggle-verification');
-	Route::post('admin/users/bulk-action', [App\Http\Controllers\Admin\UserController::class, 'bulkAction'])->name('admin.users.bulk-action');
-	Route::get('admin/users/export/csv', [App\Http\Controllers\Admin\UserController::class, 'exportCsv'])->name('admin.users.export');
 
 	// KDV oranları yönetimi (admin)
 	Route::get('admin/kdv', [App\Http\Controllers\Admin\KdvRateController::class, 'index'])->name('admin.kdv.index');
@@ -358,7 +355,9 @@ Route::middleware('auth')->group(function(){
 	Route::get('admin/kdv/{kdvRate}/edit', [App\Http\Controllers\Admin\KdvRateController::class, 'edit'])->name('admin.kdv.edit');
 	Route::put('admin/kdv/{kdvRate}', [App\Http\Controllers\Admin\KdvRateController::class, 'update'])->name('admin.kdv.update');
 	Route::delete('admin/kdv/{kdvRate}', [App\Http\Controllers\Admin\KdvRateController::class, 'destroy'])->name('admin.kdv.destroy');
+});
 
+Route::middleware('auth')->group(function(){
 	Route::post('portfolio/programs/{program}/milestones', [App\Http\Controllers\ProgramController::class, 'storeMilestone'])->name('portfolio.programs.milestones.store');
 	Route::put('portfolio/programs/{program}/milestones/{milestone}', [App\Http\Controllers\ProgramController::class, 'updateMilestone'])->name('portfolio.programs.milestones.update');
 	Route::delete('portfolio/programs/{program}/milestones/{milestone}', [App\Http\Controllers\ProgramController::class, 'destroyMilestone'])->name('portfolio.programs.milestones.destroy');
@@ -382,6 +381,12 @@ Route::get('portfolio/financials/export-xlsx', [App\Http\Controllers\PortfolioFi
 Route::get('cost/budget', [App\Http\Controllers\CostBudgetController::class, 'index'])->name('cost.budget');
 // Hakedişler / Ödemeler - Payments module
 Route::get('cost/payments', [App\Http\Controllers\PaymentController::class, 'index'])->name('cost.payments.index');
+Route::get('cost/payments/create', [App\Http\Controllers\PaymentController::class, 'create'])->name('cost.payments.create');
+Route::post('cost/payments', [App\Http\Controllers\PaymentController::class, 'store'])->name('cost.payments.store');
+Route::get('cost/payments/export', [App\Http\Controllers\PaymentController::class, 'exportCsv'])->name('cost.payments.export');
+Route::get('cost/payments/{id}', [App\Http\Controllers\PaymentController::class, 'show'])->name('cost.payments.show');
+Route::get('cost/payments/{id}/edit', [App\Http\Controllers\PaymentController::class, 'show'])->name('cost.payments.edit');
+Route::post('cost/payments/{id}/approve', [App\Http\Controllers\PaymentController::class, 'approve'])->name('cost.payments.approve');
 Route::middleware('auth')->group(function(){
 	// Progress Payments (Hakediş Yönetimi)
 	Route::get('progress-payments', [App\Http\Controllers\ProgressPaymentController::class, 'index'])->name('progress-payments.index');
@@ -397,17 +402,16 @@ Route::middleware('auth')->group(function(){
 	Route::post('progress-payments/{progressPayment}/approve', [App\Http\Controllers\ProgressPaymentController::class, 'approve'])->name('progress-payments.approve');
 	Route::post('progress-payments/{progressPayment}/reject', [App\Http\Controllers\ProgressPaymentController::class, 'reject'])->name('progress-payments.reject');
 
-	// Currency Exchanges (Döviz Alım/Satım & Kur Çevrim Yönetimi)
-	Route::get('currency-exchanges', [App\Http\Controllers\CurrencyExchangeController::class, 'index'])->name('currency_exchanges.index');
-	Route::get('currency_exchanges', [App\Http\Controllers\CurrencyExchangeController::class, 'index']);
-	Route::get('currency-exchanges/create', [App\Http\Controllers\CurrencyExchangeController::class, 'create'])->name('currency_exchanges.create');
-	Route::get('currency_exchanges/create', [App\Http\Controllers\CurrencyExchangeController::class, 'create']);
-	Route::post('currency-exchanges', [App\Http\Controllers\CurrencyExchangeController::class, 'store'])->name('currency_exchanges.store');
-	Route::get('currency-exchanges/{currencyExchange}', [App\Http\Controllers\CurrencyExchangeController::class, 'show'])->name('currency_exchanges.show');
-	Route::get('currency_exchanges/{currencyExchange}', [App\Http\Controllers\CurrencyExchangeController::class, 'show']);
-	Route::get('currency-exchanges/{currencyExchange}/edit', [App\Http\Controllers\CurrencyExchangeController::class, 'edit'])->name('currency_exchanges.edit');
-	Route::put('currency-exchanges/{currencyExchange}', [App\Http\Controllers\CurrencyExchangeController::class, 'update'])->name('currency_exchanges.update');
-	Route::delete('currency-exchanges/{currencyExchange}', [App\Http\Controllers\CurrencyExchangeController::class, 'destroy'])->name('currency_exchanges.destroy');
+	// Currency Exchanges (Döviz Alım/Satım & Kur Çevrim Yönetimi - alt çizgili ve tireli isim desteği)
+	Route::prefix('currency_exchanges')->name('currency_exchanges.')->group(function () {
+		Route::get('/', [App\Http\Controllers\CurrencyExchangeController::class, 'index'])->name('index');
+		Route::get('create', [App\Http\Controllers\CurrencyExchangeController::class, 'create'])->name('create');
+		Route::post('/', [App\Http\Controllers\CurrencyExchangeController::class, 'store'])->name('store');
+		Route::get('{currencyExchange}', [App\Http\Controllers\CurrencyExchangeController::class, 'show'])->name('show');
+		Route::get('{currencyExchange}/edit', [App\Http\Controllers\CurrencyExchangeController::class, 'edit'])->name('edit');
+		Route::put('{currencyExchange}', [App\Http\Controllers\CurrencyExchangeController::class, 'update'])->name('update');
+		Route::delete('{currencyExchange}', [App\Http\Controllers\CurrencyExchangeController::class, 'destroy'])->name('destroy');
+	});
 	Route::get('api/currency-exchanges/rate', [App\Http\Controllers\CurrencyExchangeController::class, 'conversionRate'])->name('currency_exchanges.rate');
 
 	// E-Dönüşüm & E-Fatura (E-Invoice & Digital Transformation)
@@ -980,16 +984,10 @@ Route::get('finance/budget/guarantees', [App\Http\Controllers\FinanceController:
 Route::get('finance/edoc/efatura', [App\Http\Controllers\FinanceController::class, 'edocEfatura'])->name('finance.edoc.efatura');
 Route::get('finance/edoc/earshiv', [App\Http\Controllers\FinanceController::class, 'edocEarshiv'])->name('finance.edoc.earshiv');
 Route::get('finance/edoc/eirsaliye', [App\Http\Controllers\FinanceController::class, 'edocEirsaliye'])->name('finance.edoc.eirsaliye');
-// Dev preview route for tender package create (only enable when APP_DEBUG=true)
-// Public dev preview (development convenience) - render the create view directly and omit auth middleware
-Route::get('portfolio/tenders/package-prepare/preview', function(){
-	// For local preview, auto-login as user id 1 if exists (development convenience)
-	try {
-		if (class_exists(\App\Models\User::class) && \App\Models\User::find(1)) {
-			Auth::loginUsingId(1);
-		}
-	} catch (\Exception $e) {
-		// ignore
+// Dev preview route for tender package create (only enable in local debug environment)
+Route::middleware('auth')->get('portfolio/tenders/package-prepare/preview', function(){
+	if (!app()->environment('local') && !config('app.debug')) {
+		abort(403);
 	}
 	$projects = App\Models\Project::all();
 	return view('portfolio.tenders.package-create', compact('projects'));
@@ -1290,8 +1288,8 @@ Route::middleware('auth')->group(function(){
 
 
 // System Management Routes (admin)
-Route::get('admin/system', [App\Http\Controllers\Admin\SystemController::class, 'index'])->name('admin.system.index');
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
+	Route::get('admin/system', [App\Http\Controllers\Admin\SystemController::class, 'index'])->name('admin.system.index');
 	Route::get('admin/license', [App\Http\Controllers\Admin\LicenseController::class, 'index'])->name('admin.license.index');
 	Route::get('admin/license/modules', [App\Http\Controllers\Admin\LicenseController::class, 'modules'])->name('admin.license.modules');
 	Route::get('admin/license/upgrade', [App\Http\Controllers\Admin\LicenseController::class, 'upgrade'])->name('admin.license.upgrade');
@@ -1301,6 +1299,7 @@ Route::middleware(['auth'])->group(function () {
 
 	// PERGEL Modül & Eklenti Yönetimi
 	Route::get('admin/modules', [App\Http\Controllers\Admin\ModuleController::class, 'index'])->name('admin.modules.index');
+	Route::post('admin/modules/install-license', [App\Http\Controllers\Admin\ModuleController::class, 'installWithLicense'])->name('admin.modules.install-license');
 	Route::post('admin/modules/upload', [App\Http\Controllers\Admin\ModuleController::class, 'upload'])->name('admin.modules.upload');
 	Route::delete('admin/modules/{slug}', [App\Http\Controllers\Admin\ModuleController::class, 'destroy'])->name('admin.modules.destroy');
 	Route::post('admin/system/clear-cache', [App\Http\Controllers\Admin\SystemController::class, 'clearCache'])->name('admin.system.clear-cache');
@@ -1406,7 +1405,7 @@ Route::prefix('purchasing')->name('purchasing.')->group(function() {
 
     // Satın Alma Taleplerini Extend
     Route::prefix('requisitions')->name('requisitions.')->group(function() {
-        Route::get('/', function() { return redirect()->route('purchasing.requisitions.index'); });
+        Route::get('/', function() { return redirect()->route('supply.procurement.requisitions'); })->name('index');
     });
 });
 
@@ -1547,54 +1546,33 @@ Route::middleware('auth')->group(function() {
         Route::get('available-portfolio', [App\Http\Controllers\GeneralReportsController::class, 'availablePortfolio'])->name('available_portfolio');
     });
 
-    // ADVANCED REPORTS ROUTES
-    Route::prefix('advanced-reports')->name('advanced_reports.')->group(function() {
+    // ADVANCED REPORTS ROUTES (alt çizgili isim desteği)
+    Route::prefix('advanced_reports')->name('advanced_reports.')->group(function() {
         Route::get('/', [App\Http\Controllers\AdvancedReportController::class, 'index'])->name('index');
         Route::get('consultant-performance', [App\Http\Controllers\AdvancedReportController::class, 'consultantPerformance'])->name('consultant_performance');
         Route::get('seasonal-analysis', [App\Http\Controllers\AdvancedReportController::class, 'seasonalAnalysis'])->name('seasonal_analysis');
         Route::get('payment-analysis', [App\Http\Controllers\AdvancedReportController::class, 'paymentAnalysis'])->name('payment_analysis');
         Route::get('activity-dashboard', [App\Http\Controllers\AdvancedReportController::class, 'activityDashboard'])->name('activity_dashboard');
         Route::get('multi-dimensional', [App\Http\Controllers\AdvancedReportController::class, 'multiDimensionalReport'])->name('multi_dimensional');
-        Route::get('export', [App\Http\Controllers\AdvancedReportController::class, 'exportReport'])->name('export');
+        Route::match(['get', 'post'], 'export', [App\Http\Controllers\AdvancedReportController::class, 'exportReport'])->name('export');
     });
 
-    // ADMIN USER MANAGEMENT ROUTES
-    Route::prefix('admin/users')->name('admin.users.')->group(function() {
-        Route::get('/', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('index');
-        Route::get('create', [App\Http\Controllers\Admin\UserController::class, 'create'])->name('create');
-        Route::post('store', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('store');
-        Route::get('export-csv', [App\Http\Controllers\Admin\UserController::class, 'exportCsv'])->name('export_csv');
-        Route::post('bulk-action', [App\Http\Controllers\Admin\UserController::class, 'bulkAction'])->name('bulk_action');
-        Route::get('{user}', [App\Http\Controllers\Admin\UserController::class, 'show'])->name('show');
-        Route::get('{user}/edit', [App\Http\Controllers\Admin\UserController::class, 'edit'])->name('edit');
-        Route::put('{user}', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('update');
-        Route::delete('{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('destroy');
-        Route::post('{user}/toggle-admin', [App\Http\Controllers\Admin\UserController::class, 'toggleAdmin'])->name('toggle_admin');
-        Route::post('{user}/toggle-verification', [App\Http\Controllers\Admin\UserController::class, 'toggleVerification'])->name('toggle_verification');
-    });
+    // ADMIN USER, LICENSE & STANDARDS MANAGEMENT ROUTES (alt çizgili ek rotalar - admin korumalı)
+    Route::middleware(['admin'])->group(function() {
+        Route::prefix('admin/users')->name('admin.users.')->group(function() {
+            Route::post('store', [App\Http\Controllers\Admin\UserController::class, 'store']);
+            Route::get('export-csv', [App\Http\Controllers\Admin\UserController::class, 'exportCsv'])->name('export_csv');
+            Route::post('bulk_action', [App\Http\Controllers\Admin\UserController::class, 'bulkAction'])->name('bulk_action');
+            Route::post('{user}/toggle_admin', [App\Http\Controllers\Admin\UserController::class, 'toggleAdmin'])->name('toggle_admin');
+            Route::post('{user}/toggle_verification', [App\Http\Controllers\Admin\UserController::class, 'toggleVerification'])->name('toggle_verification');
+        });
 
-    // ADMIN LICENSE MANAGEMENT ROUTES
-    Route::prefix('admin/license')->name('admin.license.')->group(function() {
-        Route::get('/', [App\Http\Controllers\Admin\LicenseController::class, 'index'])->name('index');
-        Route::get('modules', [App\Http\Controllers\Admin\LicenseController::class, 'modules'])->name('modules');
-        Route::get('upgrade', [App\Http\Controllers\Admin\LicenseController::class, 'upgrade'])->name('upgrade');
-        Route::post('activate', [App\Http\Controllers\Admin\LicenseController::class, 'activate'])->name('activate');
-        Route::post('refresh', [App\Http\Controllers\Admin\LicenseController::class, 'refresh'])->name('refresh');
-        Route::post('clear', [App\Http\Controllers\Admin\LicenseController::class, 'clear'])->name('clear');
-    });
-
-    // ADMIN QUALITY STANDARDS & DOCUMENTATION ROUTES
-    Route::prefix('admin/standards')->name('admin.standards.')->group(function() {
-        Route::get('/', [App\Http\Controllers\Admin\StandardsController::class, 'index'])->name('index');
-        Route::get('create', [App\Http\Controllers\Admin\StandardsController::class, 'create'])->name('create');
-        Route::post('store', [App\Http\Controllers\Admin\StandardsController::class, 'store'])->name('store');
-        Route::get('export-csv', [App\Http\Controllers\Admin\StandardsController::class, 'exportCsv'])->name('export_csv');
-        Route::post('bulk-action', [App\Http\Controllers\Admin\StandardsController::class, 'bulkAction'])->name('bulk_action');
-        Route::get('{standard}', [App\Http\Controllers\Admin\StandardsController::class, 'show'])->name('show');
-        Route::get('{standard}/edit', [App\Http\Controllers\Admin\StandardsController::class, 'edit'])->name('edit');
-        Route::put('{standard}', [App\Http\Controllers\Admin\StandardsController::class, 'update'])->name('update');
-        Route::delete('{standard}', [App\Http\Controllers\Admin\StandardsController::class, 'destroy'])->name('destroy');
-        Route::post('{standard}/toggle-status', [App\Http\Controllers\Admin\StandardsController::class, 'toggleStatus'])->name('toggle_status');
+        Route::prefix('admin/standards')->name('admin.standards.')->group(function() {
+            Route::post('store', [App\Http\Controllers\Admin\StandardsController::class, 'store']);
+            Route::get('export-csv', [App\Http\Controllers\Admin\StandardsController::class, 'exportCsv'])->name('export_csv');
+            Route::post('bulk_action', [App\Http\Controllers\Admin\StandardsController::class, 'bulkAction'])->name('bulk_action');
+            Route::post('{standard}/toggle_status', [App\Http\Controllers\Admin\StandardsController::class, 'toggleStatus'])->name('toggle_status');
+        });
     });
 
     // DATA IMPORT & EXPORT MANAGEMENT ROUTES
@@ -1621,11 +1599,6 @@ Route::middleware('auth')->group(function() {
         Route::get('model-audit', [App\Http\Controllers\ActivityLogController::class, 'modelAuditTrail'])->name('model_audit');
         Route::get('compliance-report', [App\Http\Controllers\ActivityLogController::class, 'complianceReport'])->name('compliance_report');
         Route::get('{activityLog}', [App\Http\Controllers\ActivityLogController::class, 'show'])->name('show');
-    });
-
-    // SYSTEM MONITORING & HEALTH DASHBOARD ROUTES
-    Route::prefix('admin/system')->name('admin.system.')->group(function() {
-        Route::get('/', [App\Http\Controllers\Admin\SystemController::class, 'index'])->name('index');
     });
 
     // HELP CENTER & USER KNOWLEDGE BASE ROUTES
@@ -1771,8 +1744,8 @@ Route::middleware('auth')->group(function() {
 // TÜRKİYE İNŞAAT VE GAYRİMENKUL MEVZUATI 7 KRİTİK MODÜL ROTALARI
 Route::middleware(['auth'])->group(function() {
     Route::resource('tasks', App\Http\Controllers\TaskController::class);
-    Route::resource('notes', App\Http\Controllers\NoteController::class);
-    Route::resource('gallery', App\Http\Controllers\GalleryController::class);
+    Route::resource('notes', App\Http\Controllers\NoteController::class)->except(['show']);
+    Route::resource('gallery', App\Http\Controllers\GalleryController::class)->only(['index']);
     Route::get('activities', [App\Http\Controllers\ActivityController::class, 'index'])->name('activities.index');
 
     // MESSAGES / MESAJLAŞMA ROTALARI
@@ -1783,46 +1756,63 @@ Route::middleware(['auth'])->group(function() {
         Route::post('{id}/reply', [App\Http\Controllers\MessageController::class, 'storeReply'])->name('storeReply');
         Route::delete('{id}', [App\Http\Controllers\MessageController::class, 'destroy'])->name('destroy');
     });
-    Route::resource('sgk', App\Http\Controllers\SgkLaborController::class);
-    Route::resource('land_owner_contracts', App\Http\Controllers\LandOwnerContractController::class);
+    Route::resource('sgk', App\Http\Controllers\SgkLaborController::class)->only(['index', 'store', 'destroy']);
+    Route::resource('land_owner_contracts', App\Http\Controllers\LandOwnerContractController::class)->only(['index', 'store', 'destroy']);
     Route::post('land_owner_contracts/{contract}/add-matrix', [App\Http\Controllers\LandOwnerContractController::class, 'addUnitMatrix'])->name('land_owner_contracts.add_matrix');
-    Route::resource('concrete_tests', App\Http\Controllers\ConcreteTestController::class);
-    Route::resource('csb_poz', App\Http\Controllers\CsbPozController::class);
+    Route::resource('concrete_tests', App\Http\Controllers\ConcreteTestController::class)->only(['index', 'store', 'destroy']);
+    Route::resource('csb_poz', App\Http\Controllers\CsbPozController::class)->only(['index', 'store', 'destroy']);
     Route::get('csb_poz-seed', [App\Http\Controllers\CsbPozController::class, 'seedSampleData'])->name('csb_poz.seed');
-    Route::resource('promissory_notes', App\Http\Controllers\PromissoryNoteController::class);
-    Route::resource('trade_assets', App\Http\Controllers\TradeAssetController::class);
-    Route::resource('subcontractor_workers', App\Http\Controllers\SubcontractorWorkerController::class);
+    Route::resource('promissory_notes', App\Http\Controllers\PromissoryNoteController::class)->only(['index', 'store', 'destroy']);
+    Route::resource('trade_assets', App\Http\Controllers\TradeAssetController::class)->only(['index', 'store', 'destroy']);
+    Route::resource('subcontractor_workers', App\Http\Controllers\SubcontractorWorkerController::class)->only(['index', 'store', 'destroy']);
     Route::post('subcontractor_workers/{worker}/add-document', [App\Http\Controllers\SubcontractorWorkerController::class, 'addDocument'])->name('subcontractor_workers.add_document');
 
     // PERGEL İLERİ MODÜLLER (Mobil Saha Günlüğü, GIS Harita, Vade Zaman Çizelgesi, AI Risk Analizörü)
-    Route::resource('site_diaries', App\Http\Controllers\SiteDiaryController::class);
+    Route::resource('site_diaries', App\Http\Controllers\SiteDiaryController::class)->only(['index', 'store', 'destroy']);
     Route::get('projects-map', [App\Http\Controllers\ProjectMapController::class, 'index'])->name('projects.map');
     Route::get('promissory-notes-timeline', [App\Http\Controllers\PromissoryNoteTimelineController::class, 'index'])->name('promissory_notes.timeline');
     Route::get('contracts-ai-analysis', [App\Http\Controllers\ContractAiAnalysisController::class, 'index'])->name('land_owner_contracts.ai_analysis');
 
     // FAZ-2 (İLERİ SEVİYE) TÜRKİYE İNŞAAT MODÜLLERİ
-    Route::resource('ewaybills', App\Http\Controllers\EWaybillController::class);
-    Route::resource('building_inspections', App\Http\Controllers\BuildingInspectionController::class);
-    Route::resource('subcontractor_deductions', App\Http\Controllers\SubcontractorDeductionController::class);
-    Route::resource('price_differences', App\Http\Controllers\PriceDifferenceController::class);
-    Route::resource('site_daily_logs', App\Http\Controllers\SiteDailyLogController::class);
-    Route::resource('vat_returns', App\Http\Controllers\VatReturnController::class);
-    Route::resource('real_estate_valuations', App\Http\Controllers\RealEstateValuationController::class);
+    Route::resource('ewaybills', App\Http\Controllers\EWaybillController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('building_inspections', App\Http\Controllers\BuildingInspectionController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('subcontractor_deductions', App\Http\Controllers\SubcontractorDeductionController::class)->only(['index', 'store', 'destroy']);
+    Route::resource('price_differences', App\Http\Controllers\PriceDifferenceController::class)->only(['index', 'store', 'destroy']);
+    Route::resource('site_daily_logs', App\Http\Controllers\SiteDailyLogController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('vat_returns', App\Http\Controllers\VatReturnController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('real_estate_valuations', App\Http\Controllers\RealEstateValuationController::class)->only(['index', 'store', 'update', 'destroy']);
 
     // FAZ-3 (YAPAY ZEKA, IoT & KURUMSAL) MODÜLLERİ
-    Route::resource('fleet_telemetries', App\Http\Controllers\FleetTelemetryController::class);
-    Route::resource('ai_timesheet_analyzers', App\Http\Controllers\AiTimesheetAnalyzerController::class);
-    Route::resource('budget_simulators', App\Http\Controllers\BudgetSimulatorController::class);
-    Route::resource('waste_managements', App\Http\Controllers\WasteManagementController::class);
-    Route::resource('e_agreements', App\Http\Controllers\EAgreementController::class);
+    Route::resource('fleet_telemetries', App\Http\Controllers\FleetTelemetryController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('ai_timesheet_analyzers', App\Http\Controllers\AiTimesheetAnalyzerController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('budget_simulators', App\Http\Controllers\BudgetSimulatorController::class)->only(['index', 'store', 'destroy']);
+    Route::resource('waste_managements', App\Http\Controllers\WasteManagementController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('e_agreements', App\Http\Controllers\EAgreementController::class)->only(['index', 'store', 'update', 'destroy']);
 
     // FAZ-4 (İŞ ZEKASI, YÖNETİM & CANLI İZLEME)
     Route::get('executive_dashboards', [App\Http\Controllers\ExecutiveDashboardController::class, 'index'])->name('executive_dashboards.index');
-    Route::resource('site_cameras', App\Http\Controllers\SiteCameraController::class);
-    Route::resource('subcontractor_scores', App\Http\Controllers\SubcontractorScoreController::class);
-    Route::resource('hr_personnels', App\Http\Controllers\HrPersonnelController::class);
-    Route::resource('dynamic_reports', App\Http\Controllers\DynamicReportController::class);
+    Route::resource('site_cameras', App\Http\Controllers\SiteCameraController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('subcontractor_scores', App\Http\Controllers\SubcontractorScoreController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('hr_personnels', App\Http\Controllers\HrPersonnelController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('dynamic_reports', App\Http\Controllers\DynamicReportController::class)->only(['index', 'store', 'destroy']);
 });
+
+// Kurulu modül paketlerinin rotalarını catch-all (/{any?}) rotasından ÖNCE yükle
+try {
+    if (class_exists(\App\Services\ModuleManager::class)) {
+        $__moduleManager = app(\App\Services\ModuleManager::class);
+        foreach ($__moduleManager->getInstalledModules() as $__modSlug => $__modManifest) {
+            if (!empty($__modManifest['enabled'])) {
+                $__modRoutes = ($__modManifest['path'] ?? '') . DIRECTORY_SEPARATOR . ($__modManifest['routes'] ?? 'routes.php');
+                if (is_file($__modRoutes)) {
+                    require $__modRoutes;
+                }
+            }
+        }
+    }
+} catch (\Throwable $__e) {
+    // Sessiz geç
+}
 
 // Ana sayfa ve catch-all route: login olmayan kullanıcıya login ekranı göster (en sona taşındı)
 Route::get('/{any?}', [App\Http\Controllers\HomeController::class, 'index'])->where('any', '.*')->name('index');

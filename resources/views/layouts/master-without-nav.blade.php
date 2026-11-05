@@ -34,7 +34,7 @@
                 var lsDark  = localStorage.getItem('pergel_dark');
                 var theme = (serverTheme && serverTheme !== '') ? serverTheme : (lsTheme || 'santiye');
                 var dark  = lsDark !== null ? (lsDark === 'true') : (serverTheme ? serverDark : false);
-                var isDarkPalette = (theme === 'santiye' || theme === 'industrial' || dark === true);
+                var isDarkPalette = (dark === true);
                 document.documentElement.setAttribute('data-theme', theme);
                 document.documentElement.setAttribute('data-dark', String(dark));
                 if (isDarkPalette) { document.documentElement.setAttribute('data-bs-theme', 'dark'); }

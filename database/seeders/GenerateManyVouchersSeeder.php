@@ -13,7 +13,7 @@ class GenerateManyVouchersSeeder extends Seeder
     {
         // Ensure required tables exist
         if (!Schema::hasTable('vouchers') || !Schema::hasTable('voucher_lines') || !Schema::hasTable('invoices') || !Schema::hasTable('customers')) {
-            $this->command->error('Required tables missing. Run migrations/create tables before running this seeder.');
+            $this->command?->error('Required tables missing. Run migrations/create tables before running this seeder.');
             return;
         }
 
@@ -37,7 +37,7 @@ class GenerateManyVouchersSeeder extends Seeder
             $customerIds = array_slice($customerIds, 0, 2);
         }
 
-        $this->command->info('Using customer ids: ' . implode(',', $customerIds));
+        $this->command?->info('Using customer ids: ' . implode(',', $customerIds));
 
         $createdInvoices = 0;
         $createdVouchers = 0;
@@ -70,7 +70,7 @@ class GenerateManyVouchersSeeder extends Seeder
             $voucherId = DB::table('vouchers')->insertGetId([
                 'type' => $type,
                 'date' => Carbon::today()->subDays($i)->toDateString(),
-                'no' => 'VCH-' . str_pad($i, 4, '0', STR_PAD_LEFT),
+                'no' => 'VCH-' . uniqid() . '-' . str_pad($i, 4, '0', STR_PAD_LEFT),
                 'account' => ($type === 'journal') ? null : (($type === 'collection') ? 'Kasa ' . ($i % 3) : 'Banka ' . ($i % 2)),
                 'counterparty' => ($type === 'journal') ? null : $counterpartyName,
                 'amount' => $amount,
@@ -111,6 +111,6 @@ class GenerateManyVouchersSeeder extends Seeder
             }
         }
 
-        $this->command->info("Created {$createdInvoices} invoices and {$createdVouchers} vouchers (with lines).");
+        $this->command?->info("Created {$createdInvoices} invoices and {$createdVouchers} vouchers (with lines).");
     }
 }

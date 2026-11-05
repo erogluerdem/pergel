@@ -142,7 +142,7 @@ html[data-bs-theme="dark"] {
 /* ==========================================
    Modern Card Stilleri
    ========================================== */
-.card {
+.card:not([style*="background"]) {
     border: 1px solid var(--pt-card-border, var(--sc-slate-200)) !important;
     border-radius: var(--pt-card-radius, 16px) !important;
     background: var(--pt-card-bg, var(--gradient-card)) !important;

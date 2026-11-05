@@ -13,10 +13,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Tema adı: santiye | corporate | nature | industrial | health
-            $table->string('theme', 30)->default('santiye')->after('remember_token');
-            // Karanlık mod tercihi
-            $table->boolean('dark_mode')->default(false)->after('theme');
+            if (!Schema::hasColumn('users', 'theme')) {
+                $table->string('theme', 30)->nullable()->default('santiye')->after('remember_token');
+            }
+            if (!Schema::hasColumn('users', 'dark_mode')) {
+                $table->boolean('dark_mode')->default(false)->after('theme');
+            }
         });
     }
 

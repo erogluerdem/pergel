@@ -1,0 +1,172 @@
+/* ==========================================================================
+   PERGEL — İKON SİSTEMİ & İLÜSTRASYON KATMANI (icon-system.css) v1.0
+   1) Eksik ikon adları için alias   2) Dört ikon setini tek ölçüye getirme
+   3) Anlamsal ikon renkleri (açık/koyu modda yeterli kontrast)
+   4) Boş durum (empty-state / DataTable) ilüstrasyonları
+   eye-comfort.css'ten SONRA yüklenir.
+   ========================================================================== */
+
+/* Eksik ikon adları için takma adlar (alias). Kütüphanede olmayan sınıflar boş kare yerine benzer ikonu gösterir. */
+.ri-hard-hat-line:before{content:"\f10c"}
+.ri-hard-hat-fill:before{content:"\f10b"}
+.ri-file-seal-line:before{content:"\ed0b"}
+.ri-file-seal-fill:before{content:"\ed0a"}
+.ri-file-contract-line:before{content:"\ed0f"}
+.ri-file-contract-fill:before{content:"\ed0e"}
+.ri-file-archive-line:before{content:"\ed1f"}
+.ri-file-archive-fill:before{content:"\ed1e"}
+.ri-target-line:before{content:"\ed4c"}
+.ri-target-fill:before{content:"\ed4b"}
+.ri-handshake-line:before{content:"\f1ee"}
+.ri-handshake-fill:before{content:"\f1ed"}
+.ri-file-signature-line:before{content:"\ec82"}
+.ri-file-signature-fill:before{content:"\ec81"}
+.ri-file-csv-line:before{content:"\ecdf"}
+.ri-file-csv-fill:before{content:"\ecde"}
+.ri-vidicon-off-line:before{content:"\f51c"}
+.ri-vidicon-off-fill:before{content:"\f51b"}
+.ri-user-tie-line:before{content:"\f276"}
+.ri-user-tie-fill:before{content:"\f275"}
+.ri-user-shield-line:before{content:"\f10c"}
+.ri-user-shield-fill:before{content:"\f10b"}
+.ri-tachometer-line:before{content:"\ec12"}
+.ri-tachometer-fill:before{content:"\ec11"}
+.ri-star-add-line:before{content:"\f18b"}
+.ri-star-add-fill:before{content:"\f186"}
+.ri-sparkles-line:before{content:"\f36b"}
+.ri-sparkles-fill:before{content:"\f36a"}
+.ri-headset-line:before{content:"\ec0c"}
+.ri-headset-fill:before{content:"\ec0b"}
+.ri-gavel-line:before{content:"\f0b5"}
+.ri-gavel-fill:before{content:"\f0b4"}
+.ri-folder-key-line:before{content:"\ed69"}
+.ri-folder-key-fill:before{content:"\ed68"}
+.ri-folder-archive-line:before{content:"\ed88"}
+.ri-folder-archive-fill:before{content:"\ed87"}
+.ri-file-calculator-line:before{content:"\eb1f"}
+.ri-file-calculator-fill:before{content:"\eb1e"}
+.ri-cloud-upload-line:before{content:"\f24c"}
+.ri-cloud-upload-fill:before{content:"\f24b"}
+.ri-book-mark-line:before{content:"\ead9"}
+.ri-book-mark-fill:before{content:"\ead8"}
+.ri-biohazard-line:before{content:"\eca1"}
+.ri-biohazard-fill:before{content:"\eca0"}
+.fa-sparkles{--fa:"\e2ca"}
+.fa-crystal-ball{--fa:"\f6e8"}
+.fa-user-audit{--fa:"\f4fc"}
+.fa-trending-up{--fa:"\e098"}
+.fa-trending-down{--fa:"\e097"}
+.fa-templates{--fa:"\f009"}
+.fa-shield-check{--fa:"\f3ed"}
+.fa-scanner{--fa:"\f02a"}
+.fa-flash{--fa:"\f0e7"}
+.fa-chart-donut{--fa:"\f200"}
+.fa-badge-check{--fa:"\f058"}
+.mdi-file-pdf::before{content:"\F0226"}
+.mdi-android-messages::before{content:"\F0369"}
+.mdi-wrench-off::before{content:"\F05B7"}
+.mdi-mouse-pointer::before{content:"\F01C0"}
+.mdi-magic::before{content:"\F0068"}
+.mdi-chart::before{content:"\F0128"}
+.mdi-alert-multiple::before{content:"\F05D6"}
+.ri-list-check-line:before{content:"\eeba"}
+.ri-list-check-fill:before{content:"\eeba"}
+
+/* ───────────── 2) Dört set (Remix, MDI, FontAwesome, Bootstrap) aynı ölçü & hizada ───────────── */
+html[data-theme] i[class*="ri-"],
+html[data-theme] i[class*="mdi-"],
+html[data-theme] i.mdi,
+html[data-theme] i.fa, html[data-theme] i.fas, html[data-theme] i.far, html[data-theme] i.fab,
+html[data-theme] i.fa-solid, html[data-theme] i.fa-regular, html[data-theme] i.fa-brands {
+  display: inline-block;
+  line-height: 1;
+  vertical-align: -.125em;
+  font-style: normal;
+}
+/* FontAwesome görsel olarak Remix/MDI'dan biraz küçük durur: optik denge */
+html[data-theme] i.fas, html[data-theme] i.far, html[data-theme] i.fa-solid, html[data-theme] i.fa-regular { font-size: .93em; }
+html[data-theme] .btn > i:first-child:not(:only-child),
+html[data-theme] .btn > i[class*="me-"] { vertical-align: -.1em; }
+html[data-theme] .btn > i + span, html[data-theme] .btn > i:not(:only-child) { margin-inline-end: .35rem; }
+html[data-theme] .btn > i[class*="me-"] { margin-inline-end: .4rem; }
+
+/* sidebar ikonları: sabit kutu, ortalı, aynı boyut */
+html[data-theme] #sidebar-menu ul li a i,
+html[data-theme] #sidebar-menu ul li a .menu-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.5rem; min-width: 1.5rem; font-size: 1.15rem; margin-right: .6rem; opacity: .92;
+}
+html[data-theme] #sidebar-menu ul li a:hover i,
+html[data-theme] #sidebar-menu ul li a.active i { opacity: 1; }
+html[data-theme] .topbar-icon-btn i, html[data-theme] .header-item i { font-size: 1.25rem; }
+
+/* ikon rozetleri (KPI / avatar / stat): yumuşak yuvarlak kare, dengeli ikon */
+html[data-theme] .st-kpi-icon, html[data-theme] .stat-icon, html[data-theme] .doc-stat-icon,
+html[data-theme] .avatar-title {
+  display: inline-flex; align-items: center; justify-content: center; border-radius: 10px;
+}
+html[data-theme] .st-kpi-icon i, html[data-theme] .stat-icon i, html[data-theme] .doc-stat-icon i { font-size: 1.35rem; }
+/* boy yardımcıları: fa-3x gibi dev ikonlar göz yormasın */
+html[data-theme] i.fa-3x, html[data-theme] i.fa-4x, html[data-theme] i.fa-5x { opacity: .75; }
+
+/* ───────────── 3) Anlamsal ikon/metin renkleri — kontrast ≥ 4.5:1 ───────────── */
+/* açık mod */
+html[data-theme]:not([data-dark="true"]) .text-warning,
+html[data-theme]:not([data-dark="true"]) .text-warning i { color: #a8680f !important; }
+html[data-theme]:not([data-dark="true"]) .text-success,
+html[data-theme]:not([data-dark="true"]) .text-success i { color: #2a7656 !important; }
+html[data-theme]:not([data-dark="true"]) .text-danger,
+html[data-theme]:not([data-dark="true"]) .text-danger i { color: #b13e38 !important; }
+html[data-theme]:not([data-dark="true"]) .text-info,
+html[data-theme]:not([data-dark="true"]) .text-info i { color: #28728f !important; }
+html[data-theme]:not([data-dark="true"]) .text-primary,
+html[data-theme]:not([data-dark="true"]) .text-primary i { color: var(--pt-link-color) !important; }
+/* koyu mod */
+html[data-theme][data-dark="true"] .text-warning, html[data-theme][data-dark="true"] .text-warning i { color: #e6b556 !important; }
+html[data-theme][data-dark="true"] .text-success, html[data-theme][data-dark="true"] .text-success i { color: #6fc19a !important; }
+html[data-theme][data-dark="true"] .text-danger,  html[data-theme][data-dark="true"] .text-danger i  { color: #ee8780 !important; }
+html[data-theme][data-dark="true"] .text-info,    html[data-theme][data-dark="true"] .text-info i    { color: #77bdd9 !important; }
+html[data-theme][data-dark="true"] .text-primary, html[data-theme][data-dark="true"] .text-primary i { color: var(--pt-link-color) !important; }
+/* koyu zeminli hero/sidebar içindeki ikonlar açık kalsın */
+html[data-theme] .dashboard-hero-banner i, html[data-theme] .site-hero-banner i,
+html[data-theme] .crm-hero-banner i, html[data-theme] .sales-acc-hero-banner i { color: inherit; }
+
+/* ───────────── 4) BOŞ DURUM İLÜSTRASYONLARI ───────────── */
+.pergel-illustration { display: block; margin-inline: auto; max-width: 100%; height: auto;
+  --il-accent: var(--pt-primary); --il-soft: var(--pt-primary-subtle);
+  --il-line: var(--pt-text-muted); --il-surface: var(--pt-card-bg); --il-bg: var(--pt-card-header-bg, #eef1f4); }
+.pergel-illustration .il-stroke { fill: none; stroke: var(--il-line); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.pergel-illustration .il-acc    { fill: none; stroke: var(--il-accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.pergel-illustration .il-fill   { fill: var(--il-surface); stroke: var(--il-line); stroke-width: 2; stroke-linejoin: round; }
+.pergel-illustration .il-soft   { fill: var(--il-soft); stroke: none; }
+.pergel-illustration .il-bg      { fill: var(--il-bg); stroke: none; }
+.pergel-illustration .il-dot    { fill: var(--il-accent); stroke: none; }
+.pergel-illustration .il-text   { fill: var(--il-accent); font: 800 46px/1 var(--pt-font-heading, Inter, sans-serif); letter-spacing: .04em; }
+
+.pergel-empty { text-align: center; padding: 2.25rem 1rem; color: var(--pt-text-muted); }
+.pergel-empty h5, .pergel-empty .pergel-empty-title { color: var(--pt-heading-color); font-weight: 650; margin: .75rem 0 .35rem; }
+.pergel-empty p { max-width: 38ch; margin: 0 auto 1rem; color: var(--pt-text-muted); }
+
+/* Mevcut boş durumlar: .empty-state ve DataTables "kayıt yok" hücresi otomatik ilüstrasyon alır */
+html[data-theme] .empty-state > i:first-child { display: none; }
+html[data-theme] .empty-state:not([data-ill])::before,
+html[data-theme] td.dataTables_empty:not([data-ill])::before {
+  content: ""; display: block; width: 150px; height: 108px; margin: 0 auto .75rem;
+  background-color: var(--pt-primary); opacity: .55;
+  -webkit-mask: var(--il-empty-box) center / contain no-repeat; mask: var(--il-empty-box) center / contain no-repeat;
+}
+html {
+  --il-empty-box: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 108' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 94h110'/%3E%3Cpath d='M35 46l15-24h50l15 24'/%3E%3Cpath d='M35 46h80v40a4 4 0 0 1-4 4H39a4 4 0 0 1-4-4z'/%3E%3Cpath d='M60 46c0 8 7 12 15 12s15-4 15-12'/%3E%3Cpath d='M22 28l5 5M128 28l-5 5M75 8v7' opacity='.7'/%3E%3C/svg%3E");
+}
+
+.pergel-empty-ill { display: block; text-align: center; margin: 0 auto .5rem; }
+.pergel-empty-ill .pergel-illustration { width: 170px; max-width: 60%; }
+
+/* Hero bannerlara sağ tarafta soluk şantiye çizimi (vinç + bina) */
+html[data-theme] [class*="hero-banner"] { position: relative; overflow: hidden; }
+html[data-theme] [class*="hero-banner"]::after {
+  content: ""; position: absolute; right: 28px; bottom: 0; width: 240px; height: 100%; max-height: 170px; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 160' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 156h240'/%3E%3Cpath d='M30 156V80h62v76M30 104h62M30 128h62M61 80v76'/%3E%3Cpath d='M180 156V22M170 156h20M180 22H110M180 22l-18-9M180 22l20-9M180 22h54M122 22v36'/%3E%3Crect x='114' y='58' width='16' height='13' rx='3'/%3E%3Cpath d='M170 60l20-20M170 92l20-20M170 124l20-20'/%3E%3C/svg%3E") no-repeat right bottom / contain;
+  opacity: .16;
+}
+@media (max-width: 991px) { html[data-theme] [class*="hero-banner"]::after { display: none; } }

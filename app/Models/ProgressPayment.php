@@ -52,7 +52,7 @@ class ProgressPayment extends Model
      */
     public function contract(): BelongsTo
     {
-        return $this->belongsTo(DigitalContract::class, 'contract_id');
+        return $this->belongsTo(Contract::class, 'contract_id');
     }
 
     /**

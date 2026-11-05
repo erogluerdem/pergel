@@ -40,6 +40,9 @@ class PurchasingController extends Controller
         if (!$quotation) {
             $quotation = Quotation::with(['vendor', 'items'])->first();
         }
+        if (!$quotation) {
+            abort(404);
+        }
         return view('purchasing.quotations.show', compact('quotation', 'id'));
     }
 
@@ -48,6 +51,9 @@ class PurchasingController extends Controller
         $quotation = Quotation::with(['vendor', 'items'])->find($id);
         if (!$quotation) {
             $quotation = Quotation::with(['vendor', 'items'])->first();
+        }
+        if (!$quotation) {
+            abort(404);
         }
         $vendors = Vendor::all();
         return view('purchasing.quotations.edit', compact('quotation', 'id', 'vendors'));
@@ -108,6 +114,9 @@ class PurchasingController extends Controller
         if (!$approval) {
             $approval = \App\Models\Approval::with(['requisition.project', 'approver'])->first();
         }
+        if (!$approval) {
+            abort(404);
+        }
         return view('purchasing.approvals.show', compact('approval', 'id'));
     }
 
@@ -116,6 +125,9 @@ class PurchasingController extends Controller
         $approval = \App\Models\Approval::with(['requisition.project', 'approver'])->find($id);
         if (!$approval) {
             $approval = \App\Models\Approval::with(['requisition.project', 'approver'])->first();
+        }
+        if (!$approval) {
+            abort(404);
         }
         $users = \App\Models\User::all();
         return view('purchasing.approvals.edit', compact('approval', 'id', 'users'));

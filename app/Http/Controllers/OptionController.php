@@ -6,7 +6,9 @@ use App\Models\Option;
 use App\Models\Asset;
 use App\Models\Customer;
 use App\Models\Opportunity;
+use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class OptionController extends Controller
 {
@@ -108,15 +110,43 @@ class OptionController extends Controller
             abort(403, 'Sadece aktif opsiyonlar projeye dönüştürülebilir.');
         }
 
-        if (!$option->opportunity_id) {
-            return back()->with('error', 'Opsiyon ile ilişkili bir fırsat bulunamadı.');
+        $option->load(['asset', 'customer', 'opportunity']);
+
+        $projectName = $option->title
+            ?? $option->name
+            ?? $option->opportunity?->title
+            ?? ($option->asset ? $option->asset->name . ' Projesi' : 'Opsiyon Projesi #' . $option->id);
+
+        $budget = $option->amount
+            ?? $option->estimated_value
+            ?? $option->opportunity?->estimated_value
+            ?? $option->asset?->current_value
+            ?? $option->asset?->purchase_price
+            ?? 0;
+
+        $project = Project::create([
+            'name' => $projectName,
+            'code' => 'PRJ-' . strtoupper(Str::random(5)),
+            'status' => 'planning',
+            'budget' => $budget,
+            'description' => $option->description ?? $option->notes ?? $option->opportunity?->description,
+            'client_name' => $option->customer?->name ?? $option->opportunity?->customer,
+            'start_date' => now(),
+        ]);
+
+        if ($option->opportunity) {
+            $option->opportunity->update(['stage' => 'won', 'probability' => 100]);
         }
 
         $option->update(['status' => 'converted_to_project']);
 
-        // İlişkili fırsatı projeye dönüştür (opsiyonlar için özel işlem)
-        return redirect()->route('opportunities.show', $option->opportunity_id)
-            ->with('success', 'Opsiyon başarıyla projeye dönüştürüldü');
+        if ($option->opportunity_id) {
+            return redirect()->route('opportunities.show', $option->opportunity_id)
+                ->with('success', 'Opsiyon başarıyla projeye dönüştürüldü (Proje: ' . $project->name . ')');
+        }
+
+        return redirect()->route('options.show', $option)
+            ->with('success', 'Opsiyon başarıyla projeye dönüştürüldü (Proje: ' . $project->name . ')');
     }
 
     // Opsiyonu İptal Et
@@ -138,12 +168,17 @@ class OptionController extends Controller
     }
 
     // Süresi dolmak üzere olan opsiyonları göster (Dashboard uyarısı)
-    public function aboutToExpire()
+    public function aboutToExpire(Request $request)
     {
+        $days = (int) $request->input('days', 1);
         $expiringOptions = Option::where('status', 'active')
-            ->whereRaw('DATEDIFF(expiry_date, CURDATE()) <= 1')
+            ->whereBetween('expiry_date', [now()->toDateString(), now()->addDays($days)->toDateString()])
             ->with(['asset', 'customer'])
-            ->get();
+            ->get()
+            ->map(function ($option) {
+                $option->days_remaining = $option->expiry_date ? max(0, now()->startOfDay()->diffInDays($option->expiry_date->startOfDay(), false)) : 0;
+                return $option;
+            });
 
         return view('crm.options.about-to-expire', compact('expiringOptions'));
     }

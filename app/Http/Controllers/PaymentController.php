@@ -59,7 +59,7 @@ class PaymentController extends Controller
         $p->status = 'Onaylandı';
         $p->approved = $p->requested;
         $p->save();
-        return redirect()->route('cost.payments.show', $p->id)->with('success','Hakediş onaylandı');
+        return redirect()->route('cost.payments.index')->with('success','Hakediş onaylandı');
     }
 
     public function create(Request $request)
@@ -80,7 +80,7 @@ class PaymentController extends Controller
 
         if (Schema::hasTable('payments')) {
             $payment = \App\Models\Payment::create(array_merge($data, ['no' => 'HK-' . rand(100,999) . '-' . rand(100,999), 'status' => 'Taslak']));
-            return redirect()->route('cost.payments.show', $payment->id)->with('success','Hakediş oluşturuldu');
+            return redirect()->route('cost.payments.index')->with('success','Hakediş oluşturuldu');
         }
 
         // For demo (no table) create an object and redirect to index
@@ -118,10 +118,18 @@ class PaymentController extends Controller
         }
 
         $filename = 'payments_export_' . date('Ymd_His') . '.csv';
-        $handle = fopen(storage_path('app/' . $filename), 'w');
-        fputcsv($handle, ['No','Taşeron','Sözleşme','Tarih','Talep','KDV %','KDV Tutarı','Onaylanan','Durum']);
-        foreach ($rows as $r) fputcsv($handle, $r);
-        fclose($handle);
-        return response()->download(storage_path('app/' . $filename))->deleteFileAfterSend(true);
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        return response()->streamDownload(function () use ($rows) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, ['No','Taşeron','Sözleşme','Tarih','Talep','KDV %','KDV Tutarı','Onaylanan','Durum']);
+            foreach ($rows as $r) {
+                fputcsv($handle, $r);
+            }
+            fclose($handle);
+        }, $filename, $headers);
     }
 }

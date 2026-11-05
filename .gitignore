@@ -35,10 +35,9 @@ yarn-error.log
 # Local dev helper page
 public/dev_what_if.php
 
-# PERGEL Modular Extensions (keep core clean)
+# PERGEL Modular Extensions (keep active modules clean, track packages in Git)
 /modules/*
 !/modules/.gitkeep
-/packages/*
 /public/downloads/*
 login_photo.jpg
 

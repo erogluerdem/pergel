@@ -1,0 +1,819 @@
+/* ==========================================================================
+   PERGEL — GÖZ KONFORU KATMANI (eye-comfort.css)  v1.0
+   En son yüklenir; tüm temaların renk değişkenlerini yumuşatır.
+   İlkeler:
+   - Saf siyah / saf beyaz yok  -> aydınlık zemin #eef1f4, koyu zemin #1b222b civarı
+   - Metin kontrastı ~9:1 (AAA'ya yakın ama parlamayan), soluk metin >= 4.5:1
+   - Doygunluk düşük vurgu renkleri, düz (gradient'siz) yüzeyler
+   - Blur / glow / sürekli animasyon yok
+   - Gövde yazısı 12.8px -> 14px
+   Geri almak için: head-css.blade.php içindeki eye-comfort.css satırını silin.
+   ========================================================================== */
+
+/* ───────────── 1) GENEL: efektleri sakinleştir, yazıyı büyüt ───────────── */
+html[data-theme] { --pt-glass-blur: 0px; }
+
+html[data-theme] body {
+  font-size: .875rem;           /* 14px */
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+html[data-theme] .table,
+html[data-theme] .form-control,
+html[data-theme] .form-select,
+html[data-theme] .btn,
+html[data-theme] .dropdown-item { font-size: .875rem; }
+html[data-theme] small,
+html[data-theme] .small { font-size: .8125rem; }
+html[data-theme] .table > :not(caption) > * > * { padding: .6rem .75rem; }
+html[data-theme] .table thead th { font-size: .78rem; letter-spacing: .02em; }
+
+/* cam / blur kaldır */
+html[data-theme] .page-content,
+html[data-theme] .card,
+html[data-theme] .alert,
+html[data-theme] .modal-content,
+html[data-theme] .dropdown-menu,
+html[data-theme] .btn-outline-light,
+html[data-theme] .offcanvas {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-theme] .page-content { border-radius: 0 !important; }
+
+/* kartlar: hover'da zıplama/parlama yok */
+html[data-theme] .card { transition: border-color .15s ease; }
+html[data-theme] .card:hover { transform: none !important; }
+
+/* sidebar: düz yüzey, iç parıltı yok */
+html[data-theme] { --pt-sidebar-overlay: none; }
+html[data-theme] .sidebar-left .vertical-menu::before { display: none !important; }
+
+/* hero bannerlar: sürekli kayan renkli şerit yerine sakin, sabit çizgi */
+html[data-theme] .sales-acc-hero-banner::before,
+html[data-theme] .site-hero-banner::before,
+html[data-theme] .crm-hero-banner::before,
+html[data-theme] .dashboard-hero-banner::before {
+  animation: none !important;
+  height: 3px !important;
+  background: var(--pt-primary) !important;
+  opacity: .85;
+}
+html[data-theme] .sales-acc-hero-banner,
+html[data-theme] .site-hero-banner,
+html[data-theme] .crm-hero-banner,
+html[data-theme] .dashboard-hero-banner {
+  background: var(--pt-hero-bg) !important;       /* hero'da metin hep beyaz => hep koyu zemin */
+  box-shadow: 0 1px 3px rgba(20, 28, 38, .18) !important;
+  border-radius: 14px !important;
+}
+
+/* sonsuz döngü animasyonları durdur, girişleri kısalt */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-theme] .card { animation-duration: .25s !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme] *, html[data-theme] *::before, html[data-theme] *::after {
+    animation: none !important; transition: none !important; scroll-behavior: auto !important;
+  }
+}
+
+/* odak halkası: net ama parlamasız */
+html[data-theme] .form-control:focus,
+html[data-theme] .form-select:focus { box-shadow: 0 0 0 3px var(--pt-input-focus-shadow) !important; }
+
+/* soluk metin okunabilir kalsın */
+html[data-theme] .text-muted { color: var(--pt-text-muted) !important; opacity: 1; }
+
+/* ───────────── 2) ŞANTİYE — AÇIK (yeni varsayılan) ───────────── */
+html[data-theme="santiye"], :root:not([data-theme]) {
+  --pt-hero-bg:              #2a3644;
+  --pt-sidebar-bg:           #26323f;
+  --pt-sidebar-overlay:      none;
+  --pt-sidebar-border:       rgba(255,255,255,.07);
+  --pt-sidebar-shadow:       none;
+  --pt-sidebar-text:         #b7c3cf;
+  --pt-sidebar-text-bright:  #eef2f6;
+  --pt-sidebar-text-dim:     #8696a6;
+  --pt-sidebar-hover-bg:     rgba(255,255,255,.06);
+  --pt-sidebar-active-bg:    rgba(217,153,46,.16);
+  --pt-sidebar-active-text:  #f0c36d;
+  --pt-sidebar-accent:       #d9992e;
+  --pt-sidebar-icon-color:   #93a8bc;
+  --pt-sidebar-scrollbar:    rgba(255,255,255,.16);
+  --pt-sidebar-section-color:#8696a6;
+  --pt-sidebar-submenu-bg:   rgba(0,0,0,.14);
+
+  --pt-topbar-bg:            #2a3644;
+  --pt-topbar-border:        rgba(255,255,255,.06);
+  --pt-topbar-shadow:        0 1px 0 rgba(0,0,0,.18);
+  --pt-topbar-text:          #e3e9ef;
+  --pt-topbar-text-muted:    #a3b1bf;
+  --pt-topbar-icon-hover-bg: rgba(255,255,255,.08);
+  --pt-logo-box-bg:          #26323f;
+  --pt-logo-box-border:      rgba(255,255,255,.06);
+  --pt-logo-gradient:        linear-gradient(135deg,#d9992e,#b97a14);
+  --pt-logo-text-color:      #eef2f6;
+  --pt-logo-subtext-color:   #a3b1bf;
+
+  --pt-body-bg:              #eef1f4;
+  --pt-page-content-bg:      #eef1f4;
+  --pt-page-content-border:  transparent;
+  --pt-page-content-radius:  0;
+  --pt-card-bg:              #fbfcfd;
+  --pt-card-bg-glass:        #fbfcfd;
+  --pt-card-border:          #dde2e8;
+  --pt-card-shadow:          0 1px 2px rgba(30,41,59,.06), 0 2px 8px rgba(30,41,59,.04);
+  --pt-card-header-bg:       #f3f5f8;
+  --pt-card-header-border:   #e3e7ec;
+
+  --pt-primary:              #d9992e;
+  --pt-primary-hover:        #c4871c;
+  --pt-primary-rgb:          217,153,46;
+  --pt-primary-subtle:       rgba(217,153,46,.14);
+  --pt-accent:               #3f7fbf;
+  --pt-accent-rgb:           63,127,191;
+  --pt-success:              #2f8f6b;
+  --pt-danger:               #c9473f;
+  --pt-warning:              #d9992e;
+  --pt-info:                 #3a8cb5;
+
+  --pt-body-color:           #334155;
+  --pt-heading-color:        #1e293b;
+  --pt-text-muted:           #5b6778;
+  --pt-text-subtle:          #7b8794;
+  --pt-link-color:           #2b6cb0;
+  --pt-label-color:          #475569;
+
+  --pt-btn-primary-bg:       #d9992e;
+  --pt-btn-primary-text:     #1f2937;
+  --pt-btn-primary-border:   #d9992e;
+  --pt-btn-primary-hover-bg: #c4871c;
+
+  --pt-input-bg:             #ffffff;
+  --pt-input-border:         #cbd3dc;
+  --pt-input-text:           #1e293b;
+  --pt-input-placeholder:    #8592a0;
+  --pt-input-focus-border:   #3f7fbf;
+  --pt-input-focus-shadow:   rgba(63,127,191,.18);
+
+  --pt-table-color:          #334155;
+  --pt-table-border:         #e2e7ed;
+  --pt-table-head-bg:        #eef1f5;
+  --pt-table-head-color:     #1e293b;
+  --pt-table-stripe-bg:      rgba(30,41,59,.025);
+  --pt-table-hover-bg:       rgba(63,127,191,.07);
+
+  --pt-modal-bg:             #fbfcfd;
+  --pt-modal-border:         #dde2e8;
+  --pt-modal-header-bg:      #f1f4f7;
+  --pt-dropdown-bg:          #fbfcfd;
+  --pt-dropdown-border:      #dde2e8;
+  --pt-dropdown-shadow:      0 8px 24px rgba(30,41,59,.12);
+  --pt-dropdown-item-color:  #475569;
+  --pt-dropdown-item-hover-bg:#eef1f5;
+  --pt-dropdown-item-hover-color:#1e293b;
+  --pt-page-title-bg:        transparent;
+  --pt-page-title-border:    transparent;
+  --pt-breadcrumb-bg:        #e8ecf0;
+  --pt-pagination-bg:        #fbfcfd;
+  --pt-pagination-border:    #dde2e8;
+  --pt-pagination-color:     #2b6cb0;
+  --pt-pagination-active-bg: #d9992e;
+  --pt-alert-bg:             #fbfcfd;
+  --pt-alert-border:         #dde2e8;
+  --pt-offcanvas-bg:         #fbfcfd;
+  --pt-offcanvas-color:      #334155;
+}
+
+/* ───────────── 3) ŞANTİYE — KOYU (yumuşak kömür-lacivert) ───────────── */
+html[data-theme="santiye"][data-dark="true"], :root[data-dark="true"]:not([data-theme]) {
+  --pt-hero-bg:              #2c3846;
+  --pt-sidebar-bg:           #171d25;
+  --pt-sidebar-border:       rgba(255,255,255,.06);
+  --pt-sidebar-text:         #aab6c2;
+  --pt-sidebar-text-bright:  #e6ebf0;
+  --pt-sidebar-text-dim:     #7f8c9a;
+  --pt-sidebar-active-bg:    rgba(224,169,59,.15);
+  --pt-sidebar-active-text:  #e8bd66;
+  --pt-sidebar-accent:       #e0a93b;
+  --pt-sidebar-icon-color:   #8499ad;
+  --pt-topbar-bg:            #1d252e;
+  --pt-logo-box-bg:          #171d25;
+  --pt-body-bg:              #1b222b;
+  --pt-page-content-bg:      #1b222b;
+  --pt-card-bg:              #262f3a;
+  --pt-card-bg-glass:        #262f3a;
+  --pt-card-border:          rgba(255,255,255,.08);
+  --pt-card-shadow:          0 1px 2px rgba(0,0,0,.25);
+  --pt-card-header-bg:       #2a3440;
+  --pt-card-header-border:   rgba(255,255,255,.07);
+  --pt-primary:              #e0a93b;
+  --pt-primary-hover:        #cc9630;
+  --pt-primary-rgb:          224,169,59;
+  --pt-primary-subtle:       rgba(224,169,59,.13);
+  --pt-accent:               #6fa3d9;
+  --pt-body-color:           #c5cdd6;
+  --pt-heading-color:        #e6ebf0;
+  --pt-text-muted:           #9aa6b3;
+  --pt-text-subtle:          #7a8794;
+  --pt-link-color:           #86b4e6;
+  --pt-label-color:          #b4bec9;
+  --pt-btn-primary-bg:       #e0a93b;
+  --pt-btn-primary-text:     #1b222b;
+  --pt-btn-primary-border:   #e0a93b;
+  --pt-btn-primary-hover-bg: #cc9630;
+  --pt-input-bg:             #1f2731;
+  --pt-input-border:         #3a4654;
+  --pt-input-text:           #e6ebf0;
+  --pt-input-placeholder:    #7f8b99;
+  --pt-input-focus-border:   #6fa3d9;
+  --pt-input-focus-shadow:   rgba(111,163,217,.22);
+  --pt-table-color:          #c5cdd6;
+  --pt-table-border:         rgba(255,255,255,.08);
+  --pt-table-head-bg:        #2b3541;
+  --pt-table-head-color:     #e6ebf0;
+  --pt-table-stripe-bg:      rgba(255,255,255,.025);
+  --pt-table-hover-bg:       rgba(255,255,255,.05);
+  --pt-modal-bg:             #262f3a;
+  --pt-modal-border:         rgba(255,255,255,.1);
+  --pt-modal-header-bg:      #2a3440;
+  --pt-dropdown-bg:          #2a3440;
+  --pt-dropdown-border:      rgba(255,255,255,.1);
+  --pt-dropdown-shadow:      0 8px 24px rgba(0,0,0,.35);
+  --pt-dropdown-item-color:  #c5cdd6;
+  --pt-dropdown-item-hover-bg:rgba(255,255,255,.06);
+  --pt-dropdown-item-hover-color:#e6ebf0;
+  --pt-breadcrumb-bg:        #222a34;
+  --pt-pagination-bg:        #262f3a;
+  --pt-pagination-border:    rgba(255,255,255,.1);
+  --pt-pagination-color:     #86b4e6;
+  --pt-pagination-active-bg: #e0a93b;
+  --pt-alert-bg:             #262f3a;
+  --pt-alert-border:         rgba(255,255,255,.1);
+  --pt-offcanvas-bg:         #262f3a;
+  --pt-offcanvas-color:      #e6ebf0;
+}
+
+/* ───────────── 4) ENDÜSTRİYEL — AÇIK (beton grisi + sönük turuncu) ───────────── */
+html[data-theme="industrial"] {
+  --pt-hero-bg:              #34373b;
+  --pt-sidebar-bg:           #2b2d30;
+  --pt-sidebar-overlay:      none;
+  --pt-sidebar-shadow:       none;
+  --pt-sidebar-text:         #bcbfc3;
+  --pt-sidebar-text-bright:  #f0f1f2;
+  --pt-sidebar-text-dim:     #8d9196;
+  --pt-sidebar-hover-bg:     rgba(255,255,255,.06);
+  --pt-sidebar-active-bg:    rgba(214,122,66,.17);
+  --pt-sidebar-active-text:  #eda070;
+  --pt-sidebar-accent:       #d67a42;
+  --pt-sidebar-icon-color:   #9a9ea3;
+  --pt-topbar-bg:            #34373b;
+  --pt-topbar-text:          #e6e7e9;
+  --pt-topbar-text-muted:    #a8abaf;
+  --pt-logo-box-bg:          #2b2d30;
+  --pt-logo-gradient:        linear-gradient(135deg,#d67a42,#b8602b);
+  --pt-body-bg:              #eeedeb;
+  --pt-page-content-bg:      #eeedeb;
+  --pt-page-content-border:  transparent;
+  --pt-card-bg:              #fbfbfa;
+  --pt-card-bg-glass:        #fbfbfa;
+  --pt-card-border:          #dddbd7;
+  --pt-card-shadow:          0 1px 2px rgba(40,38,34,.07), 0 2px 8px rgba(40,38,34,.04);
+  --pt-card-header-bg:       #f3f2f0;
+  --pt-card-header-border:   #e3e1de;
+  --pt-primary:              #b8501a;
+  --pt-primary-hover:        #9a4214;
+  --pt-primary-rgb:          184,80,26;
+  --pt-primary-subtle:       rgba(184,80,26,.11);
+  --pt-accent:               #8a6d1f;
+  --pt-body-color:           #3a3a3c;
+  --pt-heading-color:        #232325;
+  --pt-text-muted:           #5f5f63;
+  --pt-text-subtle:          #85858a;
+  --pt-link-color:           #9a4214;
+  --pt-label-color:          #4a4a4d;
+  --pt-btn-primary-bg:       #b8501a;
+  --pt-btn-primary-text:     #ffffff;
+  --pt-btn-primary-border:   #b8501a;
+  --pt-btn-primary-hover-bg: #9a4214;
+  --pt-input-bg:             #ffffff;
+  --pt-input-border:         #cfcdc8;
+  --pt-input-text:           #232325;
+  --pt-input-placeholder:    #8c8c90;
+  --pt-input-focus-border:   #b8501a;
+  --pt-input-focus-shadow:   rgba(184,80,26,.18);
+  --pt-table-color:          #3a3a3c;
+  --pt-table-border:         #e4e2de;
+  --pt-table-head-bg:        #efeeeb;
+  --pt-table-head-color:     #232325;
+  --pt-table-stripe-bg:      rgba(40,38,34,.025);
+  --pt-table-hover-bg:       rgba(184,80,26,.06);
+  --pt-modal-bg:             #fbfbfa;
+  --pt-modal-border:         #dddbd7;
+  --pt-modal-header-bg:      #f1f0ee;
+  --pt-dropdown-bg:          #fbfbfa;
+  --pt-dropdown-border:      #dddbd7;
+  --pt-dropdown-shadow:      0 8px 24px rgba(40,38,34,.12);
+  --pt-dropdown-item-color:  #4a4a4d;
+  --pt-dropdown-item-hover-bg:#efeeeb;
+  --pt-dropdown-item-hover-color:#232325;
+  --pt-breadcrumb-bg:        #e7e5e2;
+  --pt-pagination-bg:        #fbfbfa;
+  --pt-pagination-border:    #dddbd7;
+  --pt-pagination-color:     #9a4214;
+  --pt-pagination-active-bg: #b8501a;
+  --pt-alert-bg:             #fbfbfa;
+  --pt-alert-border:         #dddbd7;
+  --pt-offcanvas-bg:         #fbfbfa;
+  --pt-offcanvas-color:      #3a3a3c;
+}
+
+/* ───────────── 5) ENDÜSTRİYEL — KOYU (antrasit, siyah değil) ───────────── */
+html[data-theme="industrial"][data-dark="true"] {
+  --pt-hero-bg:              #34363a;
+  --pt-sidebar-bg:           #1a1b1d;
+  --pt-topbar-bg:            #202124;
+  --pt-logo-box-bg:          #1a1b1d;
+  --pt-body-bg:              #1d1e20;
+  --pt-page-content-bg:      #1d1e20;
+  --pt-card-bg:              #27282b;
+  --pt-card-bg-glass:        #27282b;
+  --pt-card-border:          rgba(255,255,255,.08);
+  --pt-card-shadow:          0 1px 2px rgba(0,0,0,.28);
+  --pt-card-header-bg:       #2c2d31;
+  --pt-card-header-border:   rgba(255,255,255,.07);
+  --pt-primary:              #e08a52;
+  --pt-primary-hover:        #cb7842;
+  --pt-primary-rgb:          224,138,82;
+  --pt-primary-subtle:       rgba(224,138,82,.13);
+  --pt-body-color:           #c8c9cc;
+  --pt-heading-color:        #e8e9eb;
+  --pt-text-muted:           #9b9da1;
+  --pt-text-subtle:          #7b7d82;
+  --pt-link-color:           #eda070;
+  --pt-label-color:          #b5b7bb;
+  --pt-btn-primary-bg:       #e08a52;
+  --pt-btn-primary-text:     #1d1e20;
+  --pt-btn-primary-border:   #e08a52;
+  --pt-btn-primary-hover-bg: #cb7842;
+  --pt-input-bg:             #202124;
+  --pt-input-border:         #3d3f43;
+  --pt-input-text:           #e8e9eb;
+  --pt-input-placeholder:    #85878c;
+  --pt-input-focus-border:   #e08a52;
+  --pt-input-focus-shadow:   rgba(224,138,82,.22);
+  --pt-table-color:          #c8c9cc;
+  --pt-table-border:         rgba(255,255,255,.08);
+  --pt-table-head-bg:        #2e2f33;
+  --pt-table-head-color:     #e8e9eb;
+  --pt-table-stripe-bg:      rgba(255,255,255,.025);
+  --pt-table-hover-bg:       rgba(255,255,255,.05);
+  --pt-modal-bg:             #27282b;
+  --pt-modal-border:         rgba(255,255,255,.1);
+  --pt-modal-header-bg:      #2c2d31;
+  --pt-dropdown-bg:          #2c2d31;
+  --pt-dropdown-border:      rgba(255,255,255,.1);
+  --pt-dropdown-shadow:      0 8px 24px rgba(0,0,0,.4);
+  --pt-dropdown-item-color:  #c8c9cc;
+  --pt-dropdown-item-hover-bg:rgba(255,255,255,.06);
+  --pt-dropdown-item-hover-color:#e8e9eb;
+  --pt-breadcrumb-bg:        #232427;
+  --pt-pagination-bg:        #27282b;
+  --pt-pagination-border:    rgba(255,255,255,.1);
+  --pt-pagination-color:     #eda070;
+  --pt-pagination-active-bg: #e08a52;
+  --pt-alert-bg:             #27282b;
+  --pt-alert-border:         rgba(255,255,255,.1);
+  --pt-offcanvas-bg:         #27282b;
+  --pt-offcanvas-color:      #e8e9eb;
+}
+
+/* ───────────── 6) KURUMSAL — açık: sönük mavi, beyaz yerine kırık beyaz ───────────── */
+html[data-theme="corporate"] {
+  --pt-hero-bg:              #1f3358;
+  --pt-sidebar-bg:           #1b2d4d;
+  --pt-sidebar-overlay:      none;
+  --pt-sidebar-shadow:       none;
+  --pt-sidebar-active-bg:    rgba(94,140,214,.20);
+  --pt-sidebar-active-text:  #9fc0f0;
+  --pt-topbar-bg:            #1f3358;
+  --pt-logo-box-bg:          #1b2d4d;
+  --pt-body-bg:              #edf0f5;
+  --pt-page-content-bg:      #edf0f5;
+  --pt-page-content-border:  transparent;
+  --pt-card-bg:              #fbfcfe;
+  --pt-card-bg-glass:        #fbfcfe;
+  --pt-card-border:          #dbe1ea;
+  --pt-card-shadow:          0 1px 2px rgba(20,40,80,.06), 0 2px 8px rgba(20,40,80,.04);
+  --pt-card-header-bg:       #f2f5f9;
+  --pt-primary:              #3562b8;
+  --pt-primary-hover:        #2b509a;
+  --pt-primary-rgb:          53,98,184;
+  --pt-primary-subtle:       rgba(53,98,184,.10);
+  --pt-accent:               #2f7d63;
+  --pt-body-color:           #2f3e57;
+  --pt-heading-color:        #1a2740;
+  --pt-text-muted:           #5a6a82;
+  --pt-link-color:           #2f5fb3;
+  --pt-input-bg:             #ffffff;
+  --pt-input-text:           #1a2740;
+  --pt-input-border:         #c9d2de;
+  --pt-table-head-bg:        #eaeff6;
+  --pt-table-color:          #2f3e57;
+  --pt-modal-bg:             #fbfcfe;
+  --pt-dropdown-bg:          #fbfcfe;
+  --pt-pagination-active-bg: #3562b8;
+}
+html[data-theme="corporate"][data-dark="true"] {
+  --pt-body-bg:              #181f2a;
+  --pt-page-content-bg:      #181f2a;
+  --pt-card-bg:              #222b39;
+  --pt-card-bg-glass:        #222b39;
+  --pt-card-border:          rgba(255,255,255,.08);
+  --pt-card-header-bg:       #273142;
+  --pt-sidebar-bg:           #141a24;
+  --pt-topbar-bg:            #1b2330;
+  --pt-logo-box-bg:          #141a24;
+  --pt-primary:              #7a9fe0;
+  --pt-primary-hover:        #6a8fd0;
+  --pt-primary-rgb:          122,159,224;
+  --pt-btn-primary-bg:       #7a9fe0;
+  --pt-btn-primary-text:     #161c26;
+  --pt-body-color:           #c2cbd8;
+  --pt-heading-color:        #e5eaf1;
+  --pt-text-muted:           #98a4b5;
+  --pt-link-color:           #9cb9ec;
+  --pt-input-bg:             #1b2330;
+  --pt-input-border:         #384457;
+  --pt-input-text:           #e5eaf1;
+  --pt-table-head-bg:        #2a3445;
+  --pt-table-color:          #c2cbd8;
+  --pt-modal-bg:             #222b39;
+  --pt-dropdown-bg:          #273142;
+}
+
+/* ───────────── 7) DOĞA — açık: adaçayı yeşili, sönük ───────────── */
+html[data-theme="nature"] {
+  --pt-hero-bg:              #24402f;
+  --pt-sidebar-bg:           #1f3828;
+  --pt-sidebar-overlay:      none;
+  --pt-sidebar-shadow:       none;
+  --pt-sidebar-active-bg:    rgba(94,175,130,.20);
+  --pt-sidebar-active-text:  #9ad7b2;
+  --pt-topbar-bg:            #24402f;
+  --pt-logo-box-bg:          #1f3828;
+  --pt-body-bg:              #eef2ee;
+  --pt-page-content-bg:      #eef2ee;
+  --pt-page-content-border:  transparent;
+  --pt-card-bg:              #fbfcfb;
+  --pt-card-bg-glass:        #fbfcfb;
+  --pt-card-border:          #dae2db;
+  --pt-card-shadow:          0 1px 2px rgba(20,60,35,.06), 0 2px 8px rgba(20,60,35,.04);
+  --pt-card-header-bg:       #f2f5f2;
+  --pt-primary:              #2e8062;
+  --pt-primary-hover:        #256951;
+  --pt-primary-rgb:          46,128,98;
+  --pt-primary-subtle:       rgba(46,128,98,.11);
+  --pt-accent:               #9a6a1f;
+  --pt-body-color:           #2f4337;
+  --pt-heading-color:        #1a2b21;
+  --pt-text-muted:           #5a6e61;
+  --pt-link-color:           #2a7458;
+  --pt-input-bg:             #ffffff;
+  --pt-input-text:           #1a2b21;
+  --pt-input-border:         #c8d3ca;
+  --pt-table-head-bg:        #e9efe9;
+  --pt-table-color:          #2f4337;
+  --pt-modal-bg:             #fbfcfb;
+  --pt-dropdown-bg:          #fbfcfb;
+  --pt-pagination-active-bg: #2e8062;
+}
+html[data-theme="nature"][data-dark="true"] {
+  --pt-body-bg:              #1a211d;
+  --pt-page-content-bg:      #1a211d;
+  --pt-card-bg:              #242e28;
+  --pt-card-bg-glass:        #242e28;
+  --pt-card-border:          rgba(255,255,255,.08);
+  --pt-card-header-bg:       #29342d;
+  --pt-sidebar-bg:           #151b17;
+  --pt-topbar-bg:            #1d2620;
+  --pt-logo-box-bg:          #151b17;
+  --pt-primary:              #6fb895;
+  --pt-primary-hover:        #5fa885;
+  --pt-primary-rgb:          111,184,149;
+  --pt-btn-primary-bg:       #6fb895;
+  --pt-btn-primary-text:     #151b17;
+  --pt-body-color:           #c3cfc7;
+  --pt-heading-color:        #e5ece7;
+  --pt-text-muted:           #98a89d;
+  --pt-link-color:           #8fcfae;
+  --pt-input-bg:             #1d2620;
+  --pt-input-border:         #384a3f;
+  --pt-input-text:           #e5ece7;
+  --pt-table-head-bg:        #2b362f;
+  --pt-table-color:          #c3cfc7;
+  --pt-modal-bg:             #242e28;
+  --pt-dropdown-bg:          #29342d;
+}
+
+/* ───────────── 8) SAĞLIK / İSG — açık: net ama parlamayan mavi ───────────── */
+html[data-theme="health"] {
+  --pt-hero-bg:              #25406e;
+  --pt-sidebar-bg:           #f6f8fc;
+  --pt-sidebar-overlay:      none;
+  --pt-sidebar-shadow:       none;
+  --pt-sidebar-active-bg:    rgba(53,98,184,.12);
+  --pt-sidebar-active-text:  #2b53a0;
+  --pt-sidebar-text:         #3d4d69;
+  --pt-sidebar-text-bright:  #1a2740;
+  --pt-topbar-bg:            #2f5aa8;
+  --pt-body-bg:              #eef2f8;
+  --pt-page-content-bg:      #eef2f8;
+  --pt-page-content-border:  transparent;
+  --pt-card-bg:              #fbfcfe;
+  --pt-card-bg-glass:        #fbfcfe;
+  --pt-card-border:          #dae0ea;
+  --pt-card-shadow:          0 1px 2px rgba(30,60,120,.06), 0 2px 8px rgba(30,60,120,.04);
+  --pt-card-header-bg:       #f2f5fa;
+  --pt-primary:              #2f5aa8;
+  --pt-primary-hover:        #264a8c;
+  --pt-primary-rgb:          47,90,168;
+  --pt-primary-subtle:       rgba(47,90,168,.10);
+  --pt-accent:               #b83a3a;
+  --pt-body-color:           #2c3a52;
+  --pt-heading-color:        #172238;
+  --pt-text-muted:           #576680;
+  --pt-link-color:           #2b53a0;
+  --pt-input-bg:             #ffffff;
+  --pt-input-text:           #172238;
+  --pt-input-border:         #c9d1de;
+  --pt-table-head-bg:        #eaeff7;
+  --pt-table-color:          #2c3a52;
+  --pt-modal-bg:             #fbfcfe;
+  --pt-dropdown-bg:          #fbfcfe;
+  --pt-pagination-active-bg: #2f5aa8;
+}
+html[data-theme="health"][data-dark="true"] {
+  --pt-body-bg:              #171e2a;
+  --pt-page-content-bg:      #171e2a;
+  --pt-card-bg:              #212a39;
+  --pt-card-bg-glass:        #212a39;
+  --pt-card-border:          rgba(255,255,255,.08);
+  --pt-card-header-bg:       #263044;
+  --pt-sidebar-bg:           #131925;
+  --pt-sidebar-text:         #aab5c6;
+  --pt-sidebar-text-bright:  #e5eaf2;
+  --pt-sidebar-active-text:  #9cb9ec;
+  --pt-topbar-bg:            #1a2230;
+  --pt-primary:              #7a9fe0;
+  --pt-primary-hover:        #6a8fd0;
+  --pt-primary-rgb:          122,159,224;
+  --pt-btn-primary-bg:       #7a9fe0;
+  --pt-btn-primary-text:     #141a26;
+  --pt-body-color:           #c2cbd8;
+  --pt-heading-color:        #e5eaf2;
+  --pt-text-muted:           #98a4b6;
+  --pt-link-color:           #9cb9ec;
+  --pt-input-bg:             #1a2230;
+  --pt-input-border:         #384559;
+  --pt-input-text:           #e5eaf2;
+  --pt-table-head-bg:        #2a3548;
+  --pt-table-color:          #c2cbd8;
+  --pt-modal-bg:             #212a39;
+  --pt-dropdown-bg:          #263044;
+}
+
+/* ==========================================================================
+   v2 — UÇTAN UCA NORMALLEŞTİRME KATMANI
+   Sorun: uygulama "koyu-öncelikli" yazılmıştı (card-header.bg-dark.text-white,
+   .card.bg-primary, sabit gradient'ler...). Açık varsayılan temada bunlar
+   beyaz-üstüne-beyaz oluyordu. Aşağıdaki kurallar anlamı geri kurar.
+   ========================================================================== */
+
+html[data-theme] {
+  --pt-on-dark:  #f1f4f7;
+  --pt-warn-bg:  #e5b45a;  --pt-warn-text: #2b2410;
+  --pt-ok-bg:    #2a7656;  --pt-bad-bg: #b13e38;
+  --pt-inf-bg:   #28728f;  --pt-sec-bg: #5b6778;
+}
+
+/* ── 1) .bg-dark / .table-dark gerçekten koyu yüzey olsun, içindeki her şey okunsun ── */
+html[data-theme] .bg-dark:not([class*="bg-opacity"]),
+html[data-theme] .table-dark,
+html[data-theme] .card.bg-dark,
+html[data-theme] thead.bg-dark th,
+html[data-theme] .table-dark > :not(caption) > * > * {
+  background-color: var(--pt-hero-bg) !important;
+  background-image: none !important;
+  color: var(--pt-on-dark) !important;
+  border-color: rgba(255,255,255,.10) !important;
+}
+html[data-theme] .bg-dark :is(h1,h2,h3,h4,h5,h6,.card-title,label,p,span,small,td,th,li,a:not(.btn)):not(.text-warning):not(.text-success):not(.text-danger):not(.text-info):not(.badge):not(.btn) {
+  color: inherit;
+}
+html[data-theme] .bg-dark :is(h1,h2,h3,h4,h5,h6,.card-title) { color: #fff !important; }
+html[data-theme] .bg-dark .text-muted { color: #aeb9c6 !important; }
+html[data-theme] .bg-dark .text-warning, html[data-theme] .bg-dark .text-warning i { color: #f0c36d !important; }
+html[data-theme] .bg-dark .text-success, html[data-theme] .bg-dark .text-success i { color: #7dd0a8 !important; }
+html[data-theme] .bg-dark .text-info,    html[data-theme] .bg-dark .text-info i    { color: #86c9e3 !important; }
+html[data-theme] .bg-dark .text-danger,  html[data-theme] .bg-dark .text-danger i  { color: #f29a93 !important; }
+
+/* ── 2) Dolu (solid) renkli yüzeyler: rozet, kart, avatar — sönük ve kontrastlı ── */
+html[data-theme] :is(.bg-primary,.bg-success,.bg-danger,.bg-info,.bg-secondary,.bg-warning):not([class*="bg-opacity"]):not([class*="subtle"]) {
+  background-image: none !important; border-color: transparent;
+}
+html[data-theme] .bg-primary:not([class*="bg-opacity"]):not([class*="subtle"]) { background-color: var(--pt-btn-primary-bg) !important; color: var(--pt-btn-primary-text) !important; }
+html[data-theme] .bg-success:not([class*="bg-opacity"]):not([class*="subtle"]) { background-color: var(--pt-ok-bg)  !important; color:#fff !important; }
+html[data-theme] .bg-danger:not([class*="bg-opacity"]):not([class*="subtle"])  { background-color: var(--pt-bad-bg) !important; color:#fff !important; }
+html[data-theme] .bg-info:not([class*="bg-opacity"]):not([class*="subtle"])    { background-color: var(--pt-inf-bg) !important; color:#fff !important; }
+html[data-theme] .bg-secondary:not([class*="bg-opacity"]):not([class*="subtle"]){ background-color: var(--pt-sec-bg) !important; color:#fff !important; }
+html[data-theme] .bg-warning:not([class*="bg-opacity"]):not([class*="subtle"]) { background-color: var(--pt-warn-bg)!important; color: var(--pt-warn-text) !important; }
+html[data-theme] .bg-warning :is(.text-white,.text-light,i,h1,h2,h3,h4,h5,h6) { color: var(--pt-warn-text) !important; }
+html[data-theme] .bg-primary:not([class*="bg-opacity"]) .text-white { color: var(--pt-btn-primary-text) !important; }
+
+/* ── 3) Açık modda "beyaz yazı" sadece koyu yüzeylerde beyaz kalsın ── */
+html[data-theme]:not([data-dark="true"]) :is(.card-body,.card-header,.modal-body,.page-content,.list-group-item,.dropdown-menu,.offcanvas-body,.table td,.table th)
+  :is(.text-white,.text-light,.text-white-50,.text-white-70,
+      [style*="color:#fff" i],[style*="color: #fff" i],[style*="color:white" i],[style*="color: white" i],
+      [style*="color:#ffffff" i],[style*="color: #ffffff" i],[style*="color:#f8fafc" i],[style*="color: #f8fafc" i]) {
+  color: var(--pt-heading-color) !important;
+}
+html[data-theme]:not([data-dark="true"]) :is(.text-white-50,.text-white-70) { opacity: .75; }
+/* ...koyu/renkli yüzeylerin içinde yeniden beyaz */
+html[data-theme]:not([data-dark="true"]) :is(.bg-dark,.table-dark,.bg-primary,.bg-success,.bg-danger,.bg-info,.bg-secondary,
+    .btn,.badge,.avatar-title,.st-kpi-icon,.stat-icon,.doc-stat-icon,.alert-dark,.toast,
+    [class*="hero"],[class*="banner"],[class*="gradient"],[style*="gradient"],[style*="background:#" i],[style*="background: #" i],
+    #page-topbar,.sidebar-left,.vertical-menu,.modal-header.bg-primary,.modal-header.bg-dark)
+  :is(.text-white,.text-light,.text-white-50,.text-white-70,
+      [style*="color:#fff" i],[style*="color: #fff" i],[style*="color:white" i],[style*="color: white" i],
+      [style*="color:#ffffff" i],[style*="color: #ffffff" i],[style*="color:#f8fafc" i],[style*="color: #f8fafc" i]),
+html[data-theme]:not([data-dark="true"]) :is(.bg-dark,.table-dark,.bg-primary,.bg-success,.bg-danger,.bg-info,.bg-secondary,.btn,.badge,[class*="hero"],[class*="gradient"]):is(.text-white,.text-light) {
+  color: #fff !important;
+}
+html[data-theme]:not([data-dark="true"]) .bg-primary:not([class*="bg-opacity"]) :is(.text-white,.text-light),
+html[data-theme]:not([data-dark="true"]) .btn-primary :is(.text-white,.text-light),
+html[data-theme]:not([data-dark="true"]) .btn-warning :is(.text-white,.text-light),
+html[data-theme]:not([data-dark="true"]) .bg-warning :is(.text-white,.text-light) { color: var(--pt-btn-primary-text) !important; }
+
+/* ── 4) Hero bannerlar: tüm sayfalarda tek, sakin, koyu yüzey ── */
+html[data-theme] [class*="hero-banner"],
+html[data-theme] [class*="hero-header"]:not([class*="title"]),
+html[data-theme] [class*="hero-section"] {
+  background: var(--pt-hero-bg) !important;
+  background-image: none !important;
+  color: var(--pt-on-dark) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  box-shadow: 0 1px 3px rgba(20,28,38,.18) !important;
+  border-radius: 14px !important;
+}
+html[data-theme] [class*="hero-banner"]::before, html[data-theme] [class*="hero-banner"]::after { animation: none !important; }
+html[data-theme] [class*="hero-banner"]::before { background-image: none !important; }
+html[data-theme] [class*="hero-banner"]::before { background: var(--pt-primary) !important; opacity: .85; height: 3px !important; }
+html[data-theme] [class*="hero-banner"] :is(h1,h2,h3,h4,h5,h6) { color: #fff !important; }
+html[data-theme] [class*="hero-banner"] :is(p,small,.text-muted,.lead) { color: #c9d3de !important; }
+
+/* ── 5) Düğmeler: gradient/parlama yok, net kontrast ── */
+html[data-theme] .btn { background-image: none; box-shadow: none; text-shadow: none; }
+html[data-theme] .btn-primary   { background-color: var(--pt-btn-primary-bg) !important; border-color: var(--pt-btn-primary-bg) !important; color: var(--pt-btn-primary-text) !important; background-image: none !important; }
+html[data-theme] .btn-warning   { background-color: var(--pt-warn-bg) !important; border-color: var(--pt-warn-bg) !important; color: var(--pt-warn-text) !important; background-image: none !important; }
+html[data-theme] .btn-success   { background-color: var(--pt-ok-bg)  !important; border-color: var(--pt-ok-bg)  !important; color: #fff !important; background-image: none !important; }
+html[data-theme] .btn-danger    { background-color: var(--pt-bad-bg) !important; border-color: var(--pt-bad-bg) !important; color: #fff !important; background-image: none !important; }
+html[data-theme] .btn-info      { background-color: var(--pt-inf-bg) !important; border-color: var(--pt-inf-bg) !important; color: #fff !important; background-image: none !important; }
+html[data-theme] .btn-secondary { background-color: var(--pt-sec-bg) !important; border-color: var(--pt-sec-bg) !important; color: #fff !important; background-image: none !important; }
+html[data-theme] .btn-dark      { background-color: var(--pt-hero-bg) !important; border-color: var(--pt-hero-bg) !important; color: #fff !important; background-image: none !important; }
+html[data-theme] :is(.btn-primary,.btn-warning,.btn-success,.btn-danger,.btn-info,.btn-secondary,.btn-dark):hover { filter: brightness(.92); transform: none !important; }
+html[data-theme] :is(.btn-primary,.btn-warning,.btn-success,.btn-danger,.btn-info,.btn-secondary,.btn-dark) i { color: inherit !important; }
+html[data-theme] .btn-outline-light { color: #fff !important; border-color: rgba(255,255,255,.45) !important; background: rgba(255,255,255,.06) !important; }
+/* açık yüzeyde outline-light görünmez olmasın */
+html[data-theme]:not([data-dark="true"]) :is(.card-body,.modal-body,.page-content > .container-fluid > .row) .btn-outline-light:not([class*="hero"] *) {
+  color: var(--pt-body-color) !important; border-color: var(--pt-card-border) !important; background: transparent !important;
+}
+html[data-theme] [class*="hero-banner"] .btn-outline-light { color: #fff !important; border-color: rgba(255,255,255,.45) !important; background: rgba(255,255,255,.08) !important; }
+
+/* ── 6) Rozetler: kontrastlı, sönük ── */
+html[data-theme] .badge { font-weight: 600; letter-spacing: .01em; background-image: none !important; box-shadow: none !important; }
+
+/* ── 7) Üst çubuk ve sidebar ikonları parlak ve okunur ── */
+html[data-theme] #page-topbar :is(button,a):not(.btn) i,
+html[data-theme] #page-topbar :is(button,a):not(.btn) .mdi,
+html[data-theme] #page-topbar .top-icon, html[data-theme] #page-topbar .top-icon i,
+html[data-theme] #page-topbar .header-item i { color: var(--pt-topbar-text) !important; opacity: .92; }
+html[data-theme] #page-topbar :is(button,a):not(.btn):hover i { opacity: 1; color: #fff !important; }
+html[data-theme] #page-topbar .btn-primary, html[data-theme] #page-topbar .btn-primary i { color: var(--pt-btn-primary-text) !important; }
+html[data-theme] .app-search .form-control { color: var(--pt-topbar-text) !important; background: rgba(255,255,255,.07) !important; border-color: rgba(255,255,255,.12) !important; }
+html[data-theme] .app-search .form-control::placeholder { color: var(--pt-topbar-text-muted) !important; opacity: 1; }
+html[data-theme] #sidebar-menu ul li a i { color: var(--pt-sidebar-icon-color) !important; }
+html[data-theme] #sidebar-menu ul li a.active i, html[data-theme] #sidebar-menu ul li.mm-active > a i { color: var(--pt-sidebar-active-text) !important; }
+html[data-theme] .sidebar-section-label, html[data-theme] .menu-title { color: var(--pt-sidebar-text-dim) !important; }
+html[data-theme] { --pt-sidebar-icon-color: #a9bccd; }
+html[data-theme][data-theme="industrial"] { --pt-sidebar-icon-color: #b4b7bb; }
+
+/* ── 8) Kart başlıkları ve sayfa başlığı: her temada net ── */
+html[data-theme] .card-header:not(.bg-dark):not([class*="bg-primary"]):not([class*="bg-success"]):not([class*="bg-danger"]):not([class*="bg-info"]) {
+  background: var(--pt-card-header-bg) !important; color: var(--pt-heading-color);
+}
+html[data-theme] .page-title-box, html[data-theme] .page-title-box h4 { color: var(--pt-heading-color) !important; }
+html[data-theme] .card { overflow: hidden; }
+html[data-theme] .table > :not(caption) > * > * { color: var(--pt-table-color); }
+html[data-theme] .table thead th { color: var(--pt-table-head-color) !important; background: var(--pt-table-head-bg) !important; }
+html[data-theme] .table-light, html[data-theme] .table-light > :not(caption) > * > * { background: var(--pt-table-head-bg) !important; color: var(--pt-table-head-color) !important; }
+
+/* ── 9) Grafik metinleri ve gösterge kutuları ── */
+html[data-theme] .apexcharts-text, html[data-theme] .apexcharts-legend-text { fill: var(--pt-text-muted) !important; color: var(--pt-text-muted) !important; }
+html[data-theme] .apexcharts-gridline { stroke: var(--pt-table-border) !important; }
+html[data-theme] .apexcharts-tooltip { background: var(--pt-dropdown-bg) !important; color: var(--pt-body-color) !important; border-color: var(--pt-dropdown-border) !important; box-shadow: var(--pt-dropdown-shadow) !important; }
+
+/* sarı/ana renkli düğme ve rozetlerde .text-white olsa bile koyu yazı (okunurluk) */
+html[data-theme] :is(.btn-warning,.bg-warning,.btn-primary,.bg-primary):is(.text-white,.text-light):not(#_) { color: var(--pt-warn-text) !important; }
+html[data-theme] :is(.btn-primary,.bg-primary):is(.text-white,.text-light):not(#_) { color: var(--pt-btn-primary-text) !important; }
+
+/* <thead class="table-dark|bg-dark"> koyu kalsın (genel .table thead kuralı ezmesin) */
+html[data-theme] :is(thead.table-dark,thead.bg-dark,.table-dark thead,tr.table-dark,tr.bg-dark) :is(th,td):not(#_),
+html[data-theme] :is(thead.table-dark,thead.bg-dark) th:not(#_) {
+  background: var(--pt-hero-bg) !important; color: var(--pt-on-dark) !important; border-color: rgba(255,255,255,.10) !important;
+}
+
+/* Kurumsal / Doğa / Sağlık açık temalarında düğme ve dolu yüzeyler yumuşatılmış ana renge bağlansın */
+html[data-theme="corporate"]:not([data-dark="true"]),
+html[data-theme="nature"]:not([data-dark="true"]),
+html[data-theme="health"]:not([data-dark="true"]) {
+  --pt-btn-primary-bg: var(--pt-primary);
+  --pt-btn-primary-hover-bg: var(--pt-primary-hover);
+  --pt-btn-primary-border: var(--pt-primary);
+  --pt-btn-primary-text: #ffffff;
+}
+html[data-theme="industrial"]:not([data-dark="true"]) { --pt-btn-primary-bg: var(--pt-primary); }
+
+/* Bootstrap tablo değişkenleri: koyu modda yeşilimsi zemin yerine tema yüzeyi */
+html[data-theme] .table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--pt-table-color);
+  --bs-table-border-color: var(--pt-table-border);
+  --bs-table-striped-bg: var(--pt-table-stripe-bg);
+  --bs-table-hover-bg: var(--pt-table-hover-bg);
+}
+html[data-theme] .table > :not(caption) > * > * { background-color: transparent; }
+
+/* ==========================================================================
+   v3 — Logo, açık sidebar, açılır menü, tüm "-hero" / "-banner" bileşenleri
+   ========================================================================== */
+
+/* ── A) Üst çubuk logosu: alt yazı ve rozetler her temada okunur ── */
+html[data-theme] .navbar-logo-box .pergel-logo-subtitle { color: var(--pt-topbar-text-muted) !important; opacity: 1; }
+html[data-theme] .navbar-logo-box .pergel-logo-title { color: #fff !important; }
+html[data-theme] #page-topbar .badge[class*="bg-opacity"],
+html[data-theme] .navbar-logo-box .badge.bg-secondary {
+  background-color: rgba(255,255,255,.18) !important; color: #fff !important; border: 1px solid rgba(255,255,255,.22);
+}
+html[data-theme] .navbar-logo-box .badge.bg-warning { background-color: var(--pt-warn-bg) !important; color: var(--pt-warn-text) !important; box-shadow: none !important; }
+
+/* ── B) Açılır menüler (topbar): ikon ve metin koyu zeminde değil, açık menüde okunur ── */
+html[data-theme] #page-topbar .dropdown-menu :is(a,button) i:not(#_),
+html[data-theme] #page-topbar .app-menu-icon i:not(#_),
+html[data-theme] .app-dropdown-menu .app-menu-icon i:not(#_) { color: var(--pt-link-color) !important; opacity: 1 !important; }
+html[data-theme] #page-topbar .dropdown-menu :is(a,button):hover i:not(#_) { color: var(--pt-heading-color) !important; }
+html[data-theme] #page-topbar .dropdown-menu .app-menu-label, html[data-theme] #page-topbar .dropdown-menu .dropdown-content { color: var(--pt-dropdown-item-color) !important; }
+html[data-theme] .app-menu-icon { background: var(--pt-primary-subtle) !important; border-radius: 8px; }
+html[data-theme] .badge-warning { background: var(--pt-warn-bg) !important; color: var(--pt-warn-text) !important; }
+
+/* ── C) Açık renkli sidebar (Sağlık teması): beyaz yazılar ve soluk ikonlar düzeltilir ── */
+html[data-theme="health"]:not([data-dark="true"]) {
+  --pt-sidebar-icon-color: #55698a;
+  --pt-sidebar-text-dim:   #637391;
+  --pt-sidebar-section-color: #637391;
+}
+html[data-theme="health"]:not([data-dark="true"]) .sidebar-left :is(.text-white,.text-white-50,.text-light,.text-white-70):not(#_) { color: var(--pt-sidebar-text-bright) !important; }
+html[data-theme="health"]:not([data-dark="true"]) .sidebar-left .sidebar-pro-card { background: var(--pt-primary-subtle) !important; border-color: var(--pt-card-border) !important; }
+html[data-theme="health"]:not([data-dark="true"]) .sidebar-left .text-warning, 
+html[data-theme="health"]:not([data-dark="true"]) .sidebar-left .text-warning i { color: #8a5a0c !important; }
+html[data-theme="health"]:not([data-dark="true"]) .sidebar-left #sidebar-menu a i { color: var(--pt-sidebar-icon-color) !important; }
+
+/* ── D) Tüm "-hero" / "-banner" bileşenleri tek, sakin koyu yüzey ── */
+html[data-theme] :is([class$="-hero"],[class*="-hero "],[class$="-banner"],[class*="-banner "],[class*="ai-hero-header"]):not([class*="lock-"]):not([class*="expire"]):not([class*="trash"]):not([class*="alert"]):not([class*="hero-banner"]) {
+  background: var(--pt-hero-bg) !important; background-image: none !important; color: var(--pt-on-dark) !important;
+  border: 1px solid rgba(255,255,255,.08) !important; box-shadow: 0 1px 3px rgba(20,28,38,.18) !important; border-radius: 14px;
+}
+html[data-theme] :is([class$="-hero"],[class*="-hero "],[class$="-banner"],[class*="-banner "],[class*="ai-hero-header"]):not([class*="lock-"]):not([class*="expire"]):not([class*="trash"]):not([class*="alert"]):not([class*="hero-banner"])::before,
+html[data-theme] :is([class$="-hero"],[class*="-hero "],[class$="-banner"],[class*="-banner "]):not([class*="lock-"]):not([class*="hero-banner"])::after {
+  background-image: none !important; animation: none !important; box-shadow: none !important;
+}
+html[data-theme] :is([class$="-hero"],[class*="-hero "],[class$="-banner"],[class*="-banner "],[class*="hero-banner"],[class*="ai-hero-header"]):not([class*="lock-"]):not([class*="expire"]):not([class*="trash"]) :is(h1,h2,h3,h4,h5,h6) { color: #fff !important; }
+html[data-theme] :is([class$="-hero"],[class*="-hero "],[class$="-banner"],[class*="-banner "],[class*="hero-banner"]):not([class*="lock-"]):not([class*="expire"]):not([class*="trash"]) :is(p,.lead,small,.text-muted) { color: #c9d3de !important; }
+/* hero içindeki yarı saydam beyaz hap/rozetler (bg-white bg-opacity-*) */
+html[data-theme] :is([class$="-hero"],[class*="-hero "],[class$="-banner"],[class*="-banner "],[class*="hero-banner"],.bg-dark,[style*="gradient"]) :is(.bg-white,.bg-light,.bg-black)[class*="bg-opacity"],
+html[data-theme] :is(.bg-white,.bg-light)[class*="bg-opacity"][class*="text-white"] {
+  background-color: rgba(255,255,255,.16) !important; color: #fff !important; border: 1px solid rgba(255,255,255,.14) !important;
+}
+html[data-theme] :is([class$="-hero"],[class*="-hero "],[class$="-banner"],[class*="-banner "],[class*="hero-banner"]) .badge.bg-white { background: rgba(255,255,255,.16) !important; color: #fff !important; }
+html[data-theme] :is([class$="-hero"],[class*="-hero "],[class$="-banner"],[class*="-banner "],[class*="hero-banner"]) .btn-outline-light { color: #fff !important; }
+
+/* Koyu modda tüm temalarda sidebar metin/ikon/bölüm başlığı değerleri okunur olsun */
+html[data-theme][data-dark="true"] {
+  --pt-sidebar-icon-color: #a9bccd;
+  --pt-sidebar-text: #b4c0cc;
+  --pt-sidebar-text-bright: #e6ebf0;
+  --pt-sidebar-text-dim: #8fa0b8;
+  --pt-sidebar-section-color: #8fa0b8;
+}

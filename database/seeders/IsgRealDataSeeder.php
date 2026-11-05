@@ -24,9 +24,9 @@ class IsgRealDataSeeder extends Seeder
             for ($i = 0; $i < $numIncidents; $i++) {
                 IncidentReport::create([
                     'type' => $faker->randomElement(['ramak kala', 'hafif', 'ağır', 'guvensiz durum']),
-                    'occurred_at' => clone_string($faker->dateTimeBetween('-12 months', 'now')->format('Y-m-d')),
+                    'occurred_at' => (string) $faker->dateTimeBetween('-12 months', 'now')->format('Y-m-d'),
                     'status' => $faker->randomElement(['open', 'closed', 'investigation']),
-                    'description' => clone_string($project->name) . ' şantiyesinde ' . clone_string($faker->realText(50)),
+                    'description' => ((string) $project->name) . ' şantiyesinde ' . ((string) $faker->realText(50)),
                 ]);
             }
 
@@ -34,9 +34,9 @@ class IsgRealDataSeeder extends Seeder
             $permitTypes = ['Yüksekte Çalışma İzni', 'Ateşli Çalışma İzni', 'Kapalı Alan Çalışma İzni', 'Kaldırma ve Taşıma İzni', 'Elektrik Çalışma İzni', 'Gece Çalışma İzni'];
             for ($i = 0; $i < $numPermits; $i++) {
                 Permit::create([
-                    'type' => clone_string($faker->randomElement($permitTypes)) . ' (' . clone_string($project->name) . ')',
-                    'valid_from' => clone_string($faker->dateTimeBetween('-3 months', 'now')->format('Y-m-d')),
-                    'valid_to' => clone_string($faker->dateTimeBetween('now', '+1 months')->format('Y-m-d')),
+                    'type' => ((string) $faker->randomElement($permitTypes)) . ' (' . ((string) $project->name) . ')',
+                    'valid_from' => (string) $faker->dateTimeBetween('-3 months', 'now')->format('Y-m-d'),
+                    'valid_to' => (string) $faker->dateTimeBetween('now', '+1 months')->format('Y-m-d'),
                     'status' => $faker->randomElement(['pending', 'active', 'closed']),
                 ]);
             }
@@ -45,8 +45,8 @@ class IsgRealDataSeeder extends Seeder
             $talkTopics = ['Yüksekte Çalışma Kuralları', 'KKD Kullanımı', 'Acil Durum Tahliye Planı', 'İş Makineleri Güvenliği', 'Elektrik Kazalarından Korunma', 'Ergonomi ve Taşıma Kuralları'];
             for ($i = 0; $i < $numTalks; $i++) {
                 ToolboxTalk::create([
-                    'topic' => clone_string($faker->randomElement($talkTopics)) . ' - ' . clone_string($project->name),
-                    'date' => clone_string($faker->dateTimeBetween('-12 months', '+1 months')->format('Y-m-d')),
+                    'topic' => ((string) $faker->randomElement($talkTopics)) . ' - ' . ((string) $project->name),
+                    'date' => (string) $faker->dateTimeBetween('-12 months', '+1 months')->format('Y-m-d'),
                     'presenter_id' => $employees->random()->id,
                     'status' => $faker->randomElement(['draft', 'completed', 'scheduled']),
                 ]);

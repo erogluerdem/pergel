@@ -63,7 +63,7 @@
                         <button type="submit" class="btn btn-warning">
                             <i class="fas fa-sync me-2"></i>Güncelle
                         </button>
-                        <a href="{{ route('sales_targets.show', $salesTarget) }}" class="btn btn-secondary">İptal</a>
+                        <a href="{{ route('sales-targets.show', $salesTarget) }}" class="btn btn-secondary">İptal</a>
                     </div>
                 </form>
             </div>

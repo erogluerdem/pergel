@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('permits', function (Blueprint $table) {
             $table->id();
-            $table->string('permit_type');
+            $table->string('permit_type')->nullable();
             $table->text('work_description')->nullable();
             $table->string('location')->nullable();
             $table->unsignedBigInteger('responsible_team_id')->nullable();

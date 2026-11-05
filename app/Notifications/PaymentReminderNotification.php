@@ -32,7 +32,7 @@ class PaymentReminderNotification extends Notification implements ShouldQueue
             ->line("- Tutar: " . number_format($this->installment->amount, 2) . " TL")
             ->line("- Son Ödeme Tarihi: " . $this->installment->due_date->format('d.m.Y'))
             ->line("- Günler Kaldı: {$this->daysRemaining}")
-            ->action('Fatura Detaylarını Gör', route('invoices.show', $this->installment->invoice))
+            ->action('Fatura Detaylarını Gör', route('finance.invoices.show', $this->installment->invoice))
             ->line("Ödemenizi zamanında yapmanız gerektiğini hatırlatırız.")
             ->salutation('Saygılarımızla, ' . config('app.name'));
     }

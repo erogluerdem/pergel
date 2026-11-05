@@ -4,7 +4,7 @@
 @section('topbar-title', 'Finans Kontrol Paneli')
 {{-- Master layout'ta otomatik sayfa başlığını gösteren alanı bu görünüm için devre dışı bırakıyoruz
     Böylece master içindeki `page-title-box` bölümü render edilmez ve içerik topbar'a daha yakın olur. --}}
-@section('suppress_page_title')
+@section('suppress_page_title', '1')
 
 @push('styles')
 <style>

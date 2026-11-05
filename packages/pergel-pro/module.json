@@ -1,0 +1,26 @@
+{
+  "id": "pergel-pro",
+  "slug": "pergel-pro",
+  "name": "Full Enterprise Paketi",
+  "version": "1.0.0",
+  "author": "Erdem Eroğlu",
+  "website": "https://erdemeroglu.com.tr/yazilimlar/pergel#pro",
+  "description": "Tüm modüller, yapay zeka asistanı, 3D BIM modelleme, Executive BI ve sınırsız kullanım.",
+  "badge": "Hepsi Dahil (Pro)",
+  "icon": "ri-vip-crown-2-fill",
+  "modules": [
+    "subcontractor",
+    "finance",
+    "tr_compliance",
+    "tenders",
+    "qhse",
+    "qr_sla",
+    "bim",
+    "ai",
+    "bi_reports",
+    "portfolio",
+    "erp"
+  ],
+  "routes": "routes.php",
+  "enabled": true
+}

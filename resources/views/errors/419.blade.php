@@ -1,0 +1,5 @@
+@extends('errors.layout')
+@section('code','419')
+@section('illustration','maintenance')
+@section('title','Oturum süresi doldu')
+@section('message','Güvenlik nedeniyle oturumunuz sona erdi. Sayfayı yenileyip işleminizi tekrar deneyin.')

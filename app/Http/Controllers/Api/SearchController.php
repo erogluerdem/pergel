@@ -165,7 +165,7 @@ class SearchController extends Controller
                         'id' => $document->id,
                         'title' => $document->title,
                         'subtitle' => $subtitle,
-                        'url' => route('documents.show', $document->id),
+                        'url' => \Illuminate\Support\Facades\Route::has('documents.show') ? route('documents.show', $document->id) : route('projects.documents.all'),
                         'type' => 'document'
                     ];
                 })->toArray();

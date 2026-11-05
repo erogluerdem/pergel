@@ -1215,6 +1215,11 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Yield to persistent focus-radio-player.blade.php if present on the page
+    if (document.getElementById('focus-radio-widget') || document.getElementById('pergel-radio-widget')) {
+        return;
+    }
+
     const radioBtn = document.getElementById('topbar-radio-toggle-btn');
     const radioOffcanvasEl = document.getElementById('focusRadioOffcanvas');
     if (!radioBtn || !radioOffcanvasEl) return;

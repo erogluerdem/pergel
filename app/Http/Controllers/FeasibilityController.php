@@ -115,6 +115,25 @@ class FeasibilityController extends Controller
         return redirect()->route('feasibility.show', $copy->id)->with('success','Senaryo kopyalandı');
     }
 
+    public function recalc(Request $request, $id)
+    {
+        $s = FeasibilityStudy::findOrFail($id);
+        $kdv = $request->input('kdv', null);
+        $financeTermMonths = $request->input('finance_term_months', null);
+        $results = $this->computeResults($s, $kdv, $financeTermMonths);
+        $s->scenario_meta = array_merge($s->scenario_meta ?? [], [
+            'last_results' => $results,
+            'recalculated_at' => now()->toDateTimeString(),
+        ]);
+        $s->save();
+
+        if ($request->expectsJson() || $request->wantsJson()) {
+            return response()->json(['ok' => true, 'success' => true, 'results' => $results]);
+        }
+
+        return redirect()->route('feasibility.show', $s->id)->with('success', 'Fizibilite hesaplamaları güncellendi.');
+    }
+
     public function edit(Request $request, $id)
     {
         $s = FeasibilityStudy::findOrFail($id);
@@ -295,7 +314,7 @@ class FeasibilityController extends Controller
         $initialInvestment = $landCost + ($constructionCost * 0.20) + ($softCosts * 0.30);
         $months = max(1, $constructionMonths + $salesMonths);
         $monthlyRevenue = $salesMonths > 0 ? $totalRevenue / $salesMonths : 0;
-        $monthlyConstCost = $constructionMonths > 0 ? $constructionCost / $constructionMonths : 0;
+        $monthlyConstCost = $constructionMonths > 0 ? ($constructionCost * 0.80) / $constructionMonths : 0;
 
         $cashflows = [];
         $cashflows[0] = -1 * $initialInvestment;
@@ -354,8 +373,11 @@ class FeasibilityController extends Controller
             $scf[0] = -1 * $initialInvestment;
             for ($m = 1; $m <= $months; $m++) {
                 $cf = 0;
+                if ($m <= $constructionMonths) {
+                    $cf -= $monthlyConstCost;
+                }
                 if ($m > $constructionMonths) {
-                    $cf = $monthlyRev;
+                    $cf += $monthlyRev;
                 }
                 $scf[$m] = $cf;
             }

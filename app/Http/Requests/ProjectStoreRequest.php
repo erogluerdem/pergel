@@ -79,7 +79,7 @@ class ProjectStoreRequest extends FormRequest
                 'max:50',
                 function ($attribute, $value, $fail) {
                     if (!$value) return;
-                    if (!IdValidators::validateTaxNumber($value)) {
+                    if (!IdValidators::validateTcknOrVkn($value)) {
                         $fail('Geçersiz vergi numarası (VKN veya TCKN).');
                     }
                 }

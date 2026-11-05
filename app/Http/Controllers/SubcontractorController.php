@@ -10,6 +10,7 @@ use App\Models\Subcontractor;
 use App\Models\SubcontractorContract;
 use App\Models\ProgressClaim;
 use App\Models\ProgressClaimItem;
+use App\Models\ProgressClaimApproval;
 use App\Models\PaymentInstruction;
 use App\Models\Payment;
 use App\Models\CapitalTransaction;
@@ -449,45 +450,72 @@ class SubcontractorController extends Controller
         ]);
 
         // Items ekle
-        $currentQuantities = $request->input('current_quantity', []);
-        $mockItems = [
-            [
-                'progress_claim_id' => $claim->id,
-                'item_code' => '160.01.001',
-                'description' => 'C30 Beton',
-                'unit' => 'm³',
-                'contract_quantity' => 1200,
-                'previous_quantity' => 450,
-                'current_quantity' => $currentQuantities[0] ?? 0,
-                'cumulative_quantity' => 450 + ($currentQuantities[0] ?? 0),
-                'unit_price' => 2000.00,
-                'current_amount' => ($currentQuantities[0] ?? 0) * 2000.00,
-            ],
-            [
-                'progress_claim_id' => $claim->id,
-                'item_code' => '160.02.005',
-                'description' => 'Nervürlü Demir',
-                'unit' => 'ton',
-                'contract_quantity' => 85,
-                'previous_quantity' => 30,
-                'current_quantity' => $currentQuantities[1] ?? 0,
-                'cumulative_quantity' => 30 + ($currentQuantities[1] ?? 0),
-                'unit_price' => 25000.00,
-                'current_amount' => ($currentQuantities[1] ?? 0) * 25000.00,
-            ],
-        ];
+        $submittedItems = $request->input('items', []);
+        $createdItems = [];
 
-        foreach ($mockItems as $item) {
-            ProgressClaimItem::create($item);
+        if (!empty($submittedItems) && is_array($submittedItems)) {
+            foreach ($submittedItems as $idx => $rawItem) {
+                $currQty = (float) ($rawItem['current_quantity'] ?? $rawItem['quantity'] ?? 0);
+                $prevQty = (float) ($rawItem['previous_quantity'] ?? 0);
+                $unitPrice = (float) ($rawItem['unit_price'] ?? 0);
+                $currAmount = $currQty * $unitPrice;
+                $itemData = [
+                    'progress_claim_id' => $claim->id,
+                    'item_code' => $rawItem['item_code'] ?? ('160.01.' . str_pad($idx + 1, 3, '0', STR_PAD_LEFT)),
+                    'description' => $rawItem['description'] ?? $rawItem['work_item'] ?? ('İş Kalemi #' . ($idx + 1)),
+                    'unit' => $rawItem['unit'] ?? 'adet',
+                    'contract_quantity' => (float) ($rawItem['contract_quantity'] ?? $currQty),
+                    'previous_quantity' => $prevQty,
+                    'current_quantity' => $currQty,
+                    'cumulative_quantity' => $prevQty + $currQty,
+                    'unit_price' => $unitPrice,
+                    'current_amount' => $currAmount,
+                ];
+                ProgressClaimItem::create($itemData);
+                $createdItems[] = $itemData;
+            }
+        } else {
+            $currentQuantities = $request->input('current_quantity', []);
+            $mockItems = [
+                [
+                    'progress_claim_id' => $claim->id,
+                    'item_code' => '160.01.001',
+                    'description' => 'C30 Beton',
+                    'unit' => 'm³',
+                    'contract_quantity' => 1200,
+                    'previous_quantity' => 450,
+                    'current_quantity' => $currentQuantities[0] ?? 0,
+                    'cumulative_quantity' => 450 + ($currentQuantities[0] ?? 0),
+                    'unit_price' => 2000.00,
+                    'current_amount' => ($currentQuantities[0] ?? 0) * 2000.00,
+                ],
+                [
+                    'progress_claim_id' => $claim->id,
+                    'item_code' => '160.02.005',
+                    'description' => 'Nervürlü Demir',
+                    'unit' => 'ton',
+                    'contract_quantity' => 85,
+                    'previous_quantity' => 30,
+                    'current_quantity' => $currentQuantities[1] ?? 0,
+                    'cumulative_quantity' => 30 + ($currentQuantities[1] ?? 0),
+                    'unit_price' => 25000.00,
+                    'current_amount' => ($currentQuantities[1] ?? 0) * 25000.00,
+                ],
+            ];
+
+            foreach ($mockItems as $item) {
+                ProgressClaimItem::create($item);
+                $createdItems[] = $item;
+            }
         }
 
         // Finansal hesaplamalar
-        $totalAmount = array_sum(array_column($mockItems, 'current_amount'));
-        $withholding = $totalAmount * 0.1; // %10
-        $advanceDeduction = 0;
+        $totalAmount = array_sum(array_column($createdItems, 'current_amount'));
+        $withholding = $totalAmount * 0.10; // %10
+        $advanceDeduction = $claim->advance_deduction ?? 0;
         $subtotal = $totalAmount - $withholding - $advanceDeduction;
-        $vat = $subtotal * 0.2; // %20
-        $netAmount = $subtotal + $vat;
+        $vat = $totalAmount * 0.20; // %20
+        $netAmount = $totalAmount + $vat - $withholding - $advanceDeduction;
 
         $claim->update([
             'total_amount' => $totalAmount,
@@ -656,11 +684,11 @@ class SubcontractorController extends Controller
 
             // Finansal hesaplamaları yeniden yap
             $totalAmount = $claim->items()->sum('current_amount');
-            $withholding = $totalAmount * 0.1;
-            $advanceDeduction = 0;
+            $withholding = $totalAmount * 0.10;
+            $advanceDeduction = $claim->advance_deduction ?? 0;
             $subtotal = $totalAmount - $withholding - $advanceDeduction;
-            $vat = $subtotal * 0.2;
-            $netAmount = $subtotal + $vat;
+            $vat = $totalAmount * 0.20;
+            $netAmount = $totalAmount + $vat - $withholding - $advanceDeduction;
 
             $claim->update([
                 'total_amount' => $totalAmount,
@@ -715,8 +743,11 @@ class SubcontractorController extends Controller
     {
         // Dashboard verileri
         $currentMonth = now()->format('Y-m');
+        $monthExpr = DB::getDriverName() === 'sqlite'
+            ? "strftime('%Y-%m', payment_date)"
+            : "DATE_FORMAT(payment_date, '%Y-%m')";
         $thisMonthPaid = PaymentInstruction::where('status', 'processed')
-            ->whereRaw("DATE_FORMAT(payment_date, '%Y-%m') = ?", [$currentMonth])
+            ->whereRaw("{$monthExpr} = ?", [$currentMonth])
             ->sum('amount');
 
         $pendingAmount = PaymentInstruction::where('status', 'pending')
@@ -748,7 +779,7 @@ class SubcontractorController extends Controller
         $payments = $query->paginate(20);
 
         // Grafik verileri
-        $monthlyPayments = PaymentInstruction::selectRaw("DATE_FORMAT(payment_date, '%Y-%m') as month, SUM(amount) as total")
+        $monthlyPayments = PaymentInstruction::selectRaw("{$monthExpr} as month, SUM(amount) as total")
             ->where('status', 'processed')
             ->where('payment_date', '>=', now()->subMonths(6))
             ->groupBy('month')

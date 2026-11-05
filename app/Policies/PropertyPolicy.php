@@ -28,7 +28,7 @@ class PropertyPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole(['admin', 'manager']);
+        return $user->isAdmin() || $user->hasRole(['admin', 'manager']);
     }
 
     /**
@@ -37,7 +37,7 @@ class PropertyPolicy
     public function update(User $user, Property $property): bool
     {
         // Admin/Manager veya yaratıcı (user_id) uygulaması yapabilir
-        return $user->hasRole(['admin', 'manager']) || $user->id === $property->user_id;
+        return $user->isAdmin() || $user->hasRole(['admin', 'manager']) || $user->id === $property->user_id;
     }
 
     /**
@@ -46,7 +46,7 @@ class PropertyPolicy
     public function delete(User $user, Property $property): bool
     {
         // Yalnızca admin/manager silebilir
-        return $user->hasRole(['admin', 'manager']);
+        return $user->isAdmin() || $user->hasRole(['admin', 'manager']);
     }
 
     /**
@@ -54,7 +54,7 @@ class PropertyPolicy
      */
     public function restore(User $user, Property $property): bool
     {
-        return $user->hasRole('admin');
+        return $user->isAdmin() || $user->hasRole('admin');
     }
 
     /**
@@ -62,7 +62,7 @@ class PropertyPolicy
      */
     public function forceDelete(User $user, Property $property): bool
     {
-        return $user->hasRole('admin');
+        return $user->isAdmin() || $user->hasRole('admin');
     }
 
     /**
@@ -70,7 +70,7 @@ class PropertyPolicy
      */
     public function manageDocuments(User $user, Property $property): bool
     {
-        return $user->hasRole(['admin', 'manager']) || $user->id === $property->assigned_to_id;
+        return $user->isAdmin() || $user->hasRole(['admin', 'manager']) || $user->id === $property->assigned_to_id;
     }
 
     /**
@@ -78,7 +78,7 @@ class PropertyPolicy
      */
     public function addLegalProcess(User $user, Property $property): bool
     {
-        return $user->hasRole(['admin', 'manager']);
+        return $user->isAdmin() || $user->hasRole(['admin', 'manager']);
     }
 
     /**
@@ -86,7 +86,7 @@ class PropertyPolicy
      */
     public function addEvaluation(User $user, Property $property): bool
     {
-        return $user->hasRole(['admin', 'manager']);
+        return $user->isAdmin() || $user->hasRole(['admin', 'manager']);
     }
 
     /**
@@ -94,7 +94,7 @@ class PropertyPolicy
      */
     public function addReminder(User $user, Property $property): bool
     {
-        return $user->hasRole(['admin', 'manager']);
+        return $user->isAdmin() || $user->hasRole(['admin', 'manager']);
     }
 
     /**
@@ -102,6 +102,6 @@ class PropertyPolicy
      */
     public function viewReports(User $user, Property $property): bool
     {
-        return $user->hasRole(['admin', 'manager']) || $user->id === $property->assigned_to_id;
+        return $user->isAdmin() || $user->hasRole(['admin', 'manager']) || $user->id === $property->assigned_to_id;
     }
 }

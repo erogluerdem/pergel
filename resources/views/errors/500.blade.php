@@ -1,0 +1,5 @@
+@extends('errors.layout')
+@section('code','500')
+@section('illustration','error')
+@section('title','Bir şeyler ters gitti')
+@section('message','Sunucuda beklenmeyen bir hata oluştu. Ekibimiz bilgilendirildi; lütfen biraz sonra tekrar deneyin.')

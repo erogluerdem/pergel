@@ -60,9 +60,16 @@ class ProfileController extends Controller
                 }
             }
 
-            // Sorting
+            // Sorting (whitelisted)
+            $allowedSortColumns = ['id', 'name', 'email', 'is_admin', 'is_active', 'department', 'title', 'created_at', 'updated_at'];
             $sortBy = $request->input('sort_by', 'created_at');
-            $sortOrder = $request->input('sort_order', 'desc');
+            if (!in_array($sortBy, $allowedSortColumns, true)) {
+                $sortBy = 'created_at';
+            }
+            $sortOrder = strtolower($request->input('sort_order', 'desc'));
+            if (!in_array($sortOrder, ['asc', 'desc'], true)) {
+                $sortOrder = 'desc';
+            }
             $query->orderBy($sortBy, $sortOrder);
 
             $users = $query->paginate(10);
@@ -115,8 +122,9 @@ class ProfileController extends Controller
         return redirect()->route('profile.show')->with('success', 'Kullanıcı başarıyla oluşturuldu.');
     }
 
-    public function edit($id)
+    public function edit($id = null)
     {
+        $id = $id ?? auth()->id();
         if (!auth()->user()->is_admin) {
             // If not admin, allow editing own profile
             if ($id != auth()->id()) {
@@ -130,8 +138,9 @@ class ProfileController extends Controller
         return view('profile.edit', compact('user'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id = null)
     {
+        $id = $id ?? auth()->id();
         if (!auth()->user()->is_admin) {
             // If not admin, allow updating own profile
             if ($id != auth()->id()) {

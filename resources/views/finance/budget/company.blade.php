@@ -3,7 +3,7 @@
 @section('topbar-title', 'Finans')
 
 @push('styles')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="/libs/fontawesome/css/all.min.css">
 <style>
     .kpi-card {
         border: 1px solid #e9ecef;
@@ -498,7 +498,7 @@
                     <div class="col-md-3">
                         <div class="mb-3">
                             <i class="fas fa-chart-pie mb-2" style="font-size: 2rem;"></i>
-                            <h4>{{ number_format((array_sum(array_column($budgetCategories, 'spent')) / array_sum(array_column($budgetCategories, 'allocated'))) * 100, 1) }}%</h4>
+                            <h4>{{ number_format((array_sum(array_column($budgetCategories, 'spent')) / max(1, array_sum(array_column($budgetCategories, 'allocated')))) * 100, 1) }}%</h4>
                             <small>Bütçe Kullanımı</small>
                         </div>
                     </div>

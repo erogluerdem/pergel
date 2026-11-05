@@ -1,14 +1,16 @@
 @php($isAjax = request()->ajax())
 
-@if(!$isAjax)
-@extends('layouts.master')
+@extends($isAjax ? 'layouts.blank' : 'layouts.master')
 
+@if(!$isAjax)
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/bim-models.css') }}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="/libs/fontawesome/css/all.min.css">
 @endpush
+@endif
 
 @section('content')
+@if(!$isAjax)
 <div class="bim-models-container">
     <div class="container-fluid">
         <!-- Upload Header -->
@@ -162,8 +164,8 @@
 @if(!$isAjax)
     </div>
 </div>
-@endsection
 @endif
+@endsection
 
 @if($isAjax)
 <!-- When requested via AJAX we return inline script so the panel can execute it immediately -->

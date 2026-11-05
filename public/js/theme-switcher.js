@@ -19,50 +19,50 @@
       sector: 'Insaat & Tahhut',
       description: 'Saha yonetimi, santiye takibi ve hakedis odakli guclu lacivert-amber paleti.',
       icon: 'mdi-hard-hat',
-      colors: ['#0c1424', '#f5a623', '#4a8fe8'],
+      colors: ['#1f2a36', '#e0a93b', '#5b8fc7'],
       emoji: 'HH',
-      previewBg: '#0b1526', previewSidebar: '#0c1424', previewTopbar: '#0c1424',
-      previewAccent: '#f5a623', previewCard: 'rgba(22,34,56,0.88)',
+      previewBg: '#eef1f4', previewSidebar: '#1f2a36', previewTopbar: '#263341',
+      previewAccent: '#e0a93b', previewCard: '#fbfcfd',
     },
     corporate: {
       label: 'Kurumsal',
       sector: 'Gayrimenkul & Finans',
       description: 'Portfoy yonetimi, yatirim ve finans icin prestijli lacivert-mavi-zumrut dengesi.',
       icon: 'mdi-office-building',
-      colors: ['#0a1d3e', '#1e54d8', '#047857'],
+      colors: ['#1a2740', '#7a9fe0', '#2a7656'],
       emoji: 'OF',
-      previewBg: '#eef2f8', previewSidebar: '#0a1d3e', previewTopbar: '#0a1d3e',
-      previewAccent: '#1e54d8', previewCard: '#ffffff',
+      previewBg: '#edf0f5', previewSidebar: '#1a2740', previewTopbar: '#223253',
+      previewAccent: '#7a9fe0', previewCard: '#fbfcfd',
     },
     nature: {
       label: 'Doga & Cevre',
       sector: 'Cevre & Enerji & Tarim',
       description: 'Surdurulebilirlik, peyzaj ve yesil enerji icin organik zumrut-altin cizgisi.',
       icon: 'mdi-leaf',
-      colors: ['#081a0d', '#059669', '#b45309'],
+      colors: ['#1b2c24', '#6fb895', '#b8863a'],
       emoji: 'LF',
-      previewBg: '#edf6ee', previewSidebar: '#081a0d', previewTopbar: '#081a0d',
-      previewAccent: '#059669', previewCard: '#ffffff',
+      previewBg: '#eef2ee', previewSidebar: '#1b2c24', previewTopbar: '#233a2f',
+      previewAccent: '#6fb895', previewCard: '#fbfcfd',
     },
     industrial: {
       label: 'Endustriyel',
       sector: 'Fabrika & Madencilik',
       description: 'Agir sanayi, uretim hatti ve tesisler icin antrasit zirh ve alev turuncusu.',
       icon: 'mdi-factory',
-      colors: ['#0c0c0c', '#e8510a', '#d4a008'],
+      colors: ['#1f2022', '#e08a52', '#d4a73a'],
       emoji: 'FC',
-      previewBg: '#0c0c0c', previewSidebar: '#111111', previewTopbar: '#0c0c0c',
-      previewAccent: '#e8510a', previewCard: '#181818',
+      previewBg: '#eeedeb', previewSidebar: '#1f2022', previewTopbar: '#2a2b2e',
+      previewAccent: '#e08a52', previewCard: '#fbfcfd',
     },
     health: {
       label: 'Saglik & ISG',
       sector: 'Is Guvenligi & Tip',
       description: 'ISG denetimleri, saglik ve guvenlik surecleri icin steril, net ve yuksek kontrastli tasarim.',
       icon: 'mdi-hospital-box',
-      colors: ['#eef4ff', '#1d4ed8', '#c81e1e'],
+      colors: ['#17293a', '#5fb0d8', '#b13e38'],
       emoji: 'HB',
-      previewBg: '#eef4ff', previewSidebar: '#fafcff', previewTopbar: '#1d4ed8',
-      previewAccent: '#1d4ed8', previewCard: '#ffffff',
+      previewBg: '#eef2f8', previewSidebar: '#17293a', previewTopbar: '#1f3a52',
+      previewAccent: '#5fb0d8', previewCard: '#fbfcfd',
     },
   };
 
@@ -103,7 +103,7 @@
     if (!THEMES[theme]) theme = DEFAULT_THEME;
     var doApply = function() {
       var root = document.documentElement;
-      var isDarkPalette = (theme === 'santiye' || theme === 'industrial' || dark === true || dark === 'true');
+      var isDarkPalette = (dark === true || dark === 'true');
       root.setAttribute('data-theme', theme);
       root.setAttribute('data-dark', String(dark));
       if (isDarkPalette) { root.setAttribute('data-bs-theme', 'dark'); }
@@ -185,7 +185,7 @@
 
   /* ───── MİNİ PREVIEW ───── */
   function buildMiniPreview(info) {
-    var isDark = info.previewBg && (info.previewBg.startsWith('#0') || info.previewBg === '#0c0c0c');
+    var isDark = info.previewBg && (false);
     var txt = isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.4)';
     return '<div class="theme-mini-preview" style="background:'+info.previewBg+';border-radius:6px;overflow:hidden;height:48px;display:flex;border:1px solid '+info.colors[1]+'22;">'
       + '<div style="width:16px;background:'+info.previewSidebar+';flex-shrink:0;display:flex;flex-direction:column;padding:3px 2px;gap:2px;">'
@@ -297,14 +297,23 @@
   function bindTriggerButtons() {
     ['topbar-theme-switcher-btn','theme-switcher-btn'].forEach(function(id) {
       var btn = document.getElementById(id);
-      if (btn) btn.addEventListener('click', function(e) {
-        e.preventDefault(); e.stopPropagation();
-        var p = document.getElementById('pergel-theme-panel');
-        p && p.classList.contains('theme-panel-open') ? closeSwitcherPanel() : openSwitcherPanel();
-      });
+      if (btn && !btn.dataset.themeSwitcherBound) {
+        btn.dataset.themeSwitcherBound = '1';
+        btn.addEventListener('click', function(e) {
+          e.preventDefault(); e.stopPropagation();
+          var p = document.getElementById('pergel-theme-panel');
+          p && p.classList.contains('theme-panel-open') ? closeSwitcherPanel() : openSwitcherPanel();
+        });
+      }
     });
     document.querySelectorAll('#light-dark-mode, #topbar-light-dark-mode').forEach(function(btn) {
-      btn.addEventListener('click', function(e) { e.preventDefault(); applyTheme(getStoredTheme(), !getStoredDark(), true); });
+      if (btn.dataset.themeListenerBound === '1') return;
+      btn.dataset.themeListenerBound = '1';
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        applyTheme(getStoredTheme(), !getStoredDark(), true);
+      });
     });
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSwitcherPanel(); });
     updateMobileDock(getStoredTheme(), getStoredDark());

@@ -8,20 +8,24 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('planning_tasks', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('project_id')->nullable();
-            $table->string('name');
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->integer('duration')->nullable();
-            $table->integer('progress')->default(0);
-            $table->string('responsible')->nullable();
-            $table->text('notes')->nullable();
-            $table->timestamps();
+        if (!Schema::hasTable('planning_tasks')) {
+            Schema::create('planning_tasks', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('project_id')->nullable();
+                $table->string('name');
+                $table->date('start_date')->nullable();
+                $table->date('end_date')->nullable();
+                $table->integer('duration')->nullable();
+                $table->integer('progress')->default(0);
+                $table->string('responsible')->nullable();
+                $table->text('notes')->nullable();
+                $table->json('dependencies')->nullable();
+                $table->boolean('is_milestone')->default(false);
+                $table->timestamps();
 
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
-        });
+                $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            });
+        }
     }
 
     public function down(): void

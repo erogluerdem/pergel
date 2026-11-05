@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Opportunity;
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
 
 class OpportunityController extends Controller
@@ -44,7 +46,8 @@ class OpportunityController extends Controller
         ];
 
         // Monthly trend data
-        $monthlyTrend = Opportunity::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count, SUM(estimated_value) as value')
+        $monthExpr = DB::getDriverName() === 'sqlite' ? "strftime('%Y-%m', created_at)" : "DATE_FORMAT(created_at, '%Y-%m')";
+        $monthlyTrend = Opportunity::selectRaw("{$monthExpr} as month, COUNT(*) as count, SUM(estimated_value) as value")
             ->where('created_at', '>=', Carbon::now()->subMonths(6))
             ->groupBy('month')
             ->orderBy('month')
@@ -230,28 +233,114 @@ class OpportunityController extends Controller
         return redirect()->route('opportunities.list')->with('success', 'Fırsat silindi.');
     }
 
+    public function addActivity(Request $request, $id)
+    {
+        $opp = Opportunity::findOrFail($id);
+        $data = $request->validate([
+            'activity' => 'nullable|string',
+            'note' => 'nullable|string',
+            'description' => 'nullable|string',
+            'type' => 'nullable|string|max:50',
+        ]);
+
+        $text = $data['activity'] ?? $data['note'] ?? $data['description'] ?? '';
+        if (!empty($text)) {
+            $opp->addActivity($text);
+        }
+
+        if ($request->expectsJson() || $request->wantsJson()) {
+            return response()->json(['ok' => true, 'success' => true, 'message' => 'Aktivite eklendi.']);
+        }
+
+        return redirect()->back()->with('success', 'Aktivite başarıyla eklendi.');
+    }
+
+    public function addNote(Request $request, $id)
+    {
+        $opp = Opportunity::findOrFail($id);
+        $data = $request->validate([
+            'note' => 'nullable|string',
+            'notes' => 'nullable|string',
+            'content' => 'nullable|string',
+        ]);
+
+        $noteText = $data['note'] ?? $data['notes'] ?? $data['content'] ?? '';
+        if (!empty($noteText)) {
+            if (Schema::hasColumn('opportunities', 'notes')) {
+                $opp->notes = trim(($opp->notes ? $opp->notes . "\n" : '') . $noteText);
+                $opp->save();
+            } else {
+                $opp->description = trim(($opp->description ? $opp->description . "\n" : '') . $noteText);
+                $opp->save();
+            }
+            $opp->addActivity($noteText);
+        }
+
+        if ($request->expectsJson() || $request->wantsJson()) {
+            return response()->json(['ok' => true, 'success' => true, 'message' => 'Not eklendi.']);
+        }
+
+        return redirect()->back()->with('success', 'Not başarıyla eklendi.');
+    }
+
+    public function bulkAction(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:opportunities,id',
+            'action' => 'required|string',
+            'stage' => 'nullable|string',
+        ]);
+
+        $ids = $data['ids'];
+        $action = $data['action'];
+
+        if ($action === 'delete') {
+            Opportunity::whereIn('id', $ids)->delete();
+            $message = 'Seçili fırsatlar silindi.';
+        } elseif ($action === 'change_stage' || $action === 'move_stage' || !empty($data['stage'])) {
+            $stage = $data['stage'] ?? $action;
+            $update = ['stage' => $stage];
+            if ($stage === 'won') {
+                $update['probability'] = 100;
+            } elseif ($stage === 'lost') {
+                $update['probability'] = 0;
+            }
+            Opportunity::whereIn('id', $ids)->update($update);
+            $message = 'Seçili fırsatların aşaması güncellendi.';
+        } else {
+            Opportunity::whereIn('id', $ids)->update(['stage' => $action]);
+            $message = 'Toplu işlem tamamlandı.';
+        }
+
+        if ($request->expectsJson() || $request->wantsJson()) {
+            return response()->json(['ok' => true, 'success' => true, 'message' => $message]);
+        }
+
+        return redirect()->back()->with('success', $message);
+    }
+
     public function exportCsv(Request $request)
     {
         $filename = 'opportunities_'.date('Ymd_His').'.csv';
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="'.$filename.'"');
-        $handle = fopen('php://output','w');
-        fputcsv($handle, ['ID','Title','Customer','Stage','Estimated Value','kdv_percent','kdv_amount','estimated_value_kdv','Probability','Expected Close']);
-        $items = Opportunity::all();
-        foreach ($items as $i) {
-            $kdvPercent = isset($i->kdv_percent) ? intval($i->kdv_percent) : \App\Services\FinanceService::resolveKdvPercent($request->get('kdv', null));
-            $est = floatval($i->estimated_value ?: 0);
-            if (!is_null($i->kdv_amount)) {
-                $kdvAmount = (float)$i->kdv_amount;
-            } else {
-                $kdvAmount = \App\Services\FinanceService::kdvAmount($est, $kdvPercent);
+        return response()->streamDownload(function () use ($request) {
+            $handle = fopen('php://output','w');
+            fputcsv($handle, ['ID','Title','Customer','Stage','Estimated Value','kdv_percent','kdv_amount','estimated_value_kdv','Probability','Expected Close']);
+            $items = Opportunity::all();
+            foreach ($items as $i) {
+                $kdvPercent = isset($i->kdv_percent) ? intval($i->kdv_percent) : \App\Services\FinanceService::resolveKdvPercent($request->get('kdv', null));
+                $est = floatval($i->estimated_value ?: 0);
+                if (!is_null($i->kdv_amount)) {
+                    $kdvAmount = (float)$i->kdv_amount;
+                } else {
+                    $kdvAmount = \App\Services\FinanceService::kdvAmount($est, $kdvPercent);
+                }
+                $estKdv = !is_null($i->estimated_value_kdv) ? (float)$i->estimated_value_kdv : \App\Services\FinanceService::applyKdv($est, $kdvPercent);
+                fputcsv($handle, [
+                    $i->id, $i->title, $i->customer, $i->stage, $i->estimated_value, $kdvPercent, $kdvAmount, $estKdv, $i->probability, $i->expected_close_date
+                ]);
             }
-            $estKdv = !is_null($i->estimated_value_kdv) ? (float)$i->estimated_value_kdv : \App\Services\FinanceService::applyKdv($est, $kdvPercent);
-            fputcsv($handle, [
-                $i->id, $i->title, $i->customer, $i->stage, $i->estimated_value, $kdvPercent, $kdvAmount, $estKdv, $i->probability, $i->expected_close_date
-            ]);
-        }
-        fclose($handle);
-        exit;
+            fclose($handle);
+        }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
     }
 }

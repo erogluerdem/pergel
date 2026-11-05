@@ -248,7 +248,7 @@ class ProjectPlanningController extends Controller
         foreach (array_keys($adj) as $n) {
             if (!isset($visited[$n])) $dfs($n);
         }
-        return array_reverse($order);
+        return $order;
     }
 
     // get detailed task info for detail panel

@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="{{ asset('css/auth-theme.css') }}?v=2">
 {{-- Pergel Ultra-Luxury 100% Opaque In-Page Lock Screen Overlay --}}
 <div id="pergelLockOverlay" class="pergel-lock-overlay" style="display: none;">
     
@@ -146,6 +147,10 @@
                     <button type="button" class="numpad-key" onclick="pressPin('0')">0</button>
                     <button type="button" class="numpad-key numpad-back" onclick="backspacePin()"><i class="ri-delete-back-2-line"></i></button>
                 </div>
+                <button type="button" class="lock-action-btn mt-3" id="overlayPinUnlockBtn" onclick="submitOverlayPinUnlock()">
+                    <span>Kilidi Aç</span>
+                    <i class="ri-lock-unlock-line"></i>
+                </button>
             </div>
 
             <!-- Bottom Actions -->
@@ -866,7 +871,21 @@
         pinValue += digit;
         updatePinDots();
         if (pinValue.length >= 4) {
-            document.getElementById('overlayPasswordInput').value = pinValue;
+            var input = document.getElementById('overlayPasswordInput');
+            if (input) input.value = pinValue;
+        }
+        if (pinValue.length === 4) {
+            window.submitOverlayPinUnlock();
+        }
+    };
+
+    window.submitOverlayPinUnlock = function() {
+        if (pinValue.length >= 4) {
+            var input = document.getElementById('overlayPasswordInput');
+            if (input) input.value = pinValue;
+            if (typeof handleOverlayUnlock === 'function') {
+                handleOverlayUnlock(new Event('submit'));
+            }
         }
     };
 
@@ -1013,3 +1032,4 @@ async function handleOverlayUnlock(e) {
     }
 }
 </script>
+<script src="{{ asset('js/auth-scene.js') }}?v=1" defer></script>

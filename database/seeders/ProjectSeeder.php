@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Project;
 use Faker\Factory as Faker;
 
@@ -10,9 +11,9 @@ class ProjectSeeder extends Seeder
 {
     public function run(): void
     {
-        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Schema::disableForeignKeyConstraints();
         Project::truncate();
-        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        Schema::enableForeignKeyConstraints();
         
         $faker = Faker::create('tr_TR');
 
@@ -85,4 +86,3 @@ class ProjectSeeder extends Seeder
         }
     }
 }
-

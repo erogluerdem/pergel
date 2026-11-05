@@ -166,7 +166,7 @@ class FacilityController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:warranty,manual,asbuilt,other',
-            'file' => 'required|file|max:10240', // 10MB
+            'file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,webp,dwg,zip|max:20480',
             'description' => 'nullable|string|max:1000',
         ]);
 
@@ -293,9 +293,13 @@ class FacilityController extends Controller
             $assetsByCategory = Asset::selectRaw('category, COUNT(*) as count')->whereNotNull('category')->groupBy('category')->get();
 
             // Bakım Raporu Verileri
+            $isSqlite = \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite';
+            $monthExpr = $isSqlite ? "CAST(strftime('%m', created_at) AS INTEGER)" : "MONTH(created_at)";
+            $diffHoursExpr = $isSqlite ? "AVG((julianday(updated_at) - julianday(created_at)) * 24)" : "AVG(TIMESTAMPDIFF(HOUR, created_at, updated_at))";
+
             $maintenances = Maintenance::with('asset')->orderBy('created_at', 'desc')->take(50)->get(); // Limit to 50
             $maintenanceByStatus = Maintenance::selectRaw('status, COUNT(*) as count')->groupBy('status')->get();
-            $maintenanceByMonth = Maintenance::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+            $maintenanceByMonth = Maintenance::selectRaw("{$monthExpr} as month, COUNT(*) as count")
                 ->whereYear('created_at', now()->year)
                 ->groupBy('month')
                 ->get();
@@ -309,12 +313,12 @@ class FacilityController extends Controller
             $activeAssets = Asset::where('status', 'active')->count();
             $maintenanceCompleted = Maintenance::where('status', 'completed')->count();
             $avgResolutionTime = ServiceRequest::where('status', 'completed')
-                ->selectRaw('AVG(TIMESTAMPDIFF(HOUR, created_at, updated_at)) as avg_hours')
+                ->selectRaw("{$diffHoursExpr} as avg_hours")
                 ->first()->avg_hours ?? 0;
 
             // Maliyet Raporu Verileri
             $totalMaintenanceCost = Maintenance::whereNotNull('cost')->sum('cost');
-            $maintenanceCostByMonth = Maintenance::selectRaw('MONTH(created_at) as month, SUM(cost) as total_cost')
+            $maintenanceCostByMonth = Maintenance::selectRaw("{$monthExpr} as month, SUM(cost) as total_cost")
                 ->whereNotNull('cost')
                 ->whereYear('created_at', now()->year)
                 ->groupBy('month')
@@ -391,7 +395,17 @@ class FacilityController extends Controller
     {
         $request->validate([
             'project_id' => 'required|exists:projects,id',
-            'unit_id' => 'required|exists:units,id',
+            'unit_id' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    $inVillas = \Illuminate\Support\Facades\DB::table('villas')->where('id', $value)->exists();
+                    $inUnits = \Illuminate\Support\Facades\Schema::hasTable('units')
+                        && \Illuminate\Support\Facades\DB::table('units')->where('id', $value)->exists();
+                    if (!$inVillas && !$inUnits) {
+                        $fail('Seçilen bağımsız bölüm (ünite/villa) bulunamadı.');
+                    }
+                },
+            ],
             'qr_label' => 'nullable|string|max:255'
         ]);
 

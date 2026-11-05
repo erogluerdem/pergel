@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'dev_license' => env('PERGEL_DEV_LICENSE', null),
+
     'api_base' => env('PERGEL_LICENSE_API', 'https://erdemeroglu.com.tr/api/license/pergel'),
 
     'cache_ttl_hours' => (int) env('PERGEL_LICENSE_CACHE_HOURS', 24),
@@ -273,6 +275,7 @@ return [
         // Yapay Zeka & Tahminleme
         'ai-module' => 'ai',
         'ai_timesheet_analyzers' => 'ai',
+        'ai-timesheet-analyzers' => 'ai',
         'contracts-ai-analysis' => 'ai',
 
         // Taşeron Portalı & Ekosistem
@@ -300,6 +303,7 @@ return [
 
         // İş Zekası & Raporlar
         'executive_dashboards' => 'bi_reports',
+        'executive-dashboards' => 'bi_reports',
         'dynamic_reports' => 'bi_reports',
         'advanced-reports' => 'bi_reports',
         'analytics' => 'bi_reports',
@@ -315,8 +319,8 @@ return [
         'flexible-payments' => 'finance',
         'currency-exchanges' => 'finance',
         'digital-contracts' => 'finance',
-        'contracts/' => 'finance',
-        'cost/' => 'finance',
+        'contracts' => 'finance',
+        'cost' => 'finance',
         'cost/erp' => 'erp',
 
         // Portföy & Fizibilite

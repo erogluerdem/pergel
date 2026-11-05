@@ -529,13 +529,35 @@ class HelpController extends Controller
      */
     public function storeSupport(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email',
-            'subject' => 'required|string',
-            'priority' => 'required|string',
-            'message' => 'required|string',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'subject' => 'required|string|max:255',
+            'priority' => 'required|string|max:50',
+            'message' => 'required|string|max:5000',
         ]);
+
+        \Illuminate\Support\Facades\Log::info('Support request submitted', [
+            'user_id' => auth()->id(),
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'subject' => $validated['subject'],
+            'priority' => $validated['priority'],
+            'message' => $validated['message'],
+        ]);
+
+        try {
+            if (class_exists(\App\Models\ActivityLog::class) && \Illuminate\Support\Facades\Schema::hasTable('activity_logs')) {
+                \App\Models\ActivityLog::create([
+                    'user_id' => auth()->id(),
+                    'action' => 'support_ticket_created',
+                    'description' => "Destek talebi oluşturuldu: {$validated['subject']} ({$validated['priority']})",
+                    'ip_address' => $request->ip(),
+                ]);
+            }
+        } catch (\Throwable $e) {
+            // Ignore if table schema differs
+        }
 
         return back()->with('success', 'Destek biletiniz başarıyla oluşturuldu. Teknik ekibimiz en kısa sürede sizinle iletişime geçecektir.');
     }

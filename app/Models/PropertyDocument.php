@@ -55,6 +55,35 @@ class PropertyDocument extends Model
         'deleted_at' => 'datetime',
     ];
 
+    protected static function booted(): void
+    {
+        static::saving(function (PropertyDocument $doc) {
+            if (!empty($doc->document_name) && empty($doc->title)) {
+                $doc->title = $doc->document_name;
+            } elseif (!empty($doc->title) && empty($doc->document_name)) {
+                $doc->document_name = $doc->title;
+            }
+
+            if (!empty($doc->document_category) && empty($doc->document_type)) {
+                $doc->document_type = $doc->document_category;
+            } elseif (!empty($doc->document_type) && empty($doc->document_category)) {
+                $doc->document_category = $doc->document_type;
+            }
+
+            if (!empty($doc->document_date) && empty($doc->issue_date)) {
+                $doc->issue_date = $doc->document_date;
+            } elseif (!empty($doc->issue_date) && empty($doc->document_date)) {
+                $doc->document_date = $doc->issue_date;
+            }
+
+            if (!empty($doc->validity_date) && empty($doc->expiry_date)) {
+                $doc->expiry_date = $doc->validity_date;
+            } elseif (!empty($doc->expiry_date) && empty($doc->validity_date)) {
+                $doc->validity_date = $doc->expiry_date;
+            }
+        });
+    }
+
     // ==================== RELATIONSHIPS ====================
 
     public function property()

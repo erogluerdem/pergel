@@ -50,9 +50,16 @@ class TaskController extends Controller
             });
         }
 
-        // Sort by
+        // Sort by (whitelisted)
+        $allowedSortColumns = ['id', 'title', 'priority', 'status', 'due_date', 'assigned_to', 'project_id', 'created_at', 'updated_at'];
         $sortBy = $request->get('sort_by', 'due_date');
-        $sortDirection = $request->get('sort_direction', 'asc');
+        if (!in_array($sortBy, $allowedSortColumns, true)) {
+            $sortBy = 'due_date';
+        }
+        $sortDirection = strtolower($request->get('sort_direction', $request->get('sort_order', 'asc')));
+        if (!in_array($sortDirection, ['asc', 'desc'], true)) {
+            $sortDirection = 'asc';
+        }
         $query->orderBy($sortBy, $sortDirection);
 
         $tasks = $query->paginate(20);

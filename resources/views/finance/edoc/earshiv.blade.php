@@ -391,7 +391,7 @@
                         <strong>{{ number_format($complianceData['compliant']) }}</strong>
                     </div>
                     <div class="progress progress-modern">
-                        <div class="progress-bar progress-bar-modern" style="width: {{ ($complianceData['compliant'] / array_sum($complianceData)) * 100 }}%"></div>
+                        <div class="progress-bar progress-bar-modern" style="width: {{ array_sum($complianceData) > 0 ? ($complianceData['compliant'] / array_sum($complianceData)) * 100 : 0 }}%"></div>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -400,7 +400,7 @@
                         <strong>{{ number_format($complianceData['pending_review']) }}</strong>
                     </div>
                     <div class="progress progress-modern">
-                        <div class="progress-bar" style="width: {{ ($complianceData['pending_review'] / array_sum($complianceData)) * 100 }}%; background: #FF9800;"></div>
+                        <div class="progress-bar" style="width: {{ array_sum($complianceData) > 0 ? ($complianceData['pending_review'] / array_sum($complianceData)) * 100 : 0 }}%; background: #FF9800;"></div>
                     </div>
                 </div>
                 <div>
@@ -409,7 +409,7 @@
                         <strong>{{ number_format($complianceData['non_compliant']) }}</strong>
                     </div>
                     <div class="progress progress-modern">
-                        <div class="progress-bar" style="width: {{ ($complianceData['non_compliant'] / array_sum($complianceData)) * 100 }}%; background: #f44336;"></div>
+                        <div class="progress-bar" style="width: {{ array_sum($complianceData) > 0 ? ($complianceData['non_compliant'] / array_sum($complianceData)) * 100 : 0 }}%; background: #f44336;"></div>
                     </div>
                 </div>
             </div>

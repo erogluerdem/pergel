@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\NotificationController;
@@ -9,12 +8,14 @@ use App\Http\Controllers\PartnerController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
-})->middleware('auth:sanctum');
+})->middleware('auth');
 
 // Ortaklar ve sermaye işlemleri için API
-Route::get('/partners', [PartnerController::class, 'index']);
-Route::post('/partners', [PartnerController::class, 'store']);
-Route::post('/partners/{partner}/capital', [PartnerController::class, 'addCapital']);
+Route::middleware(['auth'])->group(function () {
+    Route::get('/partners', [PartnerController::class, 'index']);
+    Route::post('/partners', [PartnerController::class, 'store']);
+    Route::post('/partners/{partner}/capital', [PartnerController::class, 'addCapital']);
+});
 
 // Notification API routes
 Route::middleware(['auth'])->group(function () {
@@ -47,15 +48,12 @@ Route::prefix('qr')->group(function () {
     Route::post('/request/{token}', [App\Http\Controllers\Api\QrCodeApiController::class, 'createRequestFromQr']);
 });
 
-// (debug routes removed)
-
 // FAZ-5: MOBİL UYGULAMA API KATMANI
 Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth')->group(function () {
     // Auth actions
     Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
-    // 'user' route already exists at the top, we can use that one or keep it here
 
     // Mobile App endpoints
     Route::prefix('mobile')->group(function () {

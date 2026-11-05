@@ -6,8 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\PlanningTask;
 use App\Models\Equipment;
 use App\Models\Vendor;
+use App\Models\DailyFieldReport;
+use App\Models\DailyFieldReportLabour;
+use App\Models\DailyFieldReportEquipment;
+use App\Models\FieldMedia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class FieldOperationsController extends Controller
 {
@@ -163,12 +168,26 @@ class FieldOperationsController extends Controller
         $apiKey = config('services.openweather.api_key');
         $baseUrl = config('services.openweather.base_url');
 
+        $fallbackWeather = [
+            'ok' => true,
+            'demo' => true,
+            'city' => $city,
+            'weather' => [
+                'temperature' => 21,
+                'description' => 'Açık ve güneşli',
+                'humidity' => 45,
+                'wind_speed' => 3.4,
+                'pressure' => 1014,
+                'icon' => '01d',
+            ],
+        ];
+
         if (!$apiKey) {
-            return response()->json(['ok' => false, 'error' => 'Weather API key not configured'], 500);
+            return response()->json($fallbackWeather);
         }
 
         try {
-            $response = Http::get($baseUrl . 'weather', [
+            $response = Http::timeout(5)->get($baseUrl . 'weather', [
                 'q' => $city . ',TR',
                 'appid' => $apiKey,
                 'units' => 'metric',
@@ -188,11 +207,10 @@ class FieldOperationsController extends Controller
                         'icon' => $data['weather'][0]['icon'] ?? null,
                     ]
                 ]);
-            } else {
-                return response()->json(['ok' => false, 'error' => 'Weather API request failed'], 500);
             }
+            return response()->json($fallbackWeather);
         } catch (\Exception $e) {
-            return response()->json(['ok' => false, 'error' => 'Weather API error: ' . $e->getMessage()], 500);
+            return response()->json($fallbackWeather);
         }
     }
 

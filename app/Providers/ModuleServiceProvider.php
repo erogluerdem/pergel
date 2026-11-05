@@ -36,10 +36,11 @@ class ModuleServiceProvider extends ServiceProvider
 
             $moduleDir = $manifest['path'];
 
-            // 1. Rotaları yükle
+            // 1. Rotalar routes/web.php sonunda (catch-all'dan hemen önce) yüklenir.
+            // Eğer henüz yüklenmemişse yedek olarak burada da yükle.
             $routesFile = $manifest['routes'] ?? 'routes.php';
             $fullRoutesPath = $moduleDir . DIRECTORY_SEPARATOR . $routesFile;
-            if (File::exists($fullRoutesPath)) {
+            if (File::exists($fullRoutesPath) && !in_array(realpath($fullRoutesPath), get_included_files(), true)) {
                 Route::middleware('web')
                     ->group($fullRoutesPath);
             }

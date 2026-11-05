@@ -119,11 +119,17 @@ class PartnerController extends Controller
             'exchange_rate' => $exchangeRate ?: null,
             'amount_tl' => $amountTl,
         ]);
-        // For API calls also ensure a currency cash account exists and post account transaction
+        // For API calls also ensure target bank or currency cash account exists and post account transaction
         $cur = $request->input('currency') ?: 'TRY';
-        $cashAccount = \App\Models\Account::where('type','cash')->where('currency',$cur)->first();
-        if (! $cashAccount) {
-            $cashAccount = \App\Models\Account::create([
+        $targetAccount = null;
+        if ($request->source === 'bank' && !empty($request->bank_account_id)) {
+            $targetAccount = \App\Models\Account::find($request->bank_account_id);
+        }
+        if (! $targetAccount) {
+            $targetAccount = \App\Models\Account::where('type', 'cash')->where('currency', $cur)->first();
+        }
+        if (! $targetAccount) {
+            $targetAccount = \App\Models\Account::create([
                 'name' => 'Merkez Kasa' . ($cur !== 'TRY' ? ' - ' . $cur : ''),
                 'type' => 'cash',
                 'currency' => $cur,
@@ -135,17 +141,17 @@ class PartnerController extends Controller
         }
 
         \App\Models\AccountTransaction::create([
-            'account_id' => $cashAccount->id,
+            'account_id' => $targetAccount->id,
             'date' => $request->transaction_date,
             'description' => 'Ortak sermaye girişi: ' . $partner->name . ' - ' . $request->description,
             'debit' => $request->amount,
             'credit' => 0,
-            'balance' => ($cashAccount->balance + $request->amount),
+            'balance' => ($targetAccount->balance + $request->amount),
             'created_by' => auth()->id() ?? null,
         ]);
 
-        $cashAccount->balance += $request->amount;
-        $cashAccount->save();
+        $targetAccount->balance += $request->amount;
+        $targetAccount->save();
         return response()->json($capital);
     }
 
@@ -192,13 +198,17 @@ class PartnerController extends Controller
             'amount_tl' => $amountTl,
         ]);
 
-        // Merkez Kasa'ya (id=2) account_transactions kaydı ekle
-
-        // Find or create a currency-specific cash account (Merkez Kasa - <CUR>) and post transaction there
+        // Post transaction to the selected bank account when source === 'bank', or to the currency-specific cash account
         $cur = $request->input('currency') ?: 'TRY';
-        $cashAccount = \App\Models\Account::where('type','cash')->where('currency',$cur)->first();
-        if (! $cashAccount) {
-            $cashAccount = \App\Models\Account::create([
+        $targetAccount = null;
+        if ($request->source === 'bank' && !empty($request->bank_account_id)) {
+            $targetAccount = \App\Models\Account::find($request->bank_account_id);
+        }
+        if (! $targetAccount) {
+            $targetAccount = \App\Models\Account::where('type', 'cash')->where('currency', $cur)->first();
+        }
+        if (! $targetAccount) {
+            $targetAccount = \App\Models\Account::create([
                 'name' => 'Merkez Kasa' . ($cur !== 'TRY' ? ' - ' . $cur : ''),
                 'type' => 'cash',
                 'currency' => $cur,
@@ -210,18 +220,18 @@ class PartnerController extends Controller
         }
 
         \App\Models\AccountTransaction::create([
-            'account_id' => $cashAccount->id,
+            'account_id' => $targetAccount->id,
             'date' => $request->transaction_date,
             'description' => 'Ortak sermaye girişi: ' . $partner->name . ' - ' . $request->description,
             'debit' => $request->amount,
             'credit' => 0,
-            'balance' => ($cashAccount->balance + $request->amount),
+            'balance' => ($targetAccount->balance + $request->amount),
             'created_by' => auth()->id() ?? null,
         ]);
 
-        // Update the cash account balance
-        $cashAccount->balance += $request->amount;
-        $cashAccount->save();
+        // Update the target account balance
+        $targetAccount->balance += $request->amount;
+        $targetAccount->save();
 
         if ($request->wantsJson()) {
             return response()->json(['message' => 'Sermaye başarıyla eklendi.'], 200);

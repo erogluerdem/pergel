@@ -117,7 +117,7 @@ class DigitalContractController extends Controller
         $signature = $contract->signatures()->where('token', $token)->firstOrFail();
         
         if ($signature->status !== 'pending') {
-            return redirect()->route('home')->with('error', 'Bu imza talebinin geçerlilik süresi dolmuş.');
+            return redirect()->route('root')->with('error', 'Bu imza talebinin geçerlilik süresi dolmuş.');
         }
 
         return view('digital_contracts.sign', compact('contract', 'signature'));

@@ -3,7 +3,7 @@
 @section('topbar-title', 'Finans - Finansman & Bütçe')
 
 @push('styles')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="/libs/fontawesome/css/all.min.css">
 <style>
     .loan-card {
         border-radius: 15px;
@@ -229,12 +229,12 @@
                                             <circle cx="50" cy="50" r="40" fill="none" stroke="#e9ecef" stroke-width="8"/>
                                             <circle cx="50" cy="50" r="40" fill="none" stroke="{{ $loan['status'] == 'active' ? '#28a745' : '#6c757d' }}" 
                                                     stroke-width="8" stroke-dasharray="{{ 2 * pi() * 40 }}" 
-                                                    stroke-dashoffset="{{ 2 * pi() * 40 * (1 - $loan['paid_installments'] / $loan['installment_count']) }}"
+                                                    stroke-dashoffset="{{ 2 * pi() * 40 * (1 - ($loan['installment_count'] > 0 ? ($loan['paid_installments'] / $loan['installment_count']) : 0)) }}"
                                                     transform="rotate(-90 50 50)"/>
                                         </svg>
                                         <div class="position-absolute top-50 start-50 translate-middle text-center">
                                             <div style="font-size: 0.8rem; font-weight: bold;">
-                                                {{ round(($loan['paid_installments'] / $loan['installment_count']) * 100) }}%
+                                                {{ $loan['installment_count'] > 0 ? round(($loan['paid_installments'] / $loan['installment_count']) * 100) : 0 }}%
                                             </div>
                                         </div>
                                     </div>

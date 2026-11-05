@@ -10,7 +10,7 @@
 
 @section('css')
     <!-- Bootstrap Rating css -->
-    <link href="{{ URL::asset('build/libs/bootstrap-rating/bootstrap-rating.css" rel="stylesheet" type="text/css" />
+    <link href="{{ URL::asset('build/libs/bootstrap-rating/bootstrap-rating.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')

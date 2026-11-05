@@ -23,7 +23,21 @@ class ApprovalController extends Controller
         $approvals = $query->orderBy('created_at', 'desc')->paginate(20);
         $levels = Approval::APPROVAL_LEVELS;
 
-        return view('purchasing.approvals.index', compact('approvals', 'levels'));
+        $totalApprovals = Approval::count();
+        $pendingApprovals = Approval::where('status', 'pending')->count();
+        $pendingCount = $pendingApprovals;
+        $approvedCount = Approval::where('status', 'approved')->count();
+        $rejectedCount = Approval::where('status', 'rejected')->count();
+
+        return view('purchasing.approvals.index', compact(
+            'approvals',
+            'levels',
+            'totalApprovals',
+            'pendingApprovals',
+            'pendingCount',
+            'approvedCount',
+            'rejectedCount'
+        ));
     }
 
     public function pending()
@@ -34,11 +48,29 @@ class ApprovalController extends Controller
                             ->orderBy('created_at', 'desc')
                             ->paginate(20);
 
-        return view('purchasing.approvals.pending', compact('approvals'));
+        $levels = Approval::APPROVAL_LEVELS;
+        $totalApprovals = Approval::count();
+        $pendingApprovals = Approval::where('status', 'pending')->count();
+        $pendingCount = $pendingApprovals;
+        $approvedCount = Approval::where('status', 'approved')->count();
+        $rejectedCount = Approval::where('status', 'rejected')->count();
+
+        return view('purchasing.approvals.pending', compact(
+            'approvals',
+            'levels',
+            'totalApprovals',
+            'pendingApprovals',
+            'pendingCount',
+            'approvedCount',
+            'rejectedCount'
+        ));
     }
 
     public function show(Approval $approval)
     {
+        if (!$approval->exists) {
+            $approval = Approval::findOrFail(request()->route('approval') ?? request()->route('id'));
+        }
         $approval->load('requisition', 'approver');
 
         return view('purchasing.approvals.show', compact('approval'));

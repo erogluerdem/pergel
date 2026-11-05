@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="tr"
-      data-server-theme="{{ Auth::check() ? (Auth::user()->theme ?? 'santiye') : 'santiye' }}"
+      data-server-theme="{{ auth()->check() && !empty(auth()->user()->theme) ? auth()->user()->theme : '' }}"
       data-server-dark="{{ Auth::check() ? (Auth::user()->dark_mode ? 'true' : 'false') : 'false' }}"
-      data-theme="{{ Auth::check() ? (Auth::user()->theme ?? 'santiye') : 'santiye' }}">
+      data-theme="{{ Auth::check() && !empty(Auth::user()->theme) ? Auth::user()->theme : 'santiye' }}">
 
 <head>
     <meta charset="utf-8" />
@@ -28,7 +28,8 @@
 
     <!-- include head css -->
     @include('layouts.head-css')
-    {{-- Allow pages to push additional styles --}}
+    {{-- Allow pages to push or yield additional styles --}}
+    @yield('styles')
     @stack('styles')
 
     {{-- Tema Sistemi: FOUC önlemek için head'de erken başlat --}}
@@ -41,7 +42,7 @@
                 var lsDark  = localStorage.getItem('pergel_dark');
                 var theme = (serverTheme && serverTheme !== '') ? serverTheme : (lsTheme || 'santiye');
                 var dark  = lsDark !== null ? (lsDark === 'true') : (serverTheme ? serverDark : false);
-                var isDarkPalette = (theme === 'santiye' || theme === 'industrial' || dark === true);
+                var isDarkPalette = (dark === true);
                 document.documentElement.setAttribute('data-theme', theme);
                 document.documentElement.setAttribute('data-dark', String(dark));
                 if (isDarkPalette) { document.documentElement.setAttribute('data-bs-theme', 'dark'); }
@@ -71,7 +72,7 @@
         }
 
         /* ── Kartlar ── */
-        [data-theme] .card {
+        [data-theme] .card:not([style*="background"]) {
             background: var(--pt-card-bg, rgba(255,255,255,0.9)) !important;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -209,7 +210,7 @@
         }
 
         [data-theme] .table thead th {
-            background-color: var(--pt-table-header-bg) !important;
+            background-color: var(--pt-table-head-bg, var(--pt-table-header-bg, #f8fafc)) !important;
             color: var(--pt-heading-color) !important;
             border-color: var(--pt-table-border) !important;
             font-family: var(--pt-font-heading) !important;
@@ -577,6 +578,7 @@
     <!-- MetisMenu handles sidebar menu functionality -->
 
     @yield('scripts')
+    @yield('script')
 
     @stack('scripts')
     <script>

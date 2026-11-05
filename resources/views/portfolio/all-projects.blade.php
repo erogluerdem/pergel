@@ -182,7 +182,7 @@
         </div>
     @endif
 
-    @if(isset($pergelQuota) && $pergelQuota->tier === 'community')
+    @if(isset($pergelQuota) && (isset($pergelLicense) ? $pergelLicense->tier() : ($pergelQuota->getUsageSummary()['tier'] ?? 'community')) === 'community')
         @php
             $quotaSummary = $pergelQuota->getUsageSummary();
             $projectQuota = $quotaSummary['projects'];

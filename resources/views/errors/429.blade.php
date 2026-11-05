@@ -1,0 +1,5 @@
+@extends('errors.layout')
+@section('code','429')
+@section('illustration','maintenance')
+@section('title','Çok fazla istek')
+@section('message','Kısa sürede çok fazla istek gönderildi. Biraz bekleyip tekrar deneyin.')

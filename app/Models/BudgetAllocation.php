@@ -4,28 +4,49 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BudgetAllocation extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'project_id',
         'category',
         'allocated_amount',
         'spent_amount',
+        'committed_amount',
         'remaining_amount',
         'fiscal_year',
-        'notes'
+        'quarter',
+        'status',
+        'notes',
+        'approved_by',
+        'approved_at',
+        'created_by',
     ];
 
     protected $casts = [
         'allocated_amount' => 'decimal:2',
         'spent_amount' => 'decimal:2',
-        'remaining_amount' => 'decimal:2'
+        'committed_amount' => 'decimal:2',
+        'remaining_amount' => 'decimal:2',
+        'approved_at' => 'datetime',
     ];
 
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function approver(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function getRemainingPercentageAttribute()

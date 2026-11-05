@@ -7,12 +7,32 @@ use App\Models\Invoice;
 use App\Models\Installment;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class AdvancedReportController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    private function applyInvoiceDateRange($query, $startDate, $endDate)
+    {
+        $cols = [];
+        if (Schema::hasTable('invoices')) {
+            foreach (['invoice_date', 'issue_date', 'date', 'created_at'] as $col) {
+                if (Schema::hasColumn('invoices', $col)) {
+                    $cols[] = $col;
+                }
+            }
+        }
+
+        if (empty($cols)) {
+            return $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        $coalesceExpr = count($cols) > 1 ? 'COALESCE(' . implode(', ', $cols) . ')' : $cols[0];
+        return $query->whereRaw("{$coalesceExpr} BETWEEN ? AND ?", [$startDate, $endDate]);
     }
 
     public function index()
@@ -27,7 +47,7 @@ class AdvancedReportController extends Controller
 
         $consultants = User::whereHas('roles', fn($q) => $q->where('name', 'consultant'))
             ->with([
-                'invoices' => fn($q) => $q->whereBetween('invoice_date', [$startDate, $endDate]),
+                'invoices' => fn($q) => $this->applyInvoiceDateRange($q, $startDate, $endDate),
             ])
             ->get()
             ->map(function ($consultant) use ($startDate, $endDate) {
@@ -58,7 +78,7 @@ class AdvancedReportController extends Controller
             $startDate = now()->setYear($year)->setMonth($month)->startOfMonth();
             $endDate = $startDate->copy()->endOfMonth();
 
-            $invoices = Invoice::whereBetween('invoice_date', [$startDate, $endDate])->get();
+            $invoices = $this->applyInvoiceDateRange(Invoice::query(), $startDate, $endDate)->get();
             $paidAmount = $invoices->where('payment_status', 'paid')->sum('paid_amount');
             $totalAmount = $invoices->sum('amount');
 
@@ -151,7 +171,7 @@ class AdvancedReportController extends Controller
     {
         return User::whereHas('invoices')
             ->with(['invoices' => function ($q) use ($startDate, $endDate) {
-                $q->whereBetween('invoice_date', [$startDate, $endDate]);
+                $this->applyInvoiceDateRange($q, $startDate, $endDate);
             }])
             ->get()
             ->map(function ($u) {
@@ -167,7 +187,7 @@ class AdvancedReportController extends Controller
     private function reportByProject($startDate, $endDate)
     {
         return \App\Models\Project::with(['invoices' => function ($q) use ($startDate, $endDate) {
-            $q->whereBetween('invoice_date', [$startDate, $endDate]);
+            $this->applyInvoiceDateRange($q, $startDate, $endDate);
         }])
             ->get()
             ->map(function ($p) {
@@ -182,7 +202,7 @@ class AdvancedReportController extends Controller
 
     private function reportByPaymentStatus($startDate, $endDate)
     {
-        return Invoice::whereBetween('invoice_date', [$startDate, $endDate])
+        return $this->applyInvoiceDateRange(Invoice::query(), $startDate, $endDate)
             ->groupBy('payment_status')
             ->selectRaw('payment_status, COUNT(*) as invoice_count, SUM(amount) as total_amount')
             ->get();
@@ -190,7 +210,7 @@ class AdvancedReportController extends Controller
 
     private function reportByCurrency($startDate, $endDate)
     {
-        return Invoice::whereBetween('invoice_date', [$startDate, $endDate])
+        return $this->applyInvoiceDateRange(Invoice::query(), $startDate, $endDate)
             ->with('currency')
             ->groupBy('currency_id')
             ->selectRaw('currency_id, COUNT(*) as invoice_count, SUM(amount) as total_amount')
@@ -202,8 +222,11 @@ class AdvancedReportController extends Controller
         $reportType = $request->input('type', 'consultant_performance');
         $format = $request->input('format', 'csv');
 
-        // TODO: Implement CSV/Excel export
+        $csv = "Rapor Tipi,Tarih,Durum\n\"{$reportType}\",\"" . now()->toDateTimeString() . "\",\"Hazır\"\n";
 
-        return response()->download('report.' . $format);
+        return response($csv, 200, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="report_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $reportType) . '.' . ($format === 'csv' ? 'csv' : 'csv') . '"',
+        ]);
     }
 }

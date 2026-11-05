@@ -3,7 +3,7 @@
 @section('topbar-title', 'Finans')
 
 @push('styles')
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="/libs/fontawesome/css/all.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" rel="stylesheet">
 <style>
     .location-card {

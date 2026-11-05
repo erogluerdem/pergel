@@ -2,7 +2,7 @@
 
 @section('styles')
 {{-- Font Awesome for icons --}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"/>
+<link rel="stylesheet" href="/libs/fontawesome/css/all.min.css"/>
 <style>
     .bg-soft-success { background-color: rgba(40, 199, 111, 0.1); }
     .bg-soft-danger { background-color: rgba(244, 67, 54, 0.1); }
@@ -80,31 +80,35 @@ document.addEventListener('DOMContentLoaded', function() {
         const exchangeRateInput = modal.querySelector('.exchange-rate-input');
 
         // Source (bank/cash) change
-        sourceSelect.addEventListener('change', function() {
-            if (this.value === 'bank') {
-                bankSelectWrapper.classList.remove('d-none');
-            } else {
-                bankSelectWrapper.classList.add('d-none');
-            }
-        });
+        if (sourceSelect) {
+            sourceSelect.addEventListener('change', function() {
+                if (!bankSelectWrapper) return;
+                if (this.value === 'bank') {
+                    bankSelectWrapper.classList.remove('d-none');
+                } else {
+                    bankSelectWrapper.classList.add('d-none');
+                }
+            });
+            sourceSelect.dispatchEvent(new Event('change'));
+        }
 
         // Currency change
-        currencySelect.addEventListener('change', function() {
-            if (this.value !== 'TRY') {
-                exchangeRateWrapper.classList.remove('d-none');
-                exchangeRateInput.required = true;
-                if (lastRates[this.value]) {
-                    exchangeRateInput.value = lastRates[this.value];
+        if (currencySelect) {
+            currencySelect.addEventListener('change', function() {
+                if (!exchangeRateWrapper || !exchangeRateInput) return;
+                if (this.value !== 'TRY') {
+                    exchangeRateWrapper.classList.remove('d-none');
+                    exchangeRateInput.required = true;
+                    if (lastRates[this.value]) {
+                        exchangeRateInput.value = lastRates[this.value];
+                    }
+                } else {
+                    exchangeRateWrapper.classList.add('d-none');
+                    exchangeRateInput.required = false;
                 }
-            } else {
-                exchangeRateWrapper.classList.add('d-none');
-                exchangeRateInput.required = false;
-            }
-        });
-
-        // Initial triggers
-        sourceSelect.dispatchEvent(new Event('change'));
-        currencySelect.dispatchEvent(new Event('change'));
+            });
+            currencySelect.dispatchEvent(new Event('change'));
+        }
     }
 
     // Setup for all existing modals on page load
@@ -112,7 +116,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // AJAX for Add Partner form
     const addPartnerForm = document.getElementById('add-partner-form');
-    addPartnerForm.addEventListener('submit', function(e) {
+    if (addPartnerForm) {
+        addPartnerForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const formData = new FormData(this);
 
@@ -139,7 +144,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error:', error);
             alert('İstek gönderilirken bir hata oluştu.');
         });
-    });
+        });
+    }
 
     // AJAX for Add Capital forms (delegated from a parent element)
     document.body.addEventListener('submit', function(e) {

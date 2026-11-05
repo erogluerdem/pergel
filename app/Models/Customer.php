@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 
 class Customer extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes, Notifiable;
 
     protected $fillable = [
         'name', 'tax_number', 'tax_office', 'mersis', 'contact_person', 'phone', 'email', 'address', 'city',

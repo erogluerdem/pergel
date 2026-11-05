@@ -158,7 +158,10 @@ class AnalyticsController extends Controller
         $query = $this->buildQuery($dataSource, $fields, $filters);
 
         if ($groupBy) {
-            $query->groupBy($groupBy);
+            $cleanGroupBy = preg_replace('/[^a-zA-Z0-9_]/', '', (string) $groupBy);
+            if ($cleanGroupBy !== '') {
+                $query->groupBy($cleanGroupBy);
+            }
         }
 
         $results = $query->get();
@@ -236,17 +239,27 @@ class AnalyticsController extends Controller
         }
 
         $query = $modelMap[$dataSource]::query();
+        $allowedOperators = ['=', '!=', '<>', '>', '<', '>=', '<=', 'like', 'LIKE'];
 
         // Filtreleri uygula
         foreach ($filters as $filter) {
             if (isset($filter['field'], $filter['operator'], $filter['value'])) {
-                $query->where($filter['field'], $filter['operator'], $filter['value']);
+                $cleanField = preg_replace('/[^a-zA-Z0-9_]/', '', (string) $filter['field']);
+                $operator = in_array($filter['operator'], $allowedOperators, true) ? $filter['operator'] : '=';
+                if ($cleanField !== '') {
+                    $query->where($cleanField, $operator, $filter['value']);
+                }
             }
         }
 
         // Alanları seç
-        if (!empty($fields)) {
-            $query->select($fields);
+        if (!empty($fields) && is_array($fields)) {
+            $cleanFields = array_values(array_filter(array_map(function ($field) {
+                return preg_replace('/[^a-zA-Z0-9_]/', '', (string) $field);
+            }, $fields)));
+            if (!empty($cleanFields)) {
+                $query->select($cleanFields);
+            }
         }
 
         return $query;
@@ -255,7 +268,7 @@ class AnalyticsController extends Controller
     /**
      * Build baseline analytics data used by whatIf and API endpoint
      */
-    private function buildBaselineData()
+    public function buildBaselineData()
     {
     // Include projects that are active or in planning so analytics reflect current portfolio
     $projects = Project::with(['costItems'])->whereIn('status', ['active', 'planning'])->get();

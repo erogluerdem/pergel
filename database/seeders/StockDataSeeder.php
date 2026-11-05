@@ -5,12 +5,15 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\StockCard;
 use App\Models\StockMovement;
+use App\Models\User;
 use Carbon\Carbon;
 
 class StockDataSeeder extends Seeder
 {
     public function run()
     {
+        $userId = User::first()?->id;
+
         // Mevcut stock card'ları güncelle
         $stockCards = StockCard::all();
         
@@ -48,7 +51,7 @@ class StockDataSeeder extends Seeder
                     'total_amount' => $quantity * $unitPrice,
                     'reference_no' => 'REF-' . strtoupper(uniqid()),
                     'description' => $this->getRandomDescription($type),
-                    'created_by' => 4,
+                    'created_by' => $userId,
                     'created_at' => $date,
                     'updated_at' => $date
                 ]);

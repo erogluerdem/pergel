@@ -24,9 +24,9 @@ class SampleProgramSeeder extends Seeder
         if ($project) {
             $project->program_id = $program->id;
             $project->save();
-            $this->command->info('Linked project '.$project->id.' to program '.$program->id);
+            $this->command?->info('Linked project '.$project->id.' to program '.$program->id);
         } else {
-            $this->command->info('No projects found to link.');
+            $this->command?->info('No projects found to link.');
         }
     }
 }

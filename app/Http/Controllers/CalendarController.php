@@ -17,18 +17,19 @@ class CalendarController extends Controller
         // Bu ay için takvim verileri
         $currentMonth = now()->format('Y-m');
         
-        // Görevlerin deadline'ları
+        // Görevlerin due_date'leri
         $taskEvents = Task::with(['project', 'assignedTo'])
-            ->whereNotNull('deadline')
-            ->where('deadline', '>=', now()->startOfMonth())
-            ->where('deadline', '<=', now()->endOfMonth())
+            ->whereNotNull('due_date')
+            ->where('due_date', '>=', now()->startOfMonth())
+            ->where('due_date', '<=', now()->endOfMonth())
             ->get()
             ->map(function ($task) {
+                $dueDateFormatted = Carbon::parse($task->due_date)->format('Y-m-d');
                 return [
                     'id' => 'task-' . $task->id,
                     'title' => $task->title,
-                    'start' => $task->deadline->format('Y-m-d'),
-                    'end' => $task->deadline->format('Y-m-d'),
+                    'start' => $dueDateFormatted,
+                    'end' => $dueDateFormatted,
                     'className' => 'bg-' . $this->getTaskPriorityColor($task->priority),
                     'type' => 'task',
                     'description' => $task->description,
@@ -46,11 +47,12 @@ class CalendarController extends Controller
             ->where('milestone_date', '<=', now()->endOfMonth())
             ->get()
             ->map(function ($project) {
+                $milestoneFormatted = Carbon::parse($project->milestone_date)->format('Y-m-d');
                 return [
                     'id' => 'project-' . $project->id,
                     'title' => $project->name . ' (Milestone)',
-                    'start' => $project->milestone_date->format('Y-m-d'),
-                    'end' => $project->milestone_date->format('Y-m-d'),
+                    'start' => $milestoneFormatted,
+                    'end' => $milestoneFormatted,
                     'className' => 'bg-warning',
                     'type' => 'milestone',
                     'description' => $project->description,
@@ -65,11 +67,11 @@ class CalendarController extends Controller
 
         // Güncel istatistikler
         $stats = [
-            'this_month_deadlines' => Task::whereMonth('deadline', now()->month)
-                ->whereYear('deadline', now()->year)
+            'this_month_deadlines' => Task::whereMonth('due_date', now()->month)
+                ->whereYear('due_date', now()->year)
                 ->where('status', '!=', 'completed')
                 ->count(),
-            'overdue_tasks' => Task::where('deadline', '<', now())
+            'overdue_tasks' => Task::where('due_date', '<', now())
                 ->where('status', '!=', 'completed')
                 ->count(),
             'upcoming_milestones' => Project::where('milestone_date', '>', now())

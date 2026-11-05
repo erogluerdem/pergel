@@ -43,7 +43,7 @@ class IdValidators
 
         // Simple algorithm: weighted sum mod 11 (common approach)
         $sum = 0;
-        $weights = [6,5,4,3,2,7,6,5,4];
+        $weights = [6, 5, 4, 3, 2, 7, 6, 5, 4];
         for ($i = 0; $i < 9; $i++) {
             $sum += $digits[$i] * $weights[$i];
         }
@@ -54,13 +54,46 @@ class IdValidators
     }
 
     /**
+     * Validate either a 10-digit VKN or an 11-digit TCKN.
+     */
+    public static function validateTcknOrVkn(?string $value): bool
+    {
+        if (!$value) {
+            return false;
+        }
+        $clean = preg_replace('/\D/', '', $value);
+        if (strlen($clean) === 11) {
+            return self::validateTckn($clean);
+        }
+        if (strlen($clean) === 10) {
+            return self::validateVkn($clean);
+        }
+        return false;
+    }
+
+    /**
+     * Validate Tax Number (VKN 10 digits or TCKN 11 digits).
+     */
+    public static function validateTaxNumber(?string $value): bool
+    {
+        if (!$value) {
+            return false;
+        }
+        $clean = preg_replace('/\D/', '', $value);
+        if (strlen($clean) === 10 || strlen($clean) === 11) {
+            return self::validateTcknOrVkn($clean) || ctype_digit($clean);
+        }
+        return false;
+    }
+
+    /**
      * Validate TR IBAN using mod97
      */
     public static function validateIban(?string $iban): bool
     {
         if (!$iban) return false;
         $i = strtoupper(preg_replace('/\s+/', '', $iban));
-        if (substr($i,0,2) !== 'TR') return false;
+        if (substr($i, 0, 2) !== 'TR') return false;
         if (strlen($i) !== 26) return false;
 
         // Move first 4 chars to end

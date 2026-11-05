@@ -10,7 +10,7 @@
 
 @section('css')
     <!-- Lightbox css -->
-    <link href="{{ URL::asset('build/libs/magnific-popup/magnific-popup.css" rel="stylesheet" type="text/css" />
+    <link href="{{ URL::asset('build/libs/magnific-popup/magnific-popup.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')

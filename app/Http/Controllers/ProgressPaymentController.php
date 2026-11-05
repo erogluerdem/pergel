@@ -89,7 +89,7 @@ class ProgressPaymentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'contract_id' => 'required|exists:digital_contracts,id',
+            'contract_id' => 'required|exists:contracts,id',
             'project_id' => 'required|exists:projects,id',
             'payment_number' => 'required|unique:progress_payments,payment_number',
             'payment_date' => 'required|date',
@@ -306,17 +306,17 @@ class ProgressPaymentController extends Controller
         }
 
         $data = [
-            'total_amount' => $query->sum('amount'),
-            'total_approved' => $query->where('status', ProgressPayment::STATUS_APPROVED)->sum('amount'),
-            'total_paid' => $query->where('status', ProgressPayment::STATUS_PAID)->sum('amount'),
-            'pending_payments' => $query->whereIn('status', [
+            'total_amount' => (clone $query)->sum('amount'),
+            'total_approved' => (clone $query)->where('status', ProgressPayment::STATUS_APPROVED)->sum('amount'),
+            'total_paid' => (clone $query)->where('status', ProgressPayment::STATUS_PAID)->sum('amount'),
+            'pending_payments' => (clone $query)->whereIn('status', [
                 ProgressPayment::STATUS_PENDING,
                 ProgressPayment::STATUS_SUBMITTED
             ])->sum('amount'),
-            'overdue_count' => $query->overdue()->count(),
+            'overdue_count' => (clone $query)->overdue()->count(),
         ];
 
-        $payments = $query->with(['project', 'contract'])
+        $payments = (clone $query)->with(['project', 'contract'])
             ->orderBy('payment_date', 'desc')
             ->get();
 

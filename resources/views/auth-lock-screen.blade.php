@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="santiye" data-dark="false">
 <head>
     <meta charset="utf-8">
     <title>Kilit Ekranı | Pergel - Şantiye & Gayrimenkul Portalı</title>
@@ -15,7 +15,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css">
+    <link rel="stylesheet" href="/libs/remixicon/remixicon.css">
+
+    <!-- Tema değişkenleri + ikon/göz konforu katmanları -->
+    <link href="{{ asset('build/css/app.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/eye-comfort.css') }}?v=6" rel="stylesheet">
+    <link href="{{ asset('css/icon-system.css') }}?v=3" rel="stylesheet">
+    <link href="{{ asset('css/auth-theme.css') }}?v=2" rel="stylesheet">
+    <script>
+        (function(){ try {
+            var h = document.documentElement;
+            var t = '{{ Auth::check() ? (Auth::user()->theme ?? "santiye") : "santiye" }}' || localStorage.getItem('pergel_theme') || 'santiye';
+            var ld = localStorage.getItem('pergel_dark');
+            var d = ld !== null ? (ld === 'true') : {{ Auth::check() && Auth::user()->dark_mode ? 'true' : 'false' }};
+            h.setAttribute('data-theme', t); h.setAttribute('data-dark', String(d)); h.setAttribute('data-bs-theme', d ? 'dark' : 'light');
+        } catch(e){} })();
+    </script>
 
     <style>
         :root {
@@ -741,6 +756,10 @@
                     <button type="button" class="numpad-key" onclick="pressPin('0')">0</button>
                     <button type="button" class="numpad-key numpad-back" onclick="backspacePin()"><i class="ri-delete-back-2-line"></i></button>
                 </div>
+                <button type="button" class="lock-action-btn mt-3" id="pinUnlockBtn" onclick="submitPinUnlock()">
+                    <span>Kilidi Aç</span>
+                    <i class="ri-lock-unlock-line"></i>
+                </button>
             </div>
 
             <!-- Bottom Actions -->
@@ -842,6 +861,19 @@
             if (pinValue.length >= 4) {
                 passwordInput.value = pinValue;
             }
+            if (pinValue.length === 4) {
+                submitPinUnlock();
+            }
+        }
+
+        function submitPinUnlock() {
+            if (pinValue.length >= 4) {
+                passwordInput.value = pinValue;
+                var form = document.getElementById('unlockForm');
+                if (form) {
+                    handleUnlock(new Event('submit'));
+                }
+            }
         }
 
         function clearPin() {
@@ -933,5 +965,6 @@
             }
         }
     </script>
+    <script src="{{ asset('js/auth-scene.js') }}?v=1"></script>
 </body>
 </html>

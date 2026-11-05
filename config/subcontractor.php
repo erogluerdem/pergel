@@ -13,5 +13,5 @@ return [
     | defining SUBCONTRACTOR_DB_CONNECTION in the environment.
     |
     */
-    'connection' => env('SUBCONTRACTOR_DB_CONNECTION', env('DB_CONNECTION', 'sqlite')),
+    'connection' => env('SUBCONTRACTOR_DB_CONNECTION', null),
 ];

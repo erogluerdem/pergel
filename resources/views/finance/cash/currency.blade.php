@@ -479,7 +479,7 @@
                         </div>
                     </div>
                     <div class="progress mt-2" style="height: 4px;">
-                        <div class="progress-bar" style="width: {{ ($position['tl_value'] / $totalPositionTL) * 100 }}%; background: linear-gradient(90deg, #667eea, #764ba2);"></div>
+                        <div class="progress-bar" style="width: {{ $totalPositionTL > 0 ? ($position['tl_value'] / $totalPositionTL) * 100 : 0 }}%; background: linear-gradient(90deg, #667eea, #764ba2);"></div>
                     </div>
                 </div>
                 @endforeach

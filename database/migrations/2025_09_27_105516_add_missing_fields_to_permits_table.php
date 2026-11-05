@@ -14,6 +14,11 @@ return new class extends Migration
         Schema::table('permits', function (Blueprint $table) {
             // permit_type -> type olarak değiştir
             $table->renameColumn('permit_type', 'type');
+        });
+        Schema::table('permits', function (Blueprint $table) {
+            if (!Schema::hasColumn('permits', 'permit_type')) {
+                $table->string('permit_type')->nullable()->after('type');
+            }
             // Yeni alanlar
             $table->text('description')->nullable()->after('type');
             $table->string('responsible_person')->nullable()->after('location');

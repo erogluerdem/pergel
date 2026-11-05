@@ -60,8 +60,8 @@ class FinanceRealDataSeeder extends Seeder
                     'bank_name' => $faker->randomElement(['Türkiye İş Bankası', 'Ziraat Bankası', 'Garanti BBVA', 'Akbank', 'Yapı Kredi', 'QNB Finansbank', 'TEB']),
                     'branch' => $faker->city,
                     'amount' => rand(20000, 2000000),
-                    'issue_date' => clone_string($faker->dateTimeBetween('-6 months', 'now')->format('Y-m-d')),
-                    'due_date' => clone_string($faker->dateTimeBetween('now', '+12 months')->format('Y-m-d')),
+                    'issue_date' => (string) $faker->dateTimeBetween('-6 months', 'now')->format('Y-m-d'),
+                    'due_date' => (string) $faker->dateTimeBetween('now', '+12 months')->format('Y-m-d'),
                     'status' => $faker->randomElement(['pending', 'cashed', 'returned']),
                     'account_number' => 'TR' . rand(10, 99) . ' 0000 0000 0000 0000',
                     'customer_id' => $customer->id
@@ -76,8 +76,8 @@ class FinanceRealDataSeeder extends Seeder
                     'no' => 'INV-2025-' . $customer->id . '-' . $faker->unique()->randomNumber(5),
                     'customer_id' => $customer->id,
                     'amount' => $subtotal + $tax,
-                    'date' => clone_string($faker->dateTimeBetween('-12 months', 'now')->format('Y-m-d')),
-                    'due_date' => clone_string($faker->dateTimeBetween('-11 months', '+2 months')->format('Y-m-d')),
+                    'date' => (string) $faker->dateTimeBetween('-12 months', 'now')->format('Y-m-d'),
+                    'due_date' => (string) $faker->dateTimeBetween('-11 months', '+2 months')->format('Y-m-d'),
                     'status' => $faker->randomElement(['open', 'partially_paid', 'paid', 'cancelled']),
                     'tax_amount' => $tax,
                     'subtotal' => $subtotal

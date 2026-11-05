@@ -4,13 +4,15 @@ namespace App\Http\Controllers\SubcontractorPortal;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\SubcontractorAdvanceRequest;
 
 class AdvanceRequestController extends Controller
 {
     public function index()
     {
-        $requests = SubcontractorAdvanceRequest::where('subcontractor_id', 1)->get();
+        $subcontractorId = Auth::guard('subcontractor')->id() ?? auth()->user()?->subcontractor_id ?? 1;
+        $requests = SubcontractorAdvanceRequest::where('subcontractor_id', $subcontractorId)->get();
         return view('subcontractor-portal.advance_requests.index', compact('requests'));
     }
 
@@ -26,8 +28,10 @@ class AdvanceRequestController extends Controller
             'reason' => 'required|string',
         ]);
 
+        $subcontractorId = Auth::guard('subcontractor')->id() ?? auth()->user()?->subcontractor_id ?? 1;
+
         SubcontractorAdvanceRequest::create([
-            'subcontractor_id' => 1,
+            'subcontractor_id' => $subcontractorId,
             'amount' => $request->amount,
             'currency' => 'TRY',
             'reason' => $request->reason,

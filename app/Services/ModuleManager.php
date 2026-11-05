@@ -133,7 +133,8 @@ class ModuleManager
                     'Kat Planı QR Kodları & SLA Servis Yönetimi',
                     'Excel & PDF Dışa Aktarım',
                 ],
-                'buy_url' => 'https://erdemeroglu.com.tr/yazilimlar/pergel#field',
+                'buy_url' => 'https://erdemeroglu.com.tr/panel/hizmetler?yazilim=pergel-field',
+                'showcase_url' => 'https://erdemeroglu.com.tr/yazilimlar/pergel#pro',
                 'modules' => ['subcontractor', 'qhse', 'qr_sla'],
                 'installed' => isset($installed['pergel-field']),
                 'enabled' => isset($installed['pergel-field']) && !empty($installed['pergel-field']['enabled']),
@@ -154,7 +155,8 @@ class ModuleManager
                     'İhale Paketi Hazırlama & Teklif Karşılaştırma',
                     'Nakit Akışı, Çek/Senet & Bütçe Simülatörü',
                 ],
-                'buy_url' => 'https://erdemeroglu.com.tr/yazilimlar/pergel#compliance',
+                'buy_url' => 'https://erdemeroglu.com.tr/panel/hizmetler?yazilim=pergel-compliance',
+                'showcase_url' => 'https://erdemeroglu.com.tr/yazilimlar/pergel#pro',
                 'modules' => ['tr_compliance', 'finance', 'tenders'],
                 'installed' => isset($installed['pergel-compliance']),
                 'enabled' => isset($installed['pergel-compliance']) && !empty($installed['pergel-compliance']['enabled']),
@@ -175,7 +177,8 @@ class ModuleManager
                     'C-Level Executive Dashboard (BI)',
                     'Sınırsız Şantiye, Kullanıcı ve Varlık',
                 ],
-                'buy_url' => 'https://erdemeroglu.com.tr/yazilimlar/pergel#pro',
+                'buy_url' => 'https://erdemeroglu.com.tr/panel/hizmetler?yazilim=pergel-pro',
+                'showcase_url' => 'https://erdemeroglu.com.tr/yazilimlar/pergel#pro',
                 'modules' => [
                     'subcontractor', 'finance', 'tr_compliance', 'tenders',
                     'qhse', 'qr_sla', 'bim', 'ai', 'bi_reports', 'portfolio', 'erp'
@@ -189,16 +192,159 @@ class ModuleManager
     }
 
     /**
-     * Yüklenen ZIP dosyasını açar, doğrular ve modules/{slug} içine kurar
+     * erdemeroglu.com.tr üzerinden alınan Lisans Anahtarı ile modülü doğrular,
+     * uzaktan (.zip) veya Git paketinden (packages/{slug}) indirip kurar ve aktifleştirir.
      */
-    public function installFromZip(UploadedFile $file): array
+    public function installWithLicenseKey(string $licenseKey, ?string $requestedSlug = null): array
+    {
+        $licenseKey = strtoupper(trim($licenseKey));
+        if (! str_starts_with($licenseKey, 'PERGEL-')) {
+            return ['ok' => false, 'message' => 'Geçersiz PERGEL lisans anahtarı formatı (Örn: PERGEL-XXXX-XXXX-XXXX-XXXX).'];
+        }
+
+        /** @var PergelLicenseService $licenseService */
+        $licenseService = app(PergelLicenseService::class);
+
+        $response = $licenseService->post('download-module', [
+            'licenseKey' => $licenseKey,
+            'installationId' => $licenseService->installationId(),
+            'moduleSlug' => $requestedSlug,
+            'customerName' => config('app.name'),
+        ]);
+
+        // Eğer uzak sunucuda download-module ucu henüz yoksa standart activate ucuna düş
+        if (! ($response['ok'] ?? false) && str_contains((string) ($response['message'] ?? ''), '404')) {
+            $response = $licenseService->post('activate', [
+                'licenseKey' => $licenseKey,
+                'installationId' => $licenseService->installationId(),
+                'customerName' => config('app.name'),
+            ]);
+        }
+
+        if (! ($response['ok'] ?? false)) {
+            return [
+                'ok' => false,
+                'message' => $response['message'] ?? 'Lisans anahtarı erdemeroglu.com.tr üzerinde doğrulanamadı.',
+            ];
+        }
+
+        $licenseService->applyPayload($response, $licenseKey);
+
+        return $this->syncPackageFromPayload($response, $licenseKey, $requestedSlug);
+    }
+
+    /**
+     * Doğrulanmış lisans yanıtına göre ilgili modül paketini modules/{slug} dizinine kurar
+     */
+    public function syncPackageFromPayload(array $payload, string $licenseKey, ?string $requestedSlug = null): array
+    {
+        $rawSlug = $requestedSlug ?: ($payload['moduleSlug'] ?? ($payload['package'] ?? 'pergel-pro'));
+        $targetSlug = preg_replace('/[^a-zA-Z0-9_\-]/', '', (string) $rawSlug);
+        if (! in_array($targetSlug, ['pergel-field', 'pergel-compliance', 'pergel-pro'], true)) {
+            $targetSlug = 'pergel-pro';
+        }
+
+        $targetDir = $this->path() . DIRECTORY_SEPARATOR . $targetSlug;
+        $installedFromZip = false;
+
+        // 1. Uzaktan gelen zipBase64 varsa aç
+        if (! empty($payload['zipBase64']) && class_exists('ZipArchive')) {
+            $binary = base64_decode((string) $payload['zipBase64'], true);
+            if ($binary !== false && strlen($binary) > 50) {
+                $tmpPath = storage_path('app/tmp_module_' . $targetSlug . '_' . uniqid() . '.zip');
+                file_put_contents($tmpPath, $binary);
+                $extractResult = $this->extractZipArchivePath($tmpPath);
+                @unlink($tmpPath);
+                if ($extractResult['ok']) {
+                    $installedFromZip = true;
+                }
+            }
+        }
+
+        // 2. Git deposundaki packages/{slug} dizininden kur (Open-Core yerel paket yedeği)
+        if (! $installedFromZip) {
+            $gitPkgDir = base_path('packages' . DIRECTORY_SEPARATOR . $targetSlug);
+            if (File::isDirectory($gitPkgDir)) {
+                if (! File::isDirectory($targetDir)) {
+                    File::makeDirectory($targetDir, 0755, true);
+                }
+                File::copyDirectory($gitPkgDir, $targetDir);
+            }
+        }
+
+        if (File::isDirectory($targetDir)) {
+            File::put(
+                $targetDir . DIRECTORY_SEPARATOR . 'activation.json',
+                json_encode([
+                    'license_key' => $licenseKey,
+                    'installation_id' => app(PergelLicenseService::class)->installationId(),
+                    'package' => $payload['package'] ?? $targetSlug,
+                    'expires_at' => $payload['expiresAt'] ?? null,
+                    'activated_at' => now()->toIso8601String(),
+                ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+            );
+        }
+
+        $this->loadedModules = null;
+
+        // Otomatik Migration Çalıştırma
+        $migrationsDir = $targetDir . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'migrations';
+        if (File::isDirectory($migrationsDir)) {
+            try {
+                Artisan::call('migrate', ['--path' => 'modules/' . $targetSlug . '/database/migrations', '--force' => true]);
+            } catch (\Throwable $e) {
+                Log::warning("Modül migration çalıştırma uyarısı ({$targetSlug}): " . $e->getMessage());
+            }
+        }
+
+        $this->clearCache();
+
+        $pkgName = $payload['packageName'] ?? $targetSlug;
+
+        return [
+            'ok' => true,
+            'message' => "{$pkgName} lisansı erdemeroglu.com.tr üzerinden doğrulandı, modül paketi indirildi ve etkinleştirildi!",
+            'slug' => $targetSlug,
+        ];
+    }
+
+    /**
+     * Yüklenen ZIP dosyasını açar, lisansı doğrular ve modules/{slug} içine kurar
+     */
+    public function installFromZip(UploadedFile $file, ?string $licenseKey = null): array
+    {
+        /** @var PergelLicenseService $licenseService */
+        $licenseService = app(PergelLicenseService::class);
+
+        if ($licenseKey !== null && trim($licenseKey) !== '') {
+            $act = $licenseService->activate($licenseKey);
+            if (! ($act['ok'] ?? false)) {
+                return [
+                    'ok' => false,
+                    'message' => $act['message'] ?? 'Girilen lisans anahtarı doğrulanamadı.',
+                ];
+            }
+        } elseif (! $licenseService->isLicenseActive() && ! $licenseService->proAccessActive()) {
+            return [
+                'ok' => false,
+                'message' => 'Modül paketini yüklemek için önce erdemeroglu.com.tr üzerinden satın aldığınız PERGEL lisans anahtarını girmeniz gerekmektedir.',
+            ];
+        }
+
+        return $this->extractZipArchivePath($file->getRealPath());
+    }
+
+    /**
+     * Disk üzerindeki ZIP dosyasını güvenli şekilde doğrular ve modules/{slug} içine açar
+     */
+    protected function extractZipArchivePath(string $zipFilePath): array
     {
         if (! class_exists('ZipArchive')) {
             return ['ok' => false, 'message' => 'PHP ZipArchive uzantısı sunucuda aktif değil.'];
         }
 
         $zip = new ZipArchive();
-        $res = $zip->open($file->getRealPath());
+        $res = $zip->open($zipFilePath);
 
         if ($res !== true) {
             return ['ok' => false, 'message' => 'Geçersiz ZIP arşivi veya dosya açılamadı.'];
@@ -212,13 +358,18 @@ class ModuleManager
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
 
-            // Path Traversal saldırılarını engelle
-            if (str_contains($filename, '..') || str_starts_with($filename, '/') || str_starts_with($filename, '\\')) {
+            // Path Traversal saldırılarını tüm girdiler için engelle (Zip-Slip koruması)
+            if (
+                str_contains($filename, '..') ||
+                str_starts_with($filename, '/') ||
+                str_starts_with($filename, '\\') ||
+                str_contains($filename, ':')
+            ) {
                 $zip->close();
                 return ['ok' => false, 'message' => 'Güvenlik uyarısı: ZIP içerisinde geçersiz dosya yolu tespit edildi.'];
             }
 
-            if (basename($filename) === 'module.json') {
+            if (!$hasManifest && basename($filename) === 'module.json') {
                 $hasManifest = true;
                 $manifestContent = $zip->getFromIndex($i);
                 $manifestFolderPrefix = dirname($filename);
@@ -227,7 +378,6 @@ class ModuleManager
                 } else {
                     $manifestFolderPrefix = rtrim($manifestFolderPrefix, '/\\') . '/';
                 }
-                break;
             }
         }
 
@@ -308,7 +458,12 @@ class ModuleManager
      */
     public function uninstall(string $slug): array
     {
-        $targetDir = $this->path() . DIRECTORY_SEPARATOR . $slug;
+        $cleanSlug = preg_replace('/[^a-zA-Z0-9_\-]/', '', $slug);
+        if (! $cleanSlug || $cleanSlug !== $slug) {
+            return ['ok' => false, 'message' => 'Geçersiz modül tanımlayıcısı.'];
+        }
+
+        $targetDir = $this->path() . DIRECTORY_SEPARATOR . $cleanSlug;
         if (! File::isDirectory($targetDir)) {
             return ['ok' => false, 'message' => 'Modül bulunamadı.'];
         }
@@ -317,7 +472,7 @@ class ModuleManager
         $this->loadedModules = null;
         $this->clearCache();
 
-        return ['ok' => true, 'message' => "{$slug} modülü başarıyla kaldırıldı."];
+        return ['ok' => true, 'message' => "{$cleanSlug} modülü başarıyla kaldırıldı."];
     }
 
     /**

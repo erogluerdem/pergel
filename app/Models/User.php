@@ -106,7 +106,16 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Opportunity::class, 'owner_id');
     }
 
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'consultant_id');
+    }
+
     // Authorization methods
+    public function isAdmin(): bool
+    {
+        return (bool) $this->is_admin;
+    }
     public function hasRole($role): bool
     {
         if (is_array($role)) {

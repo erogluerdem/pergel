@@ -226,50 +226,45 @@ class PortfolioFinancialController extends Controller
     {
         $groupBy = $request->get('group_by', 'type');
         $filename = 'portfolio_financials_'.date('Ymd_His').'.csv';
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="'.$filename.'"');
-        $handle = fopen('php://output', 'w');
-        // include KDV columns
         $columns = ['Group','Project Count','Contract Value','KDV %','KDV Tutarı','Contract Value (KDV Dahil)','Budget','Spent','Remaining','Estimated Finish Cost','Profit TL','Profit Margin %','ROI %'];
-        fputcsv($handle, $columns);
-        // resolve KDV for export (use FinanceService which reads DB/config)
         $kdvPercent = \App\Services\FinanceService::resolveKdvPercent($request->get('kdv', null));
 
-        // reuse index logic quickly (not optimal)
-        $projects = Project::get();
-        if ($groupBy === 'program') {
-            $programs = Program::with('projects')->get();
-            foreach ($programs as $program) {
-                $items = $program->projects;
-                $contractValue = $items->sum('budget');
-                $budget = $contractValue;
-                $spent = $items->sum('spent');
-                $remaining = $budget - $spent;
-                $estimatedFinishCost = $budget;
-                $profitTl = $contractValue - $estimatedFinishCost;
-                $profitMargin = $contractValue ? round(($profitTl / $contractValue) * 100,2) : 0;
-                $kdvAmount = \App\Services\FinanceService::kdvAmount((float)$contractValue, $kdvPercent);
-                $contractWithKdv = \App\Services\FinanceService::applyKdv((float)$contractValue, $kdvPercent);
-                fputcsv($handle, [$program->name,$items->count(),$contractValue,$kdvPercent,$kdvAmount,$contractWithKdv,$budget,$spent,$remaining,$estimatedFinishCost,$profitTl,$profitMargin,$profitMargin]);
+        return response()->streamDownload(function () use ($groupBy, $columns, $kdvPercent) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, $columns);
+            $projects = Project::get();
+            if ($groupBy === 'program') {
+                $programs = Program::with('projects')->get();
+                foreach ($programs as $program) {
+                    $items = $program->projects;
+                    $contractValue = $items->sum('budget');
+                    $budget = $contractValue;
+                    $spent = $items->sum('spent');
+                    $remaining = $budget - $spent;
+                    $estimatedFinishCost = $budget;
+                    $profitTl = $contractValue - $estimatedFinishCost;
+                    $profitMargin = $contractValue ? round(($profitTl / $contractValue) * 100,2) : 0;
+                    $kdvAmount = \App\Services\FinanceService::kdvAmount((float)$contractValue, $kdvPercent);
+                    $contractWithKdv = \App\Services\FinanceService::applyKdv((float)$contractValue, $kdvPercent);
+                    fputcsv($handle, [$program->name,$items->count(),$contractValue,$kdvPercent,$kdvAmount,$contractWithKdv,$budget,$spent,$remaining,$estimatedFinishCost,$profitTl,$profitMargin,$profitMargin]);
+                }
+            } else {
+                $types = $projects->groupBy('type');
+                foreach ($types as $type => $items) {
+                    $contractValue = $items->sum('budget');
+                    $budget = $contractValue;
+                    $spent = $items->sum('spent');
+                    $remaining = $budget - $spent;
+                    $estimatedFinishCost = $budget;
+                    $profitTl = $contractValue - $estimatedFinishCost;
+                    $profitMargin = $contractValue ? round(($profitTl / $contractValue) * 100,2) : 0;
+                    $kdvAmount = \App\Services\FinanceService::kdvAmount((float)$contractValue, $kdvPercent);
+                    $contractWithKdv = \App\Services\FinanceService::applyKdv((float)$contractValue, $kdvPercent);
+                    fputcsv($handle, [$type ?: 'Unspecified',$items->count(),$contractValue,$kdvPercent,$kdvAmount,$contractWithKdv,$budget,$spent,$remaining,$estimatedFinishCost,$profitTl,$profitMargin,$profitMargin]);
+                }
             }
-        } else {
-            $types = $projects->groupBy('type');
-            foreach ($types as $type => $items) {
-                $contractValue = $items->sum('budget');
-                $budget = $contractValue;
-                $spent = $items->sum('spent');
-                $remaining = $budget - $spent;
-                $estimatedFinishCost = $budget;
-                $profitTl = $contractValue - $estimatedFinishCost;
-                $profitMargin = $contractValue ? round(($profitTl / $contractValue) * 100,2) : 0;
-                $kdvAmount = \App\Services\FinanceService::kdvAmount((float)$contractValue, $kdvPercent);
-                $contractWithKdv = \App\Services\FinanceService::applyKdv((float)$contractValue, $kdvPercent);
-                fputcsv($handle, [$type ?: 'Unspecified',$items->count(),$contractValue,$kdvPercent,$kdvAmount,$contractWithKdv,$budget,$spent,$remaining,$estimatedFinishCost,$profitTl,$profitMargin,$profitMargin]);
-            }
-        }
-
-        fclose($handle);
-        exit;
+            fclose($handle);
+        }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
     }
 
     /**

@@ -1,0 +1,14 @@
+{
+  "id": "pergel-field",
+  "slug": "pergel-field",
+  "name": "PERGEL Saha & Taşeron Paketi",
+  "version": "1.0.0",
+  "author": "Erdem Eroğlu",
+  "website": "https://erdemeroglu.com.tr/yazilimlar/pergel#field",
+  "description": "Şantiye ve sahada taşeron portalı, iş güvenliği (İSG), günlük defter, EBİS beton testleri ve QR arıza yönetimi.",
+  "badge": "Saha & Taşeron",
+  "icon": "fas fa-hard-hat",
+  "modules": ["subcontractor", "qhse", "qr_sla"],
+  "routes": "routes.php",
+  "enabled": true
+}

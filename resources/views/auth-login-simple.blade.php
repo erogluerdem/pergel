@@ -95,6 +95,7 @@
             z-index: 9999;
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('css/auth-theme.css') }}?v=2">
 @endsection
 
 @section('content')
@@ -161,6 +162,7 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('js/auth-scene.js') }}?v=1"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const debugInfo = document.getElementById('debugInfo');

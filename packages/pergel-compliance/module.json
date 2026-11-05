@@ -1,0 +1,14 @@
+{
+  "id": "pergel-compliance",
+  "slug": "pergel-compliance",
+  "name": "PERGEL Mevzuat & Finans Paketi",
+  "version": "1.0.0",
+  "author": "Erdem Eroğlu",
+  "website": "https://erdemeroglu.com.tr/yazilimlar/pergel#compliance",
+  "description": "ÇŞB pozları, resmi hakedişler (Yeşil Defter), SGK asgari işçilik, TÜİK Yİ-ÜFE ve ihale yönetimi.",
+  "badge": "Mevzuat & Hakediş",
+  "icon": "fas fa-coins",
+  "modules": ["tr_compliance", "finance", "tenders"],
+  "routes": "routes.php",
+  "enabled": true
+}

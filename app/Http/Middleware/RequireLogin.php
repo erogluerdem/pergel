@@ -22,8 +22,20 @@ class RequireLogin
             return $next($request);
         }
 
-        // Allow subcontractor login paths
-        if ($request->is('subcontractor/login') || $request->is('subcontractor/login/*')) {
+        // Allow subcontractor login & portal paths (managed by auth:subcontractor / subcontractor.guest)
+        if ($request->is('subcontractor/login') || $request->is('subcontractor/login/*') || $request->is('subcontractor/logout')) {
+            return $next($request);
+        }
+
+        // Allow public external / signed stakeholder routes
+        if (
+            $request->routeIs('tenders.package.access', 'tenders.package.submit_bid', 'bim.models.file.public', 'digital-contracts.sign', 'digital-contracts.confirm_signature') ||
+            $request->is('portfolio/tenders/package-prepare/*/access') ||
+            $request->is('portfolio/tenders/package-prepare/*/submit-bid') ||
+            $request->is('bim/models/*/file/public') ||
+            $request->is('digital-contracts/*/sign/*') ||
+            $request->is('digital-contracts/*/confirm-signature/*')
+        ) {
             return $next($request);
         }
 
@@ -44,8 +56,8 @@ class RequireLogin
             return $next($request);
         }
 
-        // If already authenticated, allow
-        if (auth()->check()) {
+        // If already authenticated via web or subcontractor guard, allow
+        if (auth()->check() || auth('subcontractor')->check()) {
             return $next($request);
         }
 

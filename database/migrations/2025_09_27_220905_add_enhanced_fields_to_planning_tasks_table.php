@@ -11,13 +11,28 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('planning_tasks', function (Blueprint $table) {
-            $table->json('dependencies')->nullable()->after('notes');
-            $table->json('resources')->nullable()->after('dependencies');
-            $table->string('budget_wbs')->nullable()->after('resources');
-            $table->json('documents')->nullable()->after('budget_wbs');
-            $table->boolean('critical_path')->default(false)->after('documents');
-        });
+        if (Schema::hasTable('planning_tasks')) {
+            Schema::table('planning_tasks', function (Blueprint $table) {
+                if (!Schema::hasColumn('planning_tasks', 'dependencies')) {
+                    $table->json('dependencies')->nullable()->after('notes');
+                }
+                if (!Schema::hasColumn('planning_tasks', 'resources')) {
+                    $table->json('resources')->nullable();
+                }
+                if (!Schema::hasColumn('planning_tasks', 'budget_wbs')) {
+                    $table->string('budget_wbs')->nullable();
+                }
+                if (!Schema::hasColumn('planning_tasks', 'documents')) {
+                    $table->json('documents')->nullable();
+                }
+                if (!Schema::hasColumn('planning_tasks', 'critical_path')) {
+                    $table->boolean('critical_path')->default(false);
+                }
+                if (!Schema::hasColumn('planning_tasks', 'is_milestone')) {
+                    $table->boolean('is_milestone')->default(false);
+                }
+            });
+        }
     }
 
     /**

@@ -21,7 +21,7 @@ class AiModuleController extends Controller
         }
 
         if ($viewMode === 'legacy') {
-            return view('ai-module.index_legacy_backup', compact('stats'));
+            return view(\Illuminate\Support\Facades\View::exists('ai-module.index_legacy_backup') ? 'ai-module.index_legacy_backup' : 'ai-module.index', compact('stats'));
         }
 
         return view('ai-module.index', compact('stats'));

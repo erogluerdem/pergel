@@ -20,6 +20,7 @@
 
 <!-- Pergel Multi-Theme Switcher -->
 <script src="{{ asset('js/theme-switcher.js') }}"></script>
+<script src="{{ asset('js/pergel-illustrations.js') }}?v=3"></script>
 
 <!-- Global SweetAlert2 Luxurious Delete Confirmation Helper -->
 <script>

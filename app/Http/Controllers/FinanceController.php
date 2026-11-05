@@ -138,9 +138,12 @@ class FinanceController extends Controller
             // Stok değeri
             $totalStockValue = 0;
             if (Schema::hasTable('stock_cards') && Schema::hasTable('stock_movements')) {
-                $totalStockValue = \DB::table('stock_cards')
+                $typeCol = Schema::hasColumn('stock_movements', 'movement_type') ? 'movement_type' : 'type';
+                $rawVal = \DB::table('stock_cards')
                     ->join('stock_movements', 'stock_cards.id', '=', 'stock_movements.stock_card_id')
-                    ->sum(\DB::raw('stock_movements.quantity * stock_movements.unit_price')) ?? 0;
+                    ->selectRaw("SUM(CASE WHEN stock_movements.{$typeCol} = 'out' THEN -1 * stock_movements.quantity * stock_movements.unit_price ELSE stock_movements.quantity * stock_movements.unit_price END) as total")
+                    ->value('total') ?? 0;
+                $totalStockValue = max(0, (float) $rawVal);
             }
 
         } catch (\Exception $e) {
@@ -351,11 +354,11 @@ class FinanceController extends Controller
                             $invs = $invQuery->get();
                             foreach ($invs as $inv) {
                                 $due = isset($inv->due_date) && $inv->due_date ? \Carbon\Carbon::parse($inv->due_date)->startOfDay() : (isset($inv->date) ? \Carbon\Carbon::parse($inv->date)->startOfDay() : $today);
-                                $days = $today->diffInDays($due, false);
+                                $overdueDays = $due->diffInDays($today, false);
                                 $bal = ($inv->amount - ($inv->paid_amount ?? 0));
                                 if ($bal <= 0) continue;
-                                if ($days <= 30) $ageing['0-30'] += $bal;
-                                elseif ($days <= 60) $ageing['31-60'] += $bal;
+                                if ($overdueDays <= 30) $ageing['0-30'] += $bal;
+                                elseif ($overdueDays <= 60) $ageing['31-60'] += $bal;
                                 else $ageing['61+'] += $bal;
                             }
                         }
@@ -965,15 +968,15 @@ class FinanceController extends Controller
                     $invs = $q->get();
                     foreach ($invs as $inv) {
                         $due = isset($inv->due_date) && $inv->due_date ? \Carbon\Carbon::parse($inv->due_date)->startOfDay() : (isset($inv->date) ? \Carbon\Carbon::parse($inv->date)->startOfDay() : $today);
-                        $days = $today->diffInDays($due, false);
+                        $overdueDays = $due->diffInDays($today, false);
                         $bal = ($inv->amount - ($inv->paid_amount ?? 0));
                         if ($bal <= 0) continue;
 
                         $bucket = 'current';
-                        if ($days <= 0) $bucket = 'current';
-                        elseif ($days <= 30) $bucket = '1_30';
-                        elseif ($days <= 60) $bucket = '31_60';
-                        elseif ($days <= 90) $bucket = '61_90';
+                        if ($overdueDays <= 0) $bucket = 'current';
+                        elseif ($overdueDays <= 30) $bucket = '1_30';
+                        elseif ($overdueDays <= 60) $bucket = '31_60';
+                        elseif ($overdueDays <= 90) $bucket = '61_90';
                         else $bucket = '90_plus';
 
                         $buckets[$bucket] += $bal;
@@ -985,7 +988,7 @@ class FinanceController extends Controller
                             'date' => $inv->date,
                             'due_date' => $inv->due_date,
                             'amount' => $bal,
-                            'days_overdue' => max(0, $days),
+                            'days_overdue' => max(0, $overdueDays),
                             'bucket' => $bucket
                         ];
                     }
@@ -1199,13 +1202,16 @@ class FinanceController extends Controller
                     }
 
                     // Payment patterns - average days to pay
+                    $avgDaysLateExpr = \DB::getDriverName() === 'sqlite'
+                        ? "AVG(julianday('now') - julianday(due_date)) as avg_days_late"
+                        : 'AVG(DATEDIFF(NOW(), due_date)) as avg_days_late';
                     $paymentPatterns = \DB::table('invoices')
                         ->whereNotNull('customer_id')
                         ->whereNotNull('paid_amount')
                         ->where('paid_amount', '>', 0)
                         ->whereNotNull('due_date')
                         ->select('customer_id',
-                            \DB::raw('AVG(DATEDIFF(NOW(), due_date)) as avg_days_late'),
+                            \DB::raw($avgDaysLateExpr),
                             \DB::raw('COUNT(*) as payment_count'))
                         ->groupBy('customer_id')
                         ->havingRaw('COUNT(*) >= 3')
@@ -1495,18 +1501,18 @@ class FinanceController extends Controller
                 $today = now()->startOfDay();
                 foreach ($customer->invoices as $inv) {
                     $due = $inv->due_date ? \Carbon\Carbon::parse($inv->due_date)->startOfDay() : (isset($inv->date) ? \Carbon\Carbon::parse($inv->date)->addDays(30)->startOfDay() : $today);
-                    $days = $today->diffInDays($due, false);
+                    $overdueDays = $due->diffInDays($today, false);
                     $balance = ($inv->amount - ($inv->paid_amount ?? 0));
                     if ($balance <= 0) continue;
 
                     $bucket = '';
-                    if ($days <= 30) {
+                    if ($overdueDays <= 30) {
                         $ageing['0-30'] += $balance;
                         $bucket = '0-30';
-                    } elseif ($days <= 60) {
+                    } elseif ($overdueDays <= 60) {
                         $ageing['31-60'] += $balance;
                         $bucket = '31-60';
-                    } elseif ($days <= 90) {
+                    } elseif ($overdueDays <= 90) {
                         $ageing['61-90'] += $balance;
                         $bucket = '61-90';
                     } else {
@@ -1521,7 +1527,7 @@ class FinanceController extends Controller
                         'amount' => $inv->amount,
                         'paid' => $inv->paid_amount ?? 0,
                         'balance' => $balance,
-                        'days_overdue' => max(0, $days),
+                        'days_overdue' => max(0, $overdueDays),
                         'bucket' => $bucket
                     ];
                 }
@@ -2344,8 +2350,8 @@ class FinanceController extends Controller
 
         $netBalance = $totalIncome - $totalExpense;
         $reportDate = date('d.m.Y H:i');
-        $startDate = $request->query('start', 'Belirtilmemiş');
-        $endDate = $request->query('end', 'Belirtilmemiş');
+        $startDate = e($request->query('start', 'Belirtilmemiş'));
+        $endDate = e($request->query('end', 'Belirtilmemiş'));
 
         $html = '<!DOCTYPE html>
 <html lang="tr">
@@ -3815,7 +3821,7 @@ class FinanceController extends Controller
             ->orWhere(function($q) {
                 $q->lowStock()->whereRaw('current_stock > min_stock');
             })
-            ->orderByRaw('(current_stock / GREATEST(max_stock, 1)) ASC')
+            ->orderByRaw('(current_stock / (CASE WHEN max_stock > 1 THEN max_stock ELSE 1 END)) ASC')
             ->limit(10)
             ->get();
 
@@ -3826,13 +3832,16 @@ class FinanceController extends Controller
             ->get();
 
         // Aylık hareket trends (son 12 ay)
-        $monthlyTrends = \App\Models\StockMovement::selectRaw('
-                DATE_FORMAT(created_at, "%Y-%m") as month,
-                SUM(CASE WHEN type = "in" THEN quantity ELSE 0 END) as total_in,
-                SUM(CASE WHEN type = "out" THEN quantity ELSE 0 END) as total_out,
-                SUM(CASE WHEN type = "in" THEN total_amount ELSE 0 END) as value_in,
-                SUM(CASE WHEN type = "out" THEN total_amount ELSE 0 END) as value_out
-            ')
+        $stockMonthExpr = \DB::getDriverName() === 'sqlite'
+            ? "strftime('%Y-%m', created_at)"
+            : "DATE_FORMAT(created_at, '%Y-%m')";
+        $monthlyTrends = \App\Models\StockMovement::selectRaw("
+                {$stockMonthExpr} as month,
+                SUM(CASE WHEN type = 'in' THEN quantity ELSE 0 END) as total_in,
+                SUM(CASE WHEN type = 'out' THEN quantity ELSE 0 END) as total_out,
+                SUM(CASE WHEN type = 'in' THEN total_amount ELSE 0 END) as value_in,
+                SUM(CASE WHEN type = 'out' THEN total_amount ELSE 0 END) as value_out
+            ")
             ->where('created_at', '>=', now()->subMonths(12))
             ->groupBy('month')
             ->orderBy('month')
@@ -3992,12 +4001,15 @@ class FinanceController extends Controller
             ->get();
 
         // Aylık trend (son 12 ay)
-        $monthlyTrends = \App\Models\HrExpense::selectRaw('
-                DATE_FORMAT(expense_date, "%Y-%m") as month,
+        $hrMonthExpr = \DB::getDriverName() === 'sqlite'
+            ? "strftime('%Y-%m', expense_date)"
+            : "DATE_FORMAT(expense_date, '%Y-%m')";
+        $monthlyTrends = \App\Models\HrExpense::selectRaw("
+                {$hrMonthExpr} as month,
                 COUNT(*) as count,
                 SUM(amount) as total_amount,
                 AVG(amount) as avg_amount
-            ')
+            ")
             ->where('expense_date', '>=', now()->subMonths(12))
             ->groupBy('month')
             ->orderBy('month')
@@ -4228,6 +4240,9 @@ class FinanceController extends Controller
         if (!$expense) {
             $expense = \App\Models\HrExpense::with(['employee', 'approver'])->first();
         }
+        if (!$expense) {
+            abort(404);
+        }
         return view('finance.hr.show-expense', compact('expense', 'id'));
     }
 
@@ -4236,6 +4251,9 @@ class FinanceController extends Controller
         $expense = \App\Models\HrExpense::with(['employee', 'approver'])->find($id);
         if (!$expense) {
             $expense = \App\Models\HrExpense::with(['employee', 'approver'])->first();
+        }
+        if (!$expense) {
+            abort(404);
         }
         $expenseTypes = class_exists(\App\Models\HrExpense::class) ? \App\Models\HrExpense::getExpenseTypes() : [];
         $departments = class_exists(\App\Models\HrExpense::class) ? \App\Models\HrExpense::getDepartments() : [];
@@ -4362,6 +4380,9 @@ class FinanceController extends Controller
         if (!$advance) {
             $advance = \App\Models\Advance::with('employee')->first();
         }
+        if (!$advance) {
+            abort(404);
+        }
         return view('finance.hr.show-advance', compact('advance', 'id'));
     }
 
@@ -4370,6 +4391,9 @@ class FinanceController extends Controller
         $advance = \App\Models\Advance::with('employee')->find($id);
         if (!$advance) {
             $advance = \App\Models\Advance::with('employee')->first();
+        }
+        if (!$advance) {
+            abort(404);
         }
         $employees = \App\Models\Employee::all();
         return view('finance.hr.edit-advance', compact('advance', 'id', 'employees'));
@@ -4413,6 +4437,9 @@ class FinanceController extends Controller
         if (!$payroll) {
             $payroll = \App\Models\Payroll::with('employee')->first();
         }
+        if (!$payroll) {
+            abort(404);
+        }
         return view('finance.hr.show-payroll', compact('payroll', 'id'));
     }
 
@@ -4421,6 +4448,9 @@ class FinanceController extends Controller
         $payroll = \App\Models\Payroll::with('employee')->find($id);
         if (!$payroll) {
             $payroll = \App\Models\Payroll::with('employee')->first();
+        }
+        if (!$payroll) {
+            abort(404);
         }
         $employees = \App\Models\Employee::all();
         return view('finance.hr.edit-payroll', compact('payroll', 'id', 'employees'));
@@ -4540,6 +4570,9 @@ class FinanceController extends Controller
         if (!$stockCard) {
             $stockCard = \App\Models\StockCard::first();
         }
+        if (!$stockCard) {
+            abort(404);
+        }
         return view('finance.stock.show-card', compact('stockCard', 'id'));
     }
 
@@ -4548,6 +4581,9 @@ class FinanceController extends Controller
         $stockCard = \App\Models\StockCard::find($id);
         if (!$stockCard) {
             $stockCard = \App\Models\StockCard::first();
+        }
+        if (!$stockCard) {
+            abort(404);
         }
         return view('finance.stock.edit-card', compact('stockCard', 'id'));
     }
@@ -4586,6 +4622,9 @@ class FinanceController extends Controller
         if (!$movement) {
             $movement = \App\Models\StockMovement::with(['stockCard', 'user'])->first();
         }
+        if (!$movement) {
+            abort(404);
+        }
         return view('finance.stock.show-movement', compact('movement', 'id'));
     }
 
@@ -4594,6 +4633,9 @@ class FinanceController extends Controller
         $movement = \App\Models\StockMovement::with(['stockCard', 'user'])->find($id);
         if (!$movement) {
             $movement = \App\Models\StockMovement::with(['stockCard', 'user'])->first();
+        }
+        if (!$movement) {
+            abort(404);
         }
         $stockCards = \App\Models\StockCard::all();
         return view('finance.stock.edit-movement', compact('movement', 'id', 'stockCards'));
@@ -5218,11 +5260,14 @@ class FinanceController extends Controller
             ->get();
 
         // Yaş dağılımı
+        $assetAgeExpr = \DB::getDriverName() === 'sqlite'
+            ? "(julianday('now') - julianday(COALESCE(purchase_date, installation_date)))"
+            : "DATEDIFF(NOW(), COALESCE(purchase_date, installation_date))";
         $ageDistribution = [
-            '0-1 yıl' => Asset::whereRaw('DATEDIFF(NOW(), COALESCE(purchase_date, installation_date)) <= 365')->count(),
-            '1-3 yıl' => Asset::whereRaw('DATEDIFF(NOW(), COALESCE(purchase_date, installation_date)) BETWEEN 366 AND 1095')->count(),
-            '3-5 yıl' => Asset::whereRaw('DATEDIFF(NOW(), COALESCE(purchase_date, installation_date)) BETWEEN 1096 AND 1825')->count(),
-            '5+ yıl' => Asset::whereRaw('DATEDIFF(NOW(), COALESCE(purchase_date, installation_date)) > 1825')->count(),
+            '0-1 yıl' => Asset::whereRaw("{$assetAgeExpr} <= 365")->count(),
+            '1-3 yıl' => Asset::whereRaw("{$assetAgeExpr} BETWEEN 366 AND 1095")->count(),
+            '3-5 yıl' => Asset::whereRaw("{$assetAgeExpr} BETWEEN 1096 AND 1825")->count(),
+            '5+ yıl' => Asset::whereRaw("{$assetAgeExpr} > 1825")->count(),
         ];
 
         // Durum istatistikleri
@@ -5368,8 +5413,13 @@ class FinanceController extends Controller
      */
     public function invoicesIndex(): View
     {
-        // Mock data for invoices
-        $invoices = \App\Models\Invoice::with('customer')->get();
+        $invoices = Schema::hasTable('invoices')
+            ? \App\Models\Invoice::with('customer')->orderByDesc('date')->orderByDesc('id')->get()->map(function ($inv) {
+                $inv->customer_name = optional($inv->customer)->name ?? 'Müşteri';
+                $inv->balance = (float) ($inv->amount ?? 0) - (float) ($inv->paid_amount ?? 0);
+                return $inv;
+            })
+            : collect();
 
         $stats = [
             'total_invoices' => $invoices->count(),
@@ -5917,7 +5967,9 @@ class FinanceController extends Controller
     {
         // If a dedicated create view exists, show it; otherwise redirect back with info.
         if (view()->exists('finance.expenses.create')) {
-            return view('finance.expenses.create');
+            $vendors = Schema::hasTable('vendors') ? \App\Models\Vendor::orderBy('name')->get() : collect();
+            $projects = Schema::hasTable('projects') ? \App\Models\Project::orderBy('name')->get() : collect();
+            return view('finance.expenses.create', compact('vendors', 'projects'));
         }
 
         return redirect()->route('finance.expenses.general')->with('info', 'Gider oluşturma sayfası henüz aktif değil.');
@@ -6242,5 +6294,433 @@ class FinanceController extends Controller
     {
         $asset = Asset::findOrFail($id);
         return view('finance.assets.edit', compact('asset'));
+    }
+
+    // =========================================================================
+    // Cheques CRUD & Assignment
+    // =========================================================================
+
+    public function chequesStore(Request $request)
+    {
+        $data = $request->validate([
+            'cheque_number' => 'nullable|string|max:100',
+            'cheque_no' => 'nullable|string|max:100',
+            'amount' => 'required|numeric|min:0.01',
+            'bank_name' => 'required|string|max:191',
+            'branch' => 'nullable|string|max:191',
+            'issue_date' => 'nullable|date',
+            'due_date' => 'required|date',
+            'customer_id' => 'nullable|integer',
+            'recipient' => 'nullable|string|max:191',
+            'type' => 'nullable|string|max:50',
+            'status' => 'nullable|string|max:50',
+            'notes' => 'nullable|string',
+            'description' => 'nullable|string',
+            'image' => 'nullable|file|mimes:jpeg,jpg,png,pdf|max:5120',
+        ]);
+
+        $chequeNumber = $data['cheque_number'] ?? $data['cheque_no'] ?? ('CHK-' . time());
+        $recipient = $data['recipient'] ?? null;
+        $customerName = '';
+
+        if (!empty($data['customer_id']) && Schema::hasTable('customers')) {
+            $cust = \App\Models\Customer::find($data['customer_id']);
+            if ($cust) {
+                $customerName = $cust->name;
+                $recipient = $recipient ?: $cust->name;
+            }
+        }
+
+        if (!Schema::hasTable('cheques')) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'ok' => true,
+                    'cheque' => array_merge($data, ['id' => rand(1000, 9999), 'cheque_number' => $chequeNumber]),
+                    'customer_name' => $customerName,
+                ]);
+            }
+            return back()->with('success', 'Çek kaydedildi.');
+        }
+
+        $createData = [
+            'cheque_number' => $chequeNumber,
+            'type' => $data['type'] ?? (!empty($data['customer_id']) ? 'received' : 'issued'),
+            'amount' => $data['amount'],
+            'issue_date' => $data['issue_date'] ?? now()->toDateString(),
+            'due_date' => $data['due_date'],
+            'recipient' => $recipient ?? 'Genel',
+            'bank_name' => $data['bank_name'],
+            'status' => $data['status'] ?? 'pending',
+            'description' => $data['description'] ?? $data['notes'] ?? null,
+            'notes' => $data['notes'] ?? null,
+        ];
+
+        if (Schema::hasColumn('cheques', 'customer_id') && !empty($data['customer_id'])) {
+            $createData['customer_id'] = $data['customer_id'];
+        }
+        if (Schema::hasColumn('cheques', 'branch') && !empty($data['branch'])) {
+            $createData['branch'] = $data['branch'];
+        }
+
+        $cheque = \App\Models\Cheque::create($createData);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'ok' => true,
+                'cheque' => $cheque,
+                'customer_name' => $customerName ?: $cheque->recipient,
+            ]);
+        }
+
+        return back()->with('success', 'Çek başarıyla kaydedildi.');
+    }
+
+    public function chequesShow($id)
+    {
+        if (!Schema::hasTable('cheques')) {
+            return response()->json(['ok' => false, 'message' => 'Çek tablosu bulunamadı.'], 404);
+        }
+
+        $cheque = \App\Models\Cheque::find($id);
+        if (!$cheque) {
+            return response()->json(['ok' => false, 'message' => 'Çek bulunamadı.'], 404);
+        }
+
+        return response()->json(['ok' => true, 'cheque' => $cheque]);
+    }
+
+    public function chequesUpdate(Request $request, $id)
+    {
+        $cheque = \App\Models\Cheque::findOrFail($id);
+
+        $data = $request->validate([
+            'cheque_number' => 'nullable|string|max:100',
+            'amount' => 'nullable|numeric|min:0.01',
+            'bank_name' => 'nullable|string|max:191',
+            'branch' => 'nullable|string|max:191',
+            'issue_date' => 'nullable|date',
+            'due_date' => 'nullable|date',
+            'recipient' => 'nullable|string|max:191',
+            'status' => 'nullable|string|max:50',
+            'notes' => 'nullable|string',
+            'description' => 'nullable|string',
+        ]);
+
+        $cheque->update(array_filter($data, fn($v) => $v !== null));
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json(['ok' => true, 'cheque' => $cheque->fresh()]);
+        }
+
+        return back()->with('success', 'Çek güncellendi.');
+    }
+
+    public function chequesDestroy($id)
+    {
+        if (!Schema::hasTable('cheques')) {
+            return response()->json(['ok' => false, 'message' => 'Çek tablosu bulunamadı.'], 404);
+        }
+
+        $cheque = \App\Models\Cheque::find($id);
+        if (!$cheque) {
+            if (request()->wantsJson() || request()->ajax()) {
+                return response()->json(['ok' => false, 'message' => 'Çek bulunamadı.'], 404);
+            }
+            return back()->with('error', 'Çek bulunamadı.');
+        }
+
+        $cheque->update(['status' => 'cancelled']);
+
+        if (request()->wantsJson() || request()->ajax()) {
+            return response()->json(['ok' => true, 'message' => 'Çek iptal edildi.']);
+        }
+
+        return back()->with('success', 'Çek iptal edildi.');
+    }
+
+    public function chequesAssign(Request $request, $id)
+    {
+        $data = $request->validate([
+            'supplier_id' => 'required|integer',
+        ]);
+
+        $vendor = Schema::hasTable('vendors') ? \App\Models\Vendor::find($data['supplier_id']) : null;
+        $supplierName = $vendor ? $vendor->name : ('Tedarikçi #' . $data['supplier_id']);
+
+        if (Schema::hasTable('cheques')) {
+            $cheque = \App\Models\Cheque::find($id);
+            if ($cheque) {
+                $updateFields = [
+                    'notes' => trim(($cheque->notes ? $cheque->notes . ' | ' : '') . 'Ciro: ' . $supplierName),
+                ];
+                if (Schema::hasColumn('cheques', 'supplier_id')) {
+                    $updateFields['supplier_id'] = $data['supplier_id'];
+                }
+                $cheque->update($updateFields);
+            }
+        }
+
+        return response()->json([
+            'ok' => true,
+            'supplier_name' => $supplierName,
+        ]);
+    }
+
+    // =========================================================================
+    // Stock Search (Select2 AJAX)
+    // =========================================================================
+
+    public function searchStock(Request $request)
+    {
+        $q = trim((string) $request->query('q', ''));
+        $results = [];
+
+        if (Schema::hasTable('stock_cards')) {
+            $query = \App\Models\StockCard::query();
+            if ($q !== '') {
+                $query->where(function ($sub) use ($q) {
+                    $sub->where('name', 'like', "%{$q}%")
+                        ->orWhere('code', 'like', "%{$q}%")
+                        ->orWhere('barcode', 'like', "%{$q}%");
+                });
+            }
+            $items = $query->orderBy('name')->limit(25)->get();
+            foreach ($items as $item) {
+                $results[] = [
+                    'id' => $item->id,
+                    'text' => ($item->code ? $item->code . ' - ' : '') . $item->name,
+                    'name' => $item->name,
+                    'code' => $item->code,
+                    'unit' => $item->unit,
+                    'unit_price' => (float) ($item->unit_price ?? 0),
+                ];
+            }
+        }
+
+        return response()->json(['results' => $results]);
+    }
+
+    // =========================================================================
+    // Invoices CRUD, Print, Email & Payment
+    // =========================================================================
+
+    public function invoicesCreate(Request $request)
+    {
+        $vendors = Schema::hasTable('vendors') ? \App\Models\Vendor::orderBy('name')->get() : collect();
+        $customers = Schema::hasTable('customers') ? \App\Models\Customer::orderBy('name')->get() : collect();
+        $purchaseOrder = null;
+        $purchaseOrderItems = [];
+
+        if ($request->filled('purchase_order_id') && Schema::hasTable('purchase_orders')) {
+            $purchaseOrder = \App\Models\PurchaseOrder::find($request->purchase_order_id);
+        }
+
+        return view('finance.invoices.create', compact('vendors', 'customers', 'purchaseOrder', 'purchaseOrderItems'));
+    }
+
+    public function invoicesStore(Request $request)
+    {
+        $data = $request->validate([
+            'no' => 'nullable|string|max:100',
+            'invoice_number' => 'nullable|string|max:100',
+            'customer_id' => 'nullable|integer',
+            'vendor_id' => 'nullable|integer',
+            'purchase_order_id' => 'nullable|integer',
+            'date' => 'nullable|date',
+            'invoice_date' => 'nullable|date',
+            'due_date' => 'nullable|date',
+            'amount' => 'nullable|numeric|min:0',
+            'tax_rate' => 'nullable|numeric|min:0',
+            'currency' => 'nullable|string|max:10',
+            'description' => 'nullable|string',
+            'notes' => 'nullable|string',
+            'items' => 'nullable|array',
+        ]);
+
+        if (!Schema::hasTable('invoices')) {
+            return redirect()->route('finance.invoices.index')->with('error', 'Fatura tablosu bulunamadı.');
+        }
+
+        $items = $request->input('items', []);
+        $subtotal = 0;
+        foreach ($items as $item) {
+            $qty = (float) ($item['quantity'] ?? $item['qty'] ?? 1);
+            $price = (float) ($item['unit_price'] ?? $item['price'] ?? 0);
+            $subtotal += $qty * $price;
+        }
+
+        $taxRate = (float) ($data['tax_rate'] ?? 20);
+        $baseAmount = $subtotal > 0 ? $subtotal : (float) ($data['amount'] ?? 0);
+        $taxAmount = $subtotal > 0 ? round($baseAmount * ($taxRate / 100), 2) : 0;
+        $totalAmount = $subtotal > 0 ? ($baseAmount + $taxAmount) : $baseAmount;
+
+        $invoiceData = [
+            'no' => $data['no'] ?? $data['invoice_number'] ?? ('INV-' . date('YmdHis')),
+            'customer_id' => $data['customer_id'] ?? null,
+            'vendor_id' => $data['vendor_id'] ?? null,
+            'purchase_order_id' => $data['purchase_order_id'] ?? null,
+            'date' => $data['date'] ?? $data['invoice_date'] ?? now()->toDateString(),
+            'due_date' => $data['due_date'] ?? now()->addDays(30)->toDateString(),
+            'subtotal' => $baseAmount,
+            'tax_amount' => $taxAmount,
+            'amount' => $totalAmount,
+            'paid_amount' => 0,
+            'currency' => $data['currency'] ?? 'TRY',
+            'status' => 'unpaid',
+            'description' => $data['description'] ?? null,
+            'notes' => $data['notes'] ?? null,
+        ];
+
+        $filteredData = [];
+        foreach ($invoiceData as $col => $val) {
+            if (Schema::hasColumn('invoices', $col)) {
+                $filteredData[$col] = $val;
+            }
+        }
+
+        $invoice = \App\Models\Invoice::create($filteredData);
+
+        if (!empty($items) && Schema::hasTable('invoice_items')) {
+            foreach ($items as $item) {
+                $qty = (float) ($item['quantity'] ?? $item['qty'] ?? 1);
+                $price = (float) ($item['unit_price'] ?? $item['price'] ?? 0);
+                \App\Models\InvoiceItem::create([
+                    'invoice_id' => $invoice->id,
+                    'stock_card_id' => $item['stock_card_id'] ?? null,
+                    'description' => $item['description'] ?? $item['name'] ?? null,
+                    'quantity' => $qty,
+                    'unit_price' => $price,
+                    'line_total' => $qty * $price,
+                ]);
+            }
+        }
+
+        return redirect()->route('finance.invoices.show', $invoice->id)->with('success', 'Fatura başarıyla oluşturuldu.');
+    }
+
+    public function invoicesShow($id)
+    {
+        $invoice = \App\Models\Invoice::with(['customer', 'invoiceItems.stockCard', 'receipts'])->findOrFail($id);
+        $invoice->customer_name = optional($invoice->customer)->name ?? 'Müşteri';
+        $invoice->balance = (float) ($invoice->amount ?? 0) - (float) ($invoice->paid_amount ?? 0);
+
+        return view('finance.invoices.show', compact('invoice'));
+    }
+
+    public function invoicesEdit($id)
+    {
+        $invoice = \App\Models\Invoice::with(['customer', 'invoiceItems.stockCard'])->findOrFail($id);
+        $invoice->customer_name = optional($invoice->customer)->name ?? 'Müşteri';
+        $invoice->balance = (float) ($invoice->amount ?? 0) - (float) ($invoice->paid_amount ?? 0);
+
+        return view('finance.invoices.edit', compact('invoice'));
+    }
+
+    public function invoicesUpdate(Request $request, $id)
+    {
+        $invoice = \App\Models\Invoice::findOrFail($id);
+
+        $data = $request->validate([
+            'no' => 'nullable|string|max:100',
+            'date' => 'nullable|date',
+            'due_date' => 'nullable|date',
+            'amount' => 'nullable|numeric|min:0',
+            'status' => 'nullable|string|max:50',
+            'description' => 'nullable|string',
+            'notes' => 'nullable|string',
+        ]);
+
+        $updateData = [];
+        foreach ($data as $col => $val) {
+            if ($val !== null && Schema::hasColumn('invoices', $col)) {
+                $updateData[$col] = $val;
+            }
+        }
+
+        $invoice->update($updateData);
+
+        return redirect()->route('finance.invoices.show', $invoice->id)->with('success', 'Fatura başarıyla güncellendi.');
+    }
+
+    public function invoicesPrint($id)
+    {
+        $invoice = \App\Models\Invoice::with(['customer', 'invoiceItems.stockCard'])->findOrFail($id);
+        $invoice->customer_name = optional($invoice->customer)->name ?? 'Müşteri';
+        $invoice->balance = (float) ($invoice->amount ?? 0) - (float) ($invoice->paid_amount ?? 0);
+
+        return view('finance.invoices.print', compact('invoice'));
+    }
+
+    public function invoicesEmailForm($id)
+    {
+        $invoice = \App\Models\Invoice::with(['customer'])->findOrFail($id);
+        $invoice->customer_name = optional($invoice->customer)->name ?? 'Müşteri';
+
+        return view('finance.invoices.email', compact('invoice'));
+    }
+
+    public function invoicesEmailSend(Request $request, $id)
+    {
+        $invoice = \App\Models\Invoice::findOrFail($id);
+        $request->validate([
+            'to' => 'required|email',
+            'subject' => 'required|string|max:255',
+            'message' => 'nullable|string',
+        ]);
+
+        return redirect()->route('finance.invoices.show', $invoice->id)->with('success', 'Fatura e-postası gönderildi.');
+    }
+
+    public function invoicesPaymentForm($id)
+    {
+        $invoice = \App\Models\Invoice::with(['customer'])->findOrFail($id);
+        $invoice->customer_name = optional($invoice->customer)->name ?? 'Müşteri';
+        $invoice->balance = (float) ($invoice->amount ?? 0) - (float) ($invoice->paid_amount ?? 0);
+
+        return view('finance.invoices.payment', compact('invoice'));
+    }
+
+    public function invoicesPaymentStore(Request $request, $id)
+    {
+        $invoice = \App\Models\Invoice::findOrFail($id);
+        $data = $request->validate([
+            'amount' => 'required|numeric|min:0.01',
+            'method' => 'nullable|string|max:100',
+            'reference' => 'nullable|string|max:191',
+            'date' => 'nullable|date',
+            'notes' => 'nullable|string',
+        ]);
+
+        if (Schema::hasTable('receipts')) {
+            \App\Models\Receipt::create([
+                'invoice_id' => $invoice->id,
+                'date' => $data['date'] ?? now()->toDateString(),
+                'amount' => $data['amount'],
+                'method' => $data['method'] ?? 'bank',
+                'reference' => $data['reference'] ?? null,
+                'notes' => $data['notes'] ?? null,
+            ]);
+        }
+
+        $invoice->paid_amount = (float) ($invoice->paid_amount ?? 0) + (float) $data['amount'];
+        if ($invoice->paid_amount >= (float) $invoice->amount) {
+            $invoice->status = 'paid';
+        } elseif ($invoice->paid_amount > 0) {
+            $invoice->status = 'partially_paid';
+        }
+        $invoice->save();
+
+        return redirect()->route('finance.invoices.show', $invoice->id)->with('success', 'Fatura ödemesi kaydedildi.');
+    }
+
+    public function invoicesDestroy($id)
+    {
+        $invoice = \App\Models\Invoice::findOrFail($id);
+        if (Schema::hasTable('invoice_items')) {
+            \App\Models\InvoiceItem::where('invoice_id', $invoice->id)->delete();
+        }
+        $invoice->delete();
+
+        return redirect()->route('finance.invoices.index')->with('success', 'Fatura silindi.');
     }
 }

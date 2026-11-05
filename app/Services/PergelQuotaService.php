@@ -10,6 +10,23 @@ class PergelQuotaService
 {
     public function __construct(protected PergelLicenseService $license) {}
 
+    public function __get(string $name): mixed
+    {
+        if ($name === 'tier') {
+            return $this->license->tier();
+        }
+        if ($name === 'is_pro' || $name === 'isPro') {
+            return $this->license->isPro();
+        }
+
+        return null;
+    }
+
+    public function __isset(string $name): bool
+    {
+        return in_array($name, ['tier', 'is_pro', 'isPro'], true);
+    }
+
     public function currentLimits(): array
     {
         if ($this->license->isPro()) {
@@ -100,7 +117,7 @@ class PergelQuotaService
             return true;
         }
 
-        return (bool) config('pergel-license.community_limits.allow_export', false);
+        return (bool) ($this->currentLimits()['allow_export'] ?? config('pergel-license.community_limits.allow_export', false));
     }
 
     public function getUsageSummary(): array

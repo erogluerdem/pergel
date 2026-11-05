@@ -20,7 +20,7 @@ class CurrencyExchangeController extends Controller
         $exchanges = CurrencyExchange::with('invoice')
             ->orderBy('exchange_date', 'desc')
             ->paginate(15);
-        
+
         return view('currency_exchanges.index', compact('exchanges'));
     }
 
@@ -29,8 +29,9 @@ class CurrencyExchangeController extends Controller
         $currencies = Currency::where('is_active', true)->pluck('code', 'id');
         $invoices = Invoice::whereNull('currency_id')
             ->orWhere('currency_id', '!=', 1)
+            ->get()
             ->pluck('invoice_number', 'id');
-        
+
         return view('currency_exchanges.create', compact('currencies', 'invoices'));
     }
 
@@ -53,21 +54,21 @@ class CurrencyExchangeController extends Controller
         }
 
         $exchange = CurrencyExchange::create($validated);
-        
+
         return redirect()->route('currency_exchanges.show', $exchange)->with('success', 'Döviz işlemi kaydedildi.');
     }
 
     public function show(CurrencyExchange $currencyExchange)
     {
         $currencyExchange->load('invoice');
-        
+
         return view('currency_exchanges.show', compact('currencyExchange'));
     }
 
     public function edit(CurrencyExchange $currencyExchange)
     {
         $currencies = Currency::where('is_active', true)->pluck('code', 'id');
-        
+
         return view('currency_exchanges.edit', compact('currencyExchange', 'currencies'));
     }
 
@@ -86,14 +87,14 @@ class CurrencyExchangeController extends Controller
         }
 
         $currencyExchange->update($validated);
-        
+
         return redirect()->route('currency_exchanges.show', $currencyExchange)->with('success', 'Döviz işlemi güncellendi.');
     }
 
     public function destroy(CurrencyExchange $currencyExchange)
     {
         $currencyExchange->delete();
-        
+
         return redirect()->route('currency_exchanges.index')->with('success', 'Döviz işlemi silindi.');
     }
 

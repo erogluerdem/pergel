@@ -286,41 +286,40 @@ class ProgramController extends Controller
     public function exportCsv()
     {
         $programs = Program::with('projects')->get();
-
         $filename = 'programs_export_'.date('Ymd_His').'.csv';
-        $handle = fopen('php://output', 'w');
         $columns = ['id','name','manager','status','project_count','total_budget','kdv_percent','kdv_amount','total_budget_kdv','total_spent','progress_percent'];
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="'.$filename.'"');
-        fputcsv($handle, $columns);
 
-        foreach ($programs as $p) {
-            $projects = $p->projects;
-            $projectCount = $projects->count();
-            $totalBudget = $projects->sum('budget');
-            $totalSpent = $projects->sum('spent');
-            $progress = $projects->avg('progress_percent') ?? 0;
+        return response()->streamDownload(function () use ($programs, $columns) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, $columns);
 
-            $kdvPercent = \App\Services\FinanceService::resolveKdvPercent(request()->get('kdv', null));
-            $kdvAmount = \App\Services\FinanceService::kdvAmount((float)$totalBudget, $kdvPercent);
-            $totalBudgetKdv = \App\Services\FinanceService::applyKdv((float)$totalBudget, $kdvPercent);
+            foreach ($programs as $p) {
+                $projects = $p->projects;
+                $projectCount = $projects->count();
+                $totalBudget = $projects->sum('budget');
+                $totalSpent = $projects->sum('spent');
+                $progress = $projects->avg('progress_percent') ?? 0;
 
-            fputcsv($handle, [
-                $p->id,
-                $p->name,
-                $p->manager,
-                $p->status,
-                $projectCount,
-                $totalBudget,
-                $kdvPercent,
-                $kdvAmount,
-                $totalBudgetKdv,
-                $totalSpent,
-                $progress
-            ]);
-        }
+                $kdvPercent = \App\Services\FinanceService::resolveKdvPercent(request()->get('kdv', null));
+                $kdvAmount = \App\Services\FinanceService::kdvAmount((float)$totalBudget, $kdvPercent);
+                $totalBudgetKdv = \App\Services\FinanceService::applyKdv((float)$totalBudget, $kdvPercent);
 
-        fclose($handle);
-        exit;
+                fputcsv($handle, [
+                    $p->id,
+                    $p->name,
+                    $p->manager,
+                    $p->status,
+                    $projectCount,
+                    $totalBudget,
+                    $kdvPercent,
+                    $kdvAmount,
+                    $totalBudgetKdv,
+                    $totalSpent,
+                    $progress
+                ]);
+            }
+
+            fclose($handle);
+        }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
     }
 }

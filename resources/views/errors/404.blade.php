@@ -1,0 +1,5 @@
+@extends('errors.layout')
+@section('code','404')
+@section('illustration','notfound')
+@section('title','Sayfa bulunamadı')
+@section('message','Aradığınız sayfa taşınmış, silinmiş ya da hiç var olmamış olabilir. Adresi kontrol edin veya ana sayfaya dönün.')

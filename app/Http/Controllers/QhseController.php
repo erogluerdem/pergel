@@ -141,7 +141,7 @@ class QhseController extends Controller
     public function uploadEvidence(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|max:10240' // max 10MB
+            'file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,webp,dwg,zip|max:20480'
         ]);
         $file = $request->file('file');
         $path = $file->store('qhse', 'public');

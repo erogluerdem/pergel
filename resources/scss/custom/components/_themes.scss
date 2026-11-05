@@ -1113,7 +1113,7 @@
   }
 
   // ── Kartlar (Cards) ──
-  .card {
+  .card:not([style*="background"]) {
     background: var(--pt-card-bg) !important;
     border: 1px solid var(--pt-card-border) !important;
     border-radius: var(--pt-card-radius) !important;
